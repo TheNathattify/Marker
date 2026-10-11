@@ -14,7 +14,7 @@ prefix = get_option('prefix')
 datadir = prefix / get_option('datadir')
 libdir = prefix / get_option('libdir')
 localedir = prefix / get_option('localedir')
-appdir = datadir / 'com.github.fabiocolacio.marker'
+appdir = datadir / 'com.github.adrighem.marker'
 icons_dir = appdir / 'icons'
 styles_dir = appdir / 'styles'
 common_dir = appdir / 'common'
@@ -107,27 +107,27 @@ executable(
 )
 
 install_data(
-  'data/com.github.fabiocolacio.marker.svg',
+  'data/com.github.adrighem.marker.svg',
   install_dir: datadir / 'icons' / 'hicolor' / 'scalable' / 'apps'
 )
 
 install_data(
-  'data/com.github.fabiocolacio.marker-symbolic.svg',
+  'data/com.github.adrighem.marker-symbolic.svg',
   install_dir: datadir / 'icons' / 'hicolor' / 'symbolic' / 'apps'
 )
 
 install_data(
-  'data/com.github.fabiocolacio.marker.desktop',
+  'data/com.github.adrighem.marker.desktop',
   install_dir: datadir / 'applications'
 )
 
 install_data(
-  'data/com.github.fabiocolacio.marker.gschema.xml',
+  'data/com.github.adrighem.marker.gschema.xml',
   install_dir: datadir / 'glib-2.0' / 'schemas'
 )
 
 install_data(
-  'data/com.github.fabiocolacio.marker.appdata.xml',
+  'data/com.github.adrighem.marker.appdata.xml',
   install_dir: appdata_dir
 )
 

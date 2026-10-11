@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2018-2020 Fabio Colacio <fabio.colacio.dev@gmail.com> -->
+<!-- Copyright 2026 Vincent van Adrighem <44673609+adrighem@users.noreply.github.com> -->
 <component type="desktop-application">
-  <id>com.github.fabiocolacio.marker.desktop</id>
+  <id>com.github.adrighem.marker.desktop</id>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0</project_license>
   <name>Marker</name>
@@ -25,38 +26,50 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">com.github.fabiocolacio.marker.desktop</launchable>
+  <launchable type="desktop-id">com.github.adrighem.marker.desktop</launchable>
   <translation type="gettext">marker</translation>
 
   <screenshots>
     <screenshot type="default">
       <caption>The main view</caption>
-      <image>https://raw.githubusercontent.com/fabiocolacio/Marker/master/help/C/figures/scrot1.png</image>
+      <image>https://raw.githubusercontent.com/adrighem/Marker/master/help/C/figures/scrot1.png</image>
     </screenshot>
     <screenshot>
       <caption>Some plotting</caption>
-      <image>https://raw.githubusercontent.com/fabiocolacio/Marker/master/help/C/figures/scrot2.png</image>
+      <image>https://raw.githubusercontent.com/adrighem/Marker/master/help/C/figures/scrot2.png</image>
     </screenshot>
     <screenshot>
       <caption>The sketch editor</caption>
-      <image>https://raw.githubusercontent.com/fabiocolacio/Marker/master/help/C/figures/sketcher.png</image>
+      <image>https://raw.githubusercontent.com/adrighem/Marker/master/help/C/figures/sketcher.png</image>
     </screenshot>
   </screenshots>
 
-  <developer id="com.github.fabiocolacio">
-    <name>Fábio Colácio</name>
+  <developer id="com.github.adrighem">
+    <name>Vincent van Adrighem</name>
   </developer>
-  <url type="homepage">https://github.com/fabiocolacio/Marker</url>
-  <url type="bugtracker">https://github.com/fabiocolacio/Marker/issues</url>
-  <url type="vcs-browser">https://github.com/fabiocolacio/Marker</url>
-  <url type="translate">https://github.com/fabiocolacio/Marker/tree/master/po</url>
+  <url type="homepage">https://github.com/adrighem/Marker</url>
+  <url type="bugtracker">https://github.com/adrighem/Marker/issues</url>
+  <url type="vcs-browser">https://github.com/adrighem/Marker</url>
+  <url type="translate">https://github.com/adrighem/Marker/tree/master/po</url>
 
   <provides>
     <binary>marker</binary>
-    <id>com.github.fabiocolacio.marker</id>
+    <id>com.github.adrighem.marker</id>
   </provides>
 
   <releases>
+    <release version="2026.10.0" date="2026-10-11">
+      <description translate="no">
+        <ul>
+          <li>Modernized user interface with GTK 4 and Libadwaita.</li>
+          <li>Ported live preview to WebKitGTK 6.0.</li>
+          <li>Added document outline navigation in the sidebar.</li>
+          <li>Added Find and Replace controller.</li>
+          <li>Added automatic draft caching and recovery.</li>
+          <li>Added option to trim trailing whitespace on save.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2020.04.04" date="2020-04-04">
       <description translate="no">
         <ul>

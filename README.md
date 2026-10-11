@@ -1,95 +1,84 @@
-# <img width="30" src="data/com.github.fabiocolacio.marker.svg"/>Marker
+# <img width="32" src="data/com.github.adrighem.marker.svg" alt="Marker Logo"/> Marker
 
-Marker is a markdown editor for linux made with GTK+-3.0
+A modern, fast, and feature-rich Markdown editor designed for GNOME, built with GTK 4 and Libadwaita.
 
-**NOTE:** Issues regarding markdown parsing should go to the [scidown repo](https://github.com/mandarancio/scidown).
+Marker combines a distraction-free writing environment with a powerful live preview engine, scientific typesetting, diagramming tools, and rich document export capabilities.
 
-## Features
+---
 
-* View and edit markdown documents
-* HTML and LaTeX conversion of markdown documents with [scidown](https://github.com/Mandarancio/scidown/)
-  * Support for YAML headers
-  * Document classes
-  * Beamer/presentation mode (`class: beamer`)
-  * Abstract sections
-  * Table of Contents
-  * External document inclusion
-  * Equations, figures, table and listings with reference id and caption
-  * Internal references
-* Extra scientific syntax of SciDown on its [wiki](https://github.com/Mandarancio/scidown/wiki/)
-* TeX math rendering with [KaTeX](https://khan.github.io/KaTeX/) or [MathJax](mathjax.org/)
-* Support for [mermaid](https://mermaidjs.github.io/) diagrams
-* Support for [charter](https://github.com/Mandarancio/charter/) for plotting
-* Syntax highlighting for code blocks with [highlight.js](https://highlightjs.org/)
-* Integrated sketch editor
-* Flexible export options with [pandoc](https://pandoc.org/)
-  * PDF
-  * RTF
-  * ODT
-  * DOCX
-* Custom CSS themes
-* Custom syntax themes
-* Native GTK+3 application
+## Key Features
+
+- **Modern GNOME Interface**: Clean Libadwaita styling, responsive adaptive layouts, and automatic dark/light theme switching.
+- **Real-Time Live Preview**: Fast, sandboxed WebKitGTK 6.0 preview synchronized with your document.
+- **Document Outline**: Instant ATX and Setext heading navigation in the sidebar for effortless document traversal.
+- **Find and Replace**: Interactive search and replace controller with match highlighting and navigation.
+- **Draft Recovery & Safety**: Automatic background draft caching so your work is never lost.
+- **Trailing Whitespace Trimming**: Configurable option to clean trailing whitespace on save.
+- **Mathematical Typesetting**: Render complex formulas in real time with KaTeX or MathJax backends.
+- **Diagrams and Plotting**: Native support for Mermaid diagrams (flowcharts, sequence charts, state diagrams) and Charter plots.
+- **Syntax Highlighting**: Beautiful code block syntax highlighting powered by highlight.js and GtkSourceView 5.
+- **Integrated Sketcher**: Draw and embed hand-drawn sketches directly into your notes.
+- **Multi-Format Export**: Export your documents to HTML, PDF, LaTeX, RTF, ODT, and DOCX (powered by Pandoc and Scidown).
+- **Customizable Styling**: User-selectable editor themes and custom preview CSS stylesheets.
+
+---
 
 ## Screenshots
 
-![scrot.png](help/C/figures/scrot.png)
+![Main Window](help/C/figures/scrot1.png)
 
-![scrot1.png](help/C/figures/scrot1.png)
+![Plotting](help/C/figures/scrot2.png)
 
-![scrot2.png](help/C/figures/scrot2.png)
+![Sketch Editor](help/C/figures/sketcher.png)
 
-![sketcher.png](help/C/figures/sketcher.png)
+---
 
-![slides.png](help/C/figures/slides.png)
+## Installation and Building
 
-## Packages
+### Building with Meson & Ninja
 
-* [Fedora (thanks to @tim77)](https://src.fedoraproject.org/rpms/marker)
-* [Flathub (thanks to @jsparber and @bertob)](https://flathub.org/apps/details/com.github.fabiocolacio.marker)
-* [Arch Linux AUR (thanks to @mmetak)](https://aur.archlinux.org/packages/marker-git/)
-* [Arch Linux official package (thanks to @City-busz)](https://archlinux.org/packages/extra/x86_64/marker/)
-* [Ubuntu PPA Stable (thanks to @apandada1 and @olivierb2)](https://launchpad.net/~apandada1/+archive/ubuntu/marker)
-* [Ubuntu PPA Daily builds (thanks to @apandada1 and @olivierb2)](https://launchpad.net/~apandada1/+archive/ubuntu/marker-daily)
-* [![Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/marker)
+#### Dependencies
+- `meson` (>= 0.62.0)
+- `ninja`
+- `gtk4` (>= 4.10.0)
+- `libadwaita-1` (>= 1.4.0)
+- `gtksourceview-5` (>= 5.6.0)
+- `webkitgtk-6.0` (>= 2.40.0)
+- `glib-2.0` / `gio-2.0` (>= 2.74.0)
+- `pandoc` (optional, for document export)
 
-
-## Installation From Source
-
-### Dependencies
-
-* meson >= 0.37.0 (install only)
-* gtk3-devel >= 3.20
-* gtksourceview3-devel
-* webkitgtk4-devel
-* pandoc
-* gtkspell
-* itstool
-
-### Build Instructions
-
-**NOTE: MAKE SURE TO CLEAN THE EXTENSIONS BEFORE UPDATING:
-
+#### Build Commands
 ```bash
-rm /usr/share/com.github.fabiocolacio.marker/extensions/**
+git clone https://github.com/adrighem/Marker.git
+cd Marker
+meson setup build --prefix=/usr
+ninja -C build
+sudo ninja -C build install
 ```
 
-**Note:** For a more stable experience, users are recommended download
-[release tarball](https://github.com/fabiocolacio/Marker/releases) rather
-than cloning from master.
+### Building Flatpak
+
+You can build and test Marker in a clean Flatpak sandbox using Flatpak Builder:
 
 ```bash
-$ git clone https://github.com/fabiocolacio/Marker.git
-$ cd Marker
-$ git submodule update --init --recursive
-$ mkdir build && cd build
-$ meson .. --prefix /usr
-$ ninja
-$ sudo ninja install
+flatpak-builder --user --install --force-clean build-flatpak com.github.adrighem.marker.json
 ```
 
-## Donations/Tips
+Or run directly:
+```bash
+flatpak-builder --run build-flatpak com.github.adrighem.marker.json marker
+```
 
-If you like Marker and would like to support the development of this project, please donate below!
+---
 
-[<img height="30" src="donate.png" alt="PayPal"/>](https://www.paypal.me/fabiocolacio)
+## Attribution & Acknowledgments
+
+Marker is a modernized continuation forked from the original [Marker by Fabio Colacio](https://github.com/fabiocolacio/Marker).
+
+Special thanks to Fabio Colacio, Martino Ferrari, and all original contributors for creating the foundation of this project.
+
+---
+
+## License
+
+Marker is licensed under the [GNU General Public License v3.0 or later](LICENSE.md).

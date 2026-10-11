@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: marker
-Source: https://fabiocolacio.github.io/Marker/
+Source: https://github.com/adrighem/Marker
 
 Files: *
 Copyright: <years> <put author's name and email here>

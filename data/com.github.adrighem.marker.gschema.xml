@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <enum id="com.github.fabiocolacio.marker.ViewMode">
+  <enum id="com.github.adrighem.marker.ViewMode">
     <value nick="editor-only" value="0"/>
     <value nick="preview-only" value="1"/>
     <value nick="dual-pane" value="2"/>
     <value nick="dual-window" value="3"/>
   </enum>
 
-  <enum id="com.github.fabiocolacio.marker.MathJS">
+  <enum id="com.github.adrighem.marker.MathJS">
     <value nick="KaTeX" value="0"/>
     <value nick="MathJax" value="1"/>
   </enum>
 
-  <schema path="/com/github/fabiocolacio/marker/preferences/" id="com.github.fabiocolacio.marker.preferences">
-    <child name="editor" schema="com.github.fabiocolacio.marker.preferences.editor"/>
-    <child name="preview" schema="com.github.fabiocolacio.marker.preferences.preview"/>
-    <child name="window" schema="com.github.fabiocolacio.marker.preferences.window"/>
+  <schema path="/com/github/adrighem/marker/preferences/" id="com.github.adrighem.marker.preferences">
+    <child name="editor" schema="com.github.adrighem.marker.preferences.editor"/>
+    <child name="preview" schema="com.github.adrighem.marker.preferences.preview"/>
+    <child name="window" schema="com.github.adrighem.marker.preferences.window"/>
   </schema>
 
-  <schema path="/com/github/fabiocolacio/marker/preferences/editor/" id="com.github.fabiocolacio.marker.preferences.editor">
+  <schema path="/com/github/adrighem/marker/preferences/editor/" id="com.github.adrighem.marker.preferences.editor">
     <key name="syntax-theme" type="s">
       <default>'tango'</default>
       <summary>Syntax Theme</summary>
@@ -104,7 +104,7 @@
     </key>
   </schema>
 
-  <schema path="/com/github/fabiocolacio/marker/preferences/preview/" id="com.github.fabiocolacio.marker.preferences.preview">
+  <schema path="/com/github/adrighem/marker/preferences/preview/" id="com.github.adrighem.marker.preferences.preview">
     <key name="css-theme" type="s">
       <default>'swiss.css'</default>
       <summary>CSS Theme</summary>
@@ -123,7 +123,7 @@
       <description>Use js back-end to render math in the live preview.</description>
     </key>
 
-    <key name="math-backend" enum="com.github.fabiocolacio.marker.MathJS">
+    <key name="math-backend" enum="com.github.adrighem.marker.MathJS">
       <default>'KaTeX'</default>
       <summary>Math Back-end</summary>
       <description>Select the js math rendering back-end.</description>
@@ -158,8 +158,8 @@
     </key>
   </schema>
 
-  <schema path="/com/github/fabiocolacio/marker/preferences/window/" id="com.github.fabiocolacio.marker.preferences.window">
-    <key name="view-mode" enum="com.github.fabiocolacio.marker.ViewMode">
+  <schema path="/com/github/adrighem/marker/preferences/window/" id="com.github.adrighem.marker.preferences.window">
+    <key name="view-mode" enum="com.github.adrighem.marker.ViewMode">
       <default>'dual-pane'</default>
       <summary>View Mode</summary>
       <description>Controls how to organize the editor and preview areas on the screen.</description>

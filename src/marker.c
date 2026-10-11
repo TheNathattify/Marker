@@ -59,8 +59,8 @@ marker_init (GtkApplication *app)
   marker_prefs_load ();
 
   g_set_application_name ("Marker");
-  g_set_prgname ("com.github.fabiocolacio.marker");
-  gtk_window_set_default_icon_name ("com.github.fabiocolacio.marker");
+  g_set_prgname ("com.github.adrighem.marker");
+  gtk_window_set_default_icon_name ("com.github.adrighem.marker");
 
   const gchar *quit_accels[] = { "<Ctrl>q", NULL };
   gtk_application_set_accels_for_action (app, "app.quit", quit_accels);
@@ -149,6 +149,7 @@ marker_about_cb (GSimpleAction *action,
   (void) parameter;
   (void) user_data;
   const gchar *authors[] = {
+    "Vincent van Adrighem",
     "Fabio Colacio",
     "Martino Ferrari",
     NULL
@@ -164,11 +165,11 @@ marker_about_cb (GSimpleAction *action,
 
   adw_show_about_dialog (GTK_WIDGET (parent),
                          "application-name", "Marker",
-                         "application-icon", "com.github.fabiocolacio.marker",
+                         "application-icon", "com.github.adrighem.marker",
                          "version", MARKER_VERSION,
                          "comments", _("A markdown editor for GNOME"),
-                         "website", "https://github.com/fabiocolacio/Marker",
-                         "issue-url", "https://github.com/fabiocolacio/Marker/issues",
+                         "website", "https://github.com/adrighem/Marker",
+                         "issue-url", "https://github.com/adrighem/Marker/issues",
                          "copyright", "Copyright 2017-2026 Marker Developers",
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "developers", authors,
@@ -197,7 +198,7 @@ marker_shortcuts_cb (GSimpleAction *action,
   (void) parameter;
   (void) user_data;
   g_autoptr(GtkBuilder) builder =
-    gtk_builder_new_from_resource ("/com/github/fabiocolacio/marker/ui/marker-shortcuts-window.ui");
+    gtk_builder_new_from_resource ("/com/github/adrighem/marker/ui/marker-shortcuts-window.ui");
 
   GtkWidget *dialog = GTK_WIDGET (gtk_builder_get_object (builder, "shortcuts"));
   GtkApplication *app = marker_get_app ();
@@ -295,7 +296,7 @@ main (int    argc,
   adw_init ();
   gtk_source_init ();
 
-  g_autoptr(GtkApplication) app = gtk_application_new ("com.github.fabiocolacio.marker",
+  g_autoptr(GtkApplication) app = gtk_application_new ("com.github.adrighem.marker",
                                                         G_APPLICATION_HANDLES_OPEN);
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
   g_signal_connect (app, "open", G_CALLBACK (marker_open), NULL);

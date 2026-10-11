@@ -1,5 +1,5 @@
 #!/bin/bash
-git clone https://github.com/fabiocolacio/marker
+git clone https://github.com/adrighem/Marker.git marker
 cd marker
 git submodule update --init --recursive
 rm -rf .git .gitignore .gitmodules

@@ -19,11 +19,11 @@ jobs:
 
       - name: Validate AppStream Metadata
         run: |
-          appstreamcli validate --no-net --explain data/com.github.fabiocolacio.marker.appdata.xml
+          appstreamcli validate --no-net --explain data/com.github.adrighem.marker.appdata.xml
 
       - name: Validate Desktop Entry
         run: |
-          desktop-file-validate data/com.github.fabiocolacio.marker.desktop
+          desktop-file-validate data/com.github.adrighem.marker.desktop
 
       - name: Compile GSettings Schema
         run: |
