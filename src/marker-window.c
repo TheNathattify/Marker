@@ -26,13 +26,13 @@
 #include "marker-sketcher-window.h"
 
 #include "marker-window.h"
+#include "marker-outline.h"
 
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gi18n.h>
 
 #define MIN_DELTA_T 1
-
 
 enum {
   TITLE_COLUMN,
@@ -44,10 +44,10 @@ enum {
 
 struct _MarkerWindow
 {
-  GtkApplicationWindow  parent_instance;
+  AdwApplicationWindow  parent_instance;
 
-  GtkBox               *header_box;
-  GtkHeaderBar         *header_bar;
+  AdwHeaderBar         *header_bar;
+  AdwWindowTitle       *window_title;
   GtkButton            *zoom_original_btn;
 
   gboolean              is_fullscreen;
@@ -66,85 +66,85 @@ struct _MarkerWindow
   guint                 untitled_files;
   gboolean              sidebar_visible;
 
+  GtkListBox           *outline_list_box;
+  GListStore           *outline_store;
+  guint                 outline_timeout_id;
+
   guint32               last_click_;
 };
 
-G_DEFINE_TYPE (MarkerWindow, marker_window, GTK_TYPE_APPLICATION_WINDOW);
+G_DEFINE_TYPE (MarkerWindow, marker_window, ADW_TYPE_APPLICATION_WINDOW);
 
+typedef void (*UnsavedWarningCallback) (MarkerWindow *window, gboolean proceed, gpointer user_data);
+
+typedef struct {
+  MarkerWindow           *window;
+  UnsavedWarningCallback  callback;
+  gpointer                user_data;
+} WarningClosure;
 
 gboolean
-get_current_iter(MarkerWindow *window,
-                 GtkTreeIter  *iter)
+get_current_iter (MarkerWindow *window,
+                  GtkTreeIter  *iter)
 {
-  GtkTreeModel      *model = GTK_TREE_MODEL(window->documents_tree_store);
-  GtkTreeSelection  *selection = gtk_tree_view_get_selection(window->documents_tree_view);
+  GtkTreeModel     *model = GTK_TREE_MODEL (window->documents_tree_store);
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (window->documents_tree_view);
   return gtk_tree_selection_get_selected (selection, &model, iter);
 }
 
-/**
- * show_unsaved_documents_warning:
- * @parent The parent window for this dialog to be transient for, or NULL
- *
- * Shows a dialog asking the user to proceed closing a document without saving,
- * or to cancel the close operation
- *
- * Returns: TRUE if the user would like to proceed without saving. FALSE if the user
- * wants to cancel the operation.
- */
-static gboolean
-show_unsaved_documents_warning (MarkerWindow *window)
+static void
+on_unsaved_warning_response (AdwAlertDialog *dialog,
+                             GAsyncResult   *result,
+                             gpointer        user_data)
 {
-  const gchar *cancel_text = "Cancel";
-  const gchar *ok_text = "Discard";
+  WarningClosure *closure = user_data;
+  const char *response = adw_alert_dialog_choose_finish (dialog, result);
+  gboolean proceed = (g_strcmp0 (response, "discard") == 0);
+
+  if (closure->callback)
+    closure->callback (closure->window, proceed, closure->user_data);
+
+  g_free (closure);
+}
+
+static void
+show_unsaved_documents_warning_async (MarkerWindow           *window,
+                                      MarkerEditor           *editor,
+                                      UnsavedWarningCallback  callback,
+                                      gpointer                user_data)
+{
   g_assert (MARKER_IS_WINDOW (window));
 
-  MarkerEditor *editor = marker_window_get_active_editor (window);
-  GFile *file = marker_editor_get_file (editor);
+  GFile *file = editor ? marker_editor_get_file (editor) : NULL;
+  AdwAlertDialog *dialog = NULL;
 
-
-  GtkWidget *dialog;
   if (G_IS_FILE (file))
   {
     g_autofree gchar *filename = g_file_get_basename (file);
-    dialog = gtk_message_dialog_new_with_markup(GTK_WINDOW (window),
-                                                GTK_DIALOG_MODAL,
-                                                GTK_MESSAGE_WARNING,
-                                                GTK_BUTTONS_NONE,
-                                                _("<span weight='bold' size='larger'>"
-                                                "Discard changes to the document '%s'?"
-                                                "</span>\n\n"
-                                                "The document has unsaved changes "
-                                                "that will be lost if it is closed now."),
-                                                filename);
+    g_autofree gchar *heading = g_strdup_printf (_("Discard changes to the document '%s'?"), filename);
+    dialog = ADW_ALERT_DIALOG (adw_alert_dialog_new (heading,
+                                                      _("The document has unsaved changes that will be lost if it is closed now.")));
   }
   else
   {
-    dialog = gtk_message_dialog_new_with_markup(GTK_WINDOW (window),
-                                                GTK_DIALOG_MODAL,
-                                                GTK_MESSAGE_WARNING,
-                                                GTK_BUTTONS_NONE,
-                                                _("<span weight='bold' size='larger'>"
-                                                "Discard changes to the document?"
-                                                "</span>\n\n"
-                                                "The document has unsaved changes "
-                                                "that will be lost if it is closed now."));
+    dialog = ADW_ALERT_DIALOG (adw_alert_dialog_new (_("Discard changes to the document?"),
+                                                      _("The document has unsaved changes that will be lost if it is closed now.")));
   }
 
-  gtk_dialog_add_buttons(GTK_DIALOG (dialog),
-                         cancel_text,
-                         GTK_RESPONSE_CANCEL,
-                         ok_text,
-                         GTK_RESPONSE_OK,
-                         (char *)0);
+  adw_alert_dialog_add_responses (dialog,
+                                  "cancel", _("_Cancel"),
+                                  "discard", _("_Discard"),
+                                  NULL);
+  adw_alert_dialog_set_response_appearance (dialog, "discard", ADW_RESPONSE_DESTRUCTIVE);
+  adw_alert_dialog_set_default_response (dialog, "cancel");
+  adw_alert_dialog_set_close_response (dialog, "cancel");
 
-  gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+  WarningClosure *closure = g_new0 (WarningClosure, 1);
+  closure->window = window;
+  closure->callback = callback;
+  closure->user_data = user_data;
 
-  gtk_widget_destroy (GTK_WIDGET (dialog));
-
-  if (response == GTK_RESPONSE_OK)
-    return TRUE;
-
-  return FALSE;
+  adw_alert_dialog_choose (dialog, GTK_WIDGET (window), NULL, (GAsyncReadyCallback) on_unsaved_warning_response, closure);
 }
 
 static void
@@ -152,16 +152,15 @@ action_fullscreen (GSimpleAction *action,
                    GVariant      *value,
                    gpointer       window)
 {
-    gboolean state = g_variant_get_boolean (value);
+  gboolean state = g_variant_get_boolean (value);
+  g_simple_action_set_state (action, value);
 
-    g_simple_action_set_state (action, value);
-
-    if (state) {
-        marker_window_fullscreen (MARKER_WINDOW (window));
-    }
-    else {
-        marker_window_unfullscreen (MARKER_WINDOW (window));
-    }
+  if (state) {
+    marker_window_fullscreen (MARKER_WINDOW (window));
+  }
+  else {
+    marker_window_unfullscreen (MARKER_WINDOW (window));
+  }
 }
 
 static void
@@ -169,18 +168,17 @@ action_sidebar (GSimpleAction *action,
                 GVariant      *value,
                 gpointer       window)
 {
-    gboolean state = g_variant_get_boolean (value);
+  gboolean state = g_variant_get_boolean (value);
 
-    g_simple_action_set_state (action, value);
-    // save whether the sidebar is shown
-    marker_prefs_set_show_sidebar (state);
+  g_simple_action_set_state (action, value);
+  marker_prefs_set_show_sidebar (state);
 
-    if (state) {
-        marker_window_show_sidebar (MARKER_WINDOW (window));
-    }
-    else {
-        marker_window_hide_sidebar (MARKER_WINDOW (window));
-    }
+  if (state) {
+    marker_window_show_sidebar (MARKER_WINDOW (window));
+  }
+  else {
+    marker_window_hide_sidebar (MARKER_WINDOW (window));
+  }
 }
 
 static void
@@ -188,9 +186,9 @@ action_link (GSimpleAction *action,
              GVariant      *parameter,
              gpointer       window)
 {
-    MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
-    MarkerSourceView *source_view = marker_editor_get_source_view (editor);
-    marker_source_view_insert_link (source_view);
+  MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  marker_source_view_insert_link (source_view);
 }
 
 static void
@@ -198,9 +196,9 @@ action_monospace (GSimpleAction *action,
                   GVariant      *parameter,
                   gpointer       window)
 {
-    MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
-    MarkerSourceView *source_view = marker_editor_get_source_view (editor);
-    marker_source_view_surround_selection_with (source_view, "``");
+  MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  marker_source_view_surround_selection_with (source_view, "``");
 }
 
 static void
@@ -208,9 +206,9 @@ action_italic (GSimpleAction *action,
                GVariant      *parameter,
                gpointer       window)
 {
-    MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
-    MarkerSourceView *source_view = marker_editor_get_source_view (editor);
-    marker_source_view_surround_selection_with (source_view, "*");
+  MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  marker_source_view_surround_selection_with (source_view, "*");
 }
 
 static void
@@ -218,9 +216,9 @@ action_bold (GSimpleAction *action,
              GVariant      *parameter,
              gpointer       window)
 {
-    MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
-    MarkerSourceView *source_view = marker_editor_get_source_view (editor);
-    marker_source_view_surround_selection_with (source_view, "**");
+  MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  marker_source_view_surround_selection_with (source_view, "**");
 }
 
 static void
@@ -228,8 +226,8 @@ action_refresh (GSimpleAction *action,
                 GVariant      *parameter,
                 gpointer       window)
 {
-    MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
-    marker_editor_refresh_preview (editor);
+  MarkerEditor *editor = marker_window_get_active_editor (MARKER_WINDOW (window));
+  marker_editor_refresh_preview (editor);
 }
 
 static void
@@ -277,6 +275,18 @@ action_print (GSimpleAction *action,
 }
 
 static void
+on_reload_warning_cb (MarkerWindow *window,
+                      gboolean      proceed,
+                      gpointer      user_data)
+{
+  if (!proceed)
+    return;
+
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  marker_editor_reload_file (editor);
+}
+
+static void
 action_reload (GSimpleAction *action,
                GVariant      *parameter,
                gpointer       user_data)
@@ -288,12 +298,8 @@ action_reload (GSimpleAction *action,
 
   if (marker_editor_has_unsaved_changes (editor))
   {
-    gboolean discard = show_unsaved_documents_warning (window);
-
-    if (!discard)
-    {
-      return;
-    }
+    show_unsaved_documents_warning_async (window, editor, on_reload_warning_cb, editor);
+    return;
   }
 
   marker_editor_reload_file (editor);
@@ -340,18 +346,145 @@ action_dual_window_mode (GSimpleAction *action,
 }
 
 gchar *
-make_markup_title(MarkerEditor *editor,
-                  const char   *raw_title)
+make_markup_title (MarkerEditor *editor,
+                   const char   *raw_title)
 {
-  gchar * markup_title;
-  if (marker_editor_has_unsaved_changes(editor))
+  gchar *markup_title;
+  if (marker_editor_has_unsaved_changes (editor))
   {
-    markup_title = g_strdup_printf("<i>%s</i>", raw_title);
-  } else
+    markup_title = g_strdup_printf ("<i>%s</i>", raw_title);
+  }
+  else
   {
-    markup_title = g_strdup_printf("%s", raw_title);
+    markup_title = g_strdup_printf ("%s", raw_title);
   }
   return markup_title;
+}
+
+static GtkWidget *
+create_outline_row_cb (gpointer item,
+                       gpointer user_data)
+{
+  (void) user_data;
+  MarkerOutlineItem *outline_item = MARKER_OUTLINE_ITEM (item);
+  GtkWidget *row = gtk_list_box_row_new ();
+  GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
+  GtkWidget *label = gtk_label_new (NULL);
+
+  guint level = marker_outline_item_get_level (outline_item);
+  const gchar *title = marker_outline_item_get_title (outline_item);
+  guint margin_start = (level > 0 ? (level - 1) : 0) * 12 + 8;
+
+  gtk_widget_set_margin_start (box, margin_start);
+  gtk_widget_set_margin_end (box, 8);
+  gtk_widget_set_margin_top (box, 6);
+  gtk_widget_set_margin_bottom (box, 6);
+
+  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
+  gtk_widget_set_hexpand (label, TRUE);
+
+  g_autofree gchar *escaped_title = g_markup_escape_text (title ? title : "", -1);
+  if (level == 1)
+  {
+    g_autofree gchar *markup = g_strdup_printf ("<b>%s</b>", escaped_title);
+    gtk_label_set_markup (GTK_LABEL (label), markup);
+  }
+  else if (level == 2)
+  {
+    g_autofree gchar *markup = g_strdup_printf ("<span weight=\"semibold\">%s</span>", escaped_title);
+    gtk_label_set_markup (GTK_LABEL (label), markup);
+  }
+  else
+  {
+    gtk_label_set_text (GTK_LABEL (label), title ? title : "");
+  }
+
+  gtk_box_append (GTK_BOX (box), label);
+  gtk_list_box_row_set_child (GTK_LIST_BOX_ROW (row), box);
+  g_object_set_data_full (G_OBJECT (row), "outline-item", g_object_ref (outline_item), g_object_unref);
+
+  return row;
+}
+
+static void
+on_outline_row_activated (GtkListBox    *box,
+                          GtkListBoxRow *row,
+                          gpointer       user_data)
+{
+  (void) box;
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (!editor || !row)
+    return;
+
+  MarkerOutlineItem *item = g_object_get_data (G_OBJECT (row), "outline-item");
+  if (!item)
+    return;
+
+  guint line_number = marker_outline_item_get_line_number (item);
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  if (source_view)
+  {
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (source_view));
+    GtkTextIter iter;
+    gtk_text_buffer_get_iter_at_line (buffer, &iter, (gint) line_number);
+    gtk_text_buffer_place_cursor (buffer, &iter);
+    gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (source_view), &iter, 0.05, TRUE, 0.0, 0.1);
+    gtk_widget_grab_focus (GTK_WIDGET (source_view));
+  }
+}
+
+static void
+marker_window_update_outline (MarkerWindow *window)
+{
+  if (!window->outline_list_box)
+    return;
+
+  if (!window->active_editor)
+  {
+    if (window->outline_store)
+      g_list_store_remove_all (window->outline_store);
+    return;
+  }
+
+  MarkerSourceView *source_view = marker_editor_get_source_view (window->active_editor);
+  if (!source_view)
+    return;
+
+  g_autofree gchar *text = marker_source_view_get_text (source_view, FALSE);
+  GListStore *new_store = marker_outline_parse_markdown (text ? text : "");
+
+  if (window->outline_store)
+  {
+    g_object_unref (window->outline_store);
+  }
+  window->outline_store = new_store;
+  gtk_list_box_bind_model (window->outline_list_box,
+                           G_LIST_MODEL (window->outline_store),
+                           create_outline_row_cb,
+                           window,
+                           NULL);
+}
+
+static gboolean
+on_outline_debounce_cb (gpointer user_data)
+{
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  window->outline_timeout_id = 0;
+  marker_window_update_outline (window);
+  return G_SOURCE_REMOVE;
+}
+
+static void
+marker_window_queue_outline_update (MarkerWindow *window)
+{
+  if (window->outline_timeout_id > 0)
+  {
+    g_source_remove (window->outline_timeout_id);
+    window->outline_timeout_id = 0;
+  }
+  window->outline_timeout_id = g_timeout_add (200, on_outline_debounce_cb, window);
 }
 
 static void
@@ -360,16 +493,23 @@ title_changed_cb (MarkerEditor *editor,
                   const gchar  *raw_title,
                   gpointer      user_data)
 {
-  MarkerWindow *window = MARKER_WINDOW(user_data);
-  gtk_header_bar_set_title (window->header_bar, title);
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  if (window->window_title)
+    adw_window_title_set_title (window->window_title, title);
+
   GtkTreeIter iter;
-  if (get_current_iter(window, &iter)){
-    g_autofree gchar * markup_title = make_markup_title(editor,
-                                                        raw_title);
-    gtk_tree_store_set(window->documents_tree_store,
-                       &iter,
-                       TITLE_COLUMN,
-                       markup_title, -1);
+  if (get_current_iter (window, &iter))
+  {
+    g_autofree gchar *markup_title = make_markup_title (editor, raw_title);
+    gtk_tree_store_set (window->documents_tree_store,
+                        &iter,
+                        TITLE_COLUMN,
+                        markup_title, -1);
+  }
+
+  if (editor == window->active_editor)
+  {
+    marker_window_queue_outline_update (window);
   }
 }
 
@@ -378,8 +518,27 @@ subtitle_changed_cb (MarkerEditor *editor,
                      const gchar  *subtitle,
                      gpointer      user_data)
 {
-  MarkerWindow *window = MARKER_WINDOW(user_data);
-  gtk_header_bar_set_subtitle (window->header_bar, subtitle);
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  if (window->window_title)
+    adw_window_title_set_subtitle (window->window_title, subtitle);
+}
+
+static void
+preview_open_file_requested_cb (MarkerPreview *preview,
+                                const gchar   *uri,
+                                gpointer       user_data)
+{
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  g_return_if_fail (MARKER_IS_WINDOW (window));
+  g_return_if_fail (uri != NULL);
+
+  g_autoptr (GFile) file = NULL;
+  if (g_str_has_prefix (uri, "file://"))
+    file = g_file_new_for_uri (uri);
+  else
+    file = g_file_new_for_commandline_arg (uri);
+
+  marker_window_new_editor_from_file (window, file);
 }
 
 static void
@@ -387,18 +546,107 @@ preview_zoom_changed_cb (MarkerPreview *preview,
                          gpointer       user_data)
 {
   MarkerWindow *window = user_data;
+  if (!window->zoom_original_btn || !GTK_IS_BUTTON (window->zoom_original_btn))
+    return;
+
   const gdouble zoom_percentage = 100 * webkit_web_view_get_zoom_level (WEBKIT_WEB_VIEW (preview));
   g_autofree gchar *zoom_level_str = g_strdup_printf ("%.0f%%", zoom_percentage);
   gtk_button_set_label (window->zoom_original_btn, zoom_level_str);
 }
 
+static void
+save_window_geometry (MarkerWindow *window)
+{
+  gint width = gtk_widget_get_width (GTK_WIDGET (window));
+  gint height = gtk_widget_get_height (GTK_WIDGET (window));
+  if (width > 0 && height > 0)
+  {
+    marker_prefs_set_window_width (width);
+    marker_prefs_set_window_height (height);
+  }
+
+  if (window->active_editor)
+  {
+    guint editor_width = marker_editor_get_pane_width (window->active_editor);
+    marker_prefs_set_editor_pane_width (editor_width);
+  }
+}
+
+static void
+on_close_window_warning_cb (MarkerWindow *window,
+                            gboolean      proceed,
+                            gpointer      user_data)
+{
+  if (!proceed)
+    return;
+
+  save_window_geometry (window);
+
+  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
+  gint rows = gtk_tree_model_iter_n_children (model, NULL);
+  for (gint i = 0; i < rows; i++)
+  {
+    GtkTreeIter iter;
+    if (gtk_tree_model_get_iter (model, &iter, gtk_tree_path_new_from_indices (i, -1)))
+    {
+      MarkerEditor *editor = NULL;
+      gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
+      if (editor)
+        marker_editor_closing (editor);
+    }
+  }
+
+  gtk_window_destroy (GTK_WINDOW (window));
+}
+
+gboolean
+marker_window_try_close (MarkerWindow *window)
+{
+  g_assert (MARKER_IS_WINDOW (window));
+
+  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
+  gint rows = gtk_tree_model_iter_n_children (model, NULL);
+  MarkerEditor *unsaved_editor = NULL;
+
+  if (rows > 0)
+  {
+    for (gint i = 0; i < rows; i++)
+    {
+      GtkTreeIter iter;
+      if (gtk_tree_model_get_iter (model, &iter, gtk_tree_path_new_from_indices (i, -1)))
+      {
+        MarkerEditor *editor = NULL;
+        gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
+        if (editor && marker_editor_has_unsaved_changes (editor))
+        {
+          unsaved_editor = editor;
+          break;
+        }
+      }
+    }
+
+    if (unsaved_editor != NULL)
+    {
+      show_unsaved_documents_warning_async (window, unsaved_editor, on_close_window_warning_cb, NULL);
+      return FALSE;
+    }
+
+    on_close_window_warning_cb (window, TRUE, NULL);
+    return TRUE;
+  }
+  else
+  {
+    save_window_geometry (window);
+    gtk_window_destroy (GTK_WINDOW (window));
+    return TRUE;
+  }
+}
+
 static gboolean
-window_deleted_event_cb (GtkWidget *widget,
-                         GdkEvent  *event,
+window_close_request_cb (GtkWindow *window,
                          gpointer   user_data)
 {
-  MarkerWindow *window = user_data;
-  marker_window_try_close (window);
+  marker_window_try_close (MARKER_WINDOW (window));
   return TRUE;
 }
 
@@ -410,22 +658,8 @@ marker_window_fullscreen (MarkerWindow *window)
 
   window->is_fullscreen = TRUE;
   gtk_window_fullscreen (GTK_WINDOW (window));
-
-  GtkBox * const header_box = window->header_box;
-  GtkBox * const vbox = window->vbox;
-  GtkWidget * const header_bar = GTK_WIDGET (window->header_bar);
-  GtkWidget * const main_paned = GTK_WIDGET (window->main_paned);
-
-  g_object_ref (header_bar);
-  gtk_container_remove (GTK_CONTAINER (header_box), header_bar);
-  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (header_bar), FALSE);
-  gtk_widget_show (GTK_WIDGET (window->unfullscreen_btn));
-
-  g_object_ref (main_paned);
-  gtk_container_remove (GTK_CONTAINER (vbox), main_paned);
-
-  gtk_box_pack_start (vbox, header_bar, FALSE, TRUE, 0);
-  gtk_box_pack_start (vbox, main_paned, TRUE, TRUE, 0);
+  if (window->unfullscreen_btn)
+    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), TRUE);
 }
 
 void
@@ -436,148 +670,111 @@ marker_window_unfullscreen (MarkerWindow *window)
 
   window->is_fullscreen = FALSE;
   gtk_window_unfullscreen (GTK_WINDOW (window));
-
-  GtkBox * const vbox = window->vbox;
-  GtkBox * const header_box = window->header_box;
-  GtkWidget * const header_bar = GTK_WIDGET (window->header_bar);
-
-  g_object_ref (header_bar);
-  gtk_container_remove (GTK_CONTAINER (vbox), header_bar);
-  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (header_bar), TRUE);
-  gtk_widget_hide (GTK_WIDGET (window->unfullscreen_btn));
-
-  gtk_box_pack_start (header_box, header_bar, FALSE, TRUE, 0);
+  if (window->unfullscreen_btn)
+    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), FALSE);
 }
 
 static void
-rename_file_action_cb(GtkCellRendererText *cell,
-                      gchar               *path_string,
-                      gchar               *new_text,
-                      gpointer             user_data)
+rename_file_action_cb (GtkCellRendererText *cell,
+                       gchar               *path_string,
+                       gchar               *new_text,
+                       gpointer             user_data)
 {
-  if (!new_text || sizeof(new_text) == 0)
+  if (!new_text || strlen (new_text) == 0)
     return;
-  MarkerWindow * window = MARKER_WINDOW(user_data);
-  GtkTreeIter iter;
-  GtkTreeModel *model = GTK_TREE_MODEL(window->documents_tree_store);
-  MarkerEditor * editor;
 
-  if (gtk_tree_model_get_iter_from_string(model, &iter, path_string))
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  GtkTreeIter iter;
+  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
+  MarkerEditor *editor = NULL;
+
+  if (gtk_tree_model_get_iter_from_string (model, &iter, path_string))
   {
     gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-    if (marker_editor_rename_file(editor, g_strdup(new_text)))
+    if (marker_editor_rename_file (editor, g_strdup (new_text)))
     {
-      g_autofree gchar * markup_title = make_markup_title(editor,
-                                                          new_text);
-      gtk_tree_store_set(window->documents_tree_store,
-                         &iter,
-                         TITLE_COLUMN,
-                         markup_title, -1);
-      if (editor == window->active_editor)
+      g_autofree gchar *markup_title = make_markup_title (editor, new_text);
+      gtk_tree_store_set (window->documents_tree_store,
+                          &iter,
+                          TITLE_COLUMN,
+                          markup_title, -1);
+      if (editor == window->active_editor && window->window_title)
       {
         g_autofree gchar *title = marker_editor_get_title (editor);
         g_autofree gchar *subtitle = marker_editor_get_subtitle (editor);
 
-        gtk_header_bar_set_title (window->header_bar, title);
-        gtk_header_bar_set_subtitle (window->header_bar, subtitle);
+        adw_window_title_set_title (window->window_title, title);
+        adw_window_title_set_subtitle (window->window_title, subtitle);
       }
     }
   }
 }
 
-
-
 static void
-tree_selection_changed_cb(GtkTreeSelection *selection,
-                          gpointer          data)
+tree_selection_changed_cb (GtkTreeSelection *selection,
+                           gpointer          data)
 {
-  MarkerWindow * window = MARKER_WINDOW(data);
+  MarkerWindow *window = MARKER_WINDOW (data);
   GtkTreeIter iter;
-  GtkTreeModel *model;
-  gchar *name;
-  MarkerEditor * editor;
+  GtkTreeModel *model = NULL;
+  gchar *name = NULL;
+  MarkerEditor *editor = NULL;
 
   if (gtk_tree_selection_get_selected (selection, &model, &iter))
   {
     gtk_tree_model_get (model, &iter, NAME_COLUMN, &name, -1);
     gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-    gtk_stack_set_visible_child_full(window->editors_stack, name, GTK_STACK_TRANSITION_TYPE_CROSSFADE);
+    if (name)
+    {
+      gtk_stack_set_visible_child_name (window->editors_stack, name);
+      g_free (name);
+    }
 
     window->active_editor = editor;
-    g_autofree gchar *title = marker_editor_get_title (marker_window_get_active_editor (window));
-    g_autofree gchar *subtitle = marker_editor_get_subtitle (marker_window_get_active_editor (window));
-    gtk_header_bar_set_title (window->header_bar, title);
-    gtk_header_bar_set_subtitle (window->header_bar, subtitle);
-    preview_zoom_changed_cb(marker_editor_get_preview(editor),
-                            window);
-    g_free (name);
-  }
-}
-
-
-
-static gboolean
-close_button_clicked(GtkTreeView *view, GtkTreeViewColumn *col, guint x, GtkCellRenderer * cell)
-{
-
-	gint               colw = 0;
-
-	g_return_val_if_fail ( view != NULL, FALSE );
-
-	if (col == NULL)
-		return FALSE; /* not found */
-
-	/* (2) find the cell renderer within the column */
-
-    GtkCellRenderer *checkcell = cell;
-    gint min_width=0, nat_width=0;
-    gtk_cell_renderer_get_preferred_width(checkcell, GTK_WIDGET(view), &min_width, &nat_width);
-
-    GValue value = G_VALUE_INIT;
-    g_value_init(&value, G_TYPE_INT);
-    g_object_get_property(G_OBJECT(col), "width", &value);
-    colw = g_value_get_int(&value);
-
-
-    if (x >= colw-nat_width && x < colw)
+    if (window->window_title && editor)
     {
-    	return TRUE;
+      g_autofree gchar *title = marker_editor_get_title (editor);
+      g_autofree gchar *subtitle = marker_editor_get_subtitle (editor);
+      adw_window_title_set_title (window->window_title, title);
+      adw_window_title_set_subtitle (window->window_title, subtitle);
     }
-	return FALSE; /* not found */
+
+    if (editor)
+    {
+      preview_zoom_changed_cb (marker_editor_get_preview (editor), window);
+      marker_window_update_outline (window);
+    }
+  }
 }
 
-static gboolean
-button_pressed_cb (GtkWidget *view,
-                   GdkEventButton *bevent,
-                   gpointer data)
+static void
+tree_view_click_pressed_cb (GtkGestureClick *gesture,
+                            gint             n_press,
+                            gdouble          x,
+                            gdouble          y,
+                            gpointer         user_data)
 {
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  GtkTreeView *tree_view = window->documents_tree_view;
+  GtkTreePath *path = NULL;
+  GtkTreeViewColumn *col = NULL;
+  gint cell_x = 0;
 
-  GtkCellRenderer * cell_renderer = GTK_CELL_RENDERER(data);
-  MarkerWindow * window = MARKER_WINDOW(gtk_widget_get_ancestor(view, MARKER_TYPE_WINDOW));
-  gint x;
-
-  GtkTreePath * path = gtk_tree_path_new();
-  GtkTreeViewColumn * col = gtk_tree_view_column_new();
-
-  gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW(view),
-                                 bevent->x,
-                                 bevent->y,
-                                 &path,
-                                 &col,
-                                 &x, NULL);
-
-  gtk_tree_selection_select_path(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)),
-                                 path);
-
-  if (close_button_clicked(GTK_TREE_VIEW(view), col, x, cell_renderer))
-    marker_window_close_current_document(window);
-  guint32 delta = bevent->time - window->last_click_;
-  window->last_click_ = bevent->time;
-  if (bevent->type == GDK_2BUTTON_PRESS || delta < 500)
+  if (gtk_tree_view_get_path_at_pos (tree_view, (gint)x, (gint)y, &path, &col, &cell_x, NULL))
   {
-    return FALSE;
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (tree_view);
+    gtk_tree_selection_select_path (selection, path);
+
+    if (col != NULL)
+    {
+      gint colw = gtk_tree_view_column_get_width (col);
+      if (cell_x >= colw - 28 && cell_x <= colw)
+      {
+        marker_window_close_current_document (window);
+      }
+    }
+    gtk_tree_path_free (path);
   }
-  return TRUE;
 }
 
 static void
@@ -603,6 +800,12 @@ marker_window_init (MarkerWindow *window)
     g_signal_connect_swapped (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (marker_window_search), window);
     const gchar *find_accels[] = { "<Ctrl>f", NULL };
     gtk_application_set_accels_for_action (app, "win.find", find_accels);
+    g_action_map_add_action (G_ACTION_MAP (window), action);
+
+    action = G_ACTION (g_simple_action_new ("replace", NULL));
+    g_signal_connect_swapped (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (marker_window_replace), window);
+    const gchar *replace_accels[] = { "<Ctrl>h", NULL };
+    gtk_application_set_accels_for_action (app, "win.replace", replace_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
     action = G_ACTION (g_simple_action_new ("link", NULL));
@@ -640,7 +843,7 @@ marker_window_init (MarkerWindow *window)
     const gchar *neweditor_accels[] = { "<Ctrl>n", NULL };
     gtk_application_set_accels_for_action (app, "win.neweditor", neweditor_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
-    
+
     action = G_ACTION (g_simple_action_new ("closedocument", NULL));
     g_signal_connect_swapped (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (marker_window_close_current_document), window);
     const gchar *closedocument_accels[] = { "<Ctrl>w", NULL };
@@ -697,7 +900,7 @@ marker_window_init (MarkerWindow *window)
 
     action = G_ACTION (g_simple_action_new ("open", NULL));
     g_signal_connect_swapped (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (marker_window_open_file), window);
-    const gchar *open_accels[] = { "<Ctrl>o", NULL }; 
+    const gchar *open_accels[] = { "<Ctrl>o", NULL };
     gtk_application_set_accels_for_action (app, "win.open", open_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
@@ -739,64 +942,74 @@ marker_window_init (MarkerWindow *window)
 
     action = G_ACTION (g_simple_action_new_stateful ("sidebar", NULL, g_variant_new_boolean (FALSE)));
     g_signal_connect (G_SIMPLE_ACTION (action), "change-state", G_CALLBACK (action_sidebar), window);
-    const gchar *sidebar_accels[] =  { "F12", NULL };
+    const gchar *sidebar_accels[] = { "F12", NULL };
     gtk_application_set_accels_for_action (app, "win.sidebar", sidebar_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
   }
 
-  /** Add marker icon theme to the default icon theme **/
-  gtk_icon_theme_append_search_path (gtk_icon_theme_get_default(), ICONS_DIR);
-
   window->is_fullscreen = FALSE;
-
   window->sidebar_visible = TRUE;
   window->editors_counter = 0;
   window->last_click_ = 0;
 
   GtkBuilder *builder = gtk_builder_new ();
 
-  /** VBox **/
+  /** Content VBox **/
   GtkBox *vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
   window->vbox = vbox;
-  gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
-  gtk_widget_show (GTK_WIDGET (vbox));
+  adw_application_window_set_content (ADW_APPLICATION_WINDOW (window), GTK_WIDGET (vbox));
 
+  /** HeaderBar **/
+  gtk_builder_add_from_resource (builder, "/com/github/fabiocolacio/marker/ui/marker-headerbar.ui", NULL);
+  AdwHeaderBar *header_bar = ADW_HEADER_BAR (gtk_builder_get_object (builder, "header_bar"));
+  window->header_bar = header_bar;
+  window->window_title = ADW_WINDOW_TITLE (gtk_builder_get_object (builder, "window_title"));
+  gtk_box_append (vbox, GTK_WIDGET (header_bar));
 
+  GtkButton *unfullscreen_btn = GTK_BUTTON (gtk_builder_get_object (builder, "unfullscreen_btn"));
+  window->unfullscreen_btn = unfullscreen_btn;
+  if (unfullscreen_btn)
+  {
+    g_signal_connect_swapped (unfullscreen_btn, "clicked", G_CALLBACK (marker_window_unfullscreen), window);
+  }
+
+  /** Popover / Gear Menu **/
+  gtk_builder_add_from_resource (builder, "/com/github/fabiocolacio/marker/ui/marker-gear-popover.ui", NULL);
+  window->zoom_original_btn = GTK_BUTTON (gtk_builder_get_object (builder, "zoom_original_btn"));
+
+  /** Main View **/
   gtk_builder_add_from_resource (builder, "/com/github/fabiocolacio/marker/ui/marker-window-main-view.ui", NULL);
 
   /** DOCUMENTS TREE **/
-  GtkTreeView * documents_tree_view = GTK_TREE_VIEW(gtk_builder_get_object(builder, "documents_tree_view"));
-  GtkTreeStore
-  *documents_store = gtk_tree_store_new(N_COLUMNS,
-                                        G_TYPE_STRING,
-                                        GDK_TYPE_PIXBUF,
-                                        G_TYPE_STRING,
-                                        MARKER_TYPE_EDITOR);
+  GtkTreeView *documents_tree_view = GTK_TREE_VIEW (gtk_builder_get_object (builder, "documents_tree_view"));
+  GtkTreeStore *documents_store = gtk_tree_store_new (N_COLUMNS,
+                                                      G_TYPE_STRING,
+                                                      G_TYPE_STRING,
+                                                      G_TYPE_STRING,
+                                                      MARKER_TYPE_EDITOR);
 
-
-
-  gtk_tree_view_set_model(documents_tree_view, GTK_TREE_MODEL(documents_store));
+  gtk_tree_view_set_model (documents_tree_view, GTK_TREE_MODEL (documents_store));
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
-  column = gtk_tree_view_column_new();
-  gtk_tree_view_column_set_title(column, "Documents");
+  column = gtk_tree_view_column_new ();
+  gtk_tree_view_column_set_title (column, _("Documents"));
 
-  renderer = gtk_cell_renderer_text_new();
-  g_object_set(renderer, "editable", TRUE, NULL);
-  gtk_tree_view_column_pack_start(column, renderer, TRUE);
-  gtk_tree_view_column_set_attributes(column, renderer,
-                                      "markup", TITLE_COLUMN,
-                                      NULL);
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set (renderer, "editable", TRUE, NULL);
+  gtk_tree_view_column_pack_start (column, renderer, TRUE);
+  gtk_tree_view_column_set_attributes (column, renderer,
+                                       "markup", TITLE_COLUMN,
+                                       NULL);
 
   g_signal_connect (renderer, "edited",
-                     G_CALLBACK(rename_file_action_cb),
-                     window);
+                    G_CALLBACK (rename_file_action_cb),
+                    window);
 
-  renderer = gtk_cell_renderer_pixbuf_new();
-  gtk_tree_view_column_pack_start(column, renderer, FALSE);
-  gtk_tree_view_column_set_attributes(column, renderer,
-                                       "pixbuf", ICON_COLUMN,
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  gtk_tree_view_column_pack_start (column, renderer, FALSE);
+  gtk_tree_view_column_set_attributes (column, renderer,
+                                       "icon-name", ICON_COLUMN,
                                        NULL);
 
   gtk_tree_view_append_column (documents_tree_view, column);
@@ -804,226 +1017,192 @@ marker_window_init (MarkerWindow *window)
   window->documents_tree_store = documents_store;
   window->documents_tree_view = documents_tree_view;
 
-
-  GtkTreeSelection *select;
-  select = gtk_tree_view_get_selection (documents_tree_view);
-
+  GtkTreeSelection *select = gtk_tree_view_get_selection (documents_tree_view);
   gtk_tree_selection_set_mode (select, GTK_SELECTION_SINGLE);
   g_signal_connect (G_OBJECT (select), "changed",
                     G_CALLBACK (tree_selection_changed_cb),
                     window);
 
-  g_signal_connect (documents_tree_view, "button-press-event",
-                    G_CALLBACK(button_pressed_cb),
-                    renderer);
+  GtkGesture *click_gesture = gtk_gesture_click_new ();
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click_gesture), GDK_BUTTON_PRIMARY);
+  g_signal_connect (click_gesture, "pressed", G_CALLBACK (tree_view_click_pressed_cb), window);
+  gtk_widget_add_controller (GTK_WIDGET (documents_tree_view), GTK_EVENT_CONTROLLER (click_gesture));
+
+  /** OUTLINE LIST **/
+  GtkListBox *outline_list_box = GTK_LIST_BOX (gtk_builder_get_object (builder, "outline_list_box"));
+  window->outline_list_box = outline_list_box;
+  if (outline_list_box)
+  {
+    GtkWidget *placeholder = gtk_label_new (_("No headings found"));
+    gtk_widget_add_css_class (placeholder, "dim-label");
+    gtk_widget_set_margin_top (placeholder, 24);
+    gtk_widget_set_margin_bottom (placeholder, 24);
+    gtk_list_box_set_placeholder (outline_list_box, placeholder);
+    g_signal_connect (outline_list_box, "row-activated", G_CALLBACK (on_outline_row_activated), window);
+  }
 
   /** EDITOR STACKS **/
-  window->editors_stack = GTK_STACK(gtk_builder_get_object(builder, "documents_stack"));
-  gtk_widget_show(GTK_WIDGET(window->editors_stack));
+  window->editors_stack = GTK_STACK (gtk_builder_get_object (builder, "documents_stack"));
 
   /** MAIN PANED **/
-  GtkWidget * main_paned = GTK_WIDGET(gtk_builder_get_object(builder, "main_paned"));
-  gtk_box_pack_start (vbox, main_paned, TRUE, TRUE, 0);
-  gtk_paned_set_position(GTK_PANED(main_paned), 0);
-  window->paned1 = gtk_paned_get_child1 (GTK_PANED (main_paned));
-  window->paned2 = gtk_paned_get_child2 (GTK_PANED (main_paned));
-  gtk_widget_show(main_paned);
+  GtkWidget *main_paned = GTK_WIDGET (gtk_builder_get_object (builder, "main_paned"));
+  gtk_widget_set_vexpand (main_paned, TRUE);
+  gtk_widget_set_hexpand (main_paned, TRUE);
+  gtk_box_append (vbox, main_paned);
+  gtk_paned_set_position (GTK_PANED (main_paned), 0);
+  window->paned1 = gtk_paned_get_start_child (GTK_PANED (main_paned));
+  window->paned2 = gtk_paned_get_end_child (GTK_PANED (main_paned));
+  window->main_paned = GTK_PANED (main_paned);
 
-  window->main_paned = GTK_PANED(main_paned);
-
-  /** HeaderBar **/
-  GtkBox *header_box = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
-  window->header_box = header_box;
-  gtk_window_set_titlebar (GTK_WINDOW (window), GTK_WIDGET (header_box));
-  gtk_builder_add_from_resource (builder, "/com/github/fabiocolacio/marker/ui/marker-headerbar.ui", NULL);
-  GtkHeaderBar *header_bar = GTK_HEADER_BAR (gtk_builder_get_object (builder, "header_bar"));
-  window->header_bar = header_bar;
-
-  GtkButton *unfullscreen_btn = GTK_BUTTON (gtk_builder_get_object (builder, "unfullscreen_btn"));
-  window->unfullscreen_btn = unfullscreen_btn;
-  g_signal_connect_swapped (unfullscreen_btn, "clicked", G_CALLBACK (marker_window_unfullscreen), window);
-  gtk_header_bar_set_show_close_button (header_bar, TRUE);
-  gtk_box_pack_start (header_box, GTK_WIDGET (header_bar), FALSE, TRUE, 0);
-  gtk_widget_show (GTK_WIDGET (header_box));
-
-  /** Popover **/
-  GtkMenuButton *menu_btn = GTK_MENU_BUTTON(gtk_builder_get_object(builder, "menu_btn"));
-  gtk_builder_add_from_resource (builder, "/com/github/fabiocolacio/marker/ui/marker-gear-popover.ui", NULL);
-  GtkWidget *popover = GTK_WIDGET (gtk_builder_get_object (builder, "gear_menu_popover"));
-  window->zoom_original_btn = GTK_BUTTON (gtk_builder_get_object (builder, "zoom_original_btn"));
-  gtk_menu_button_set_use_popover (menu_btn, TRUE);
-  gtk_menu_button_set_popover (menu_btn, popover);
-  gtk_menu_button_set_direction (menu_btn, GTK_ARROW_DOWN);
-
-  if (!marker_has_app_menu ())
-  {
-    GtkWidget *extra_items_start = GTK_WIDGET (gtk_builder_get_object (builder, "appmenu_popover_items_start"));
-    GtkWidget *extra_items_end = GTK_WIDGET (gtk_builder_get_object (builder, "appmenu_popover_items_end"));
-    gtk_widget_set_visible(extra_items_start, TRUE);
-    gtk_widget_set_visible(extra_items_end, TRUE);
-    GtkApplication* app = marker_get_app ();
-    g_action_map_add_action_entries (G_ACTION_MAP(app),
-                                     APP_MENU_ACTION_ENTRIES,
-                                     APP_MENU_ACTION_ENTRIES_LEN,
-                                     window);
-  }
-
-  /** Window **/
+  /** Window size & preferences **/
   marker_window_hide_sidebar (window);
-  guint width = marker_prefs_get_window_width();
-  guint height = marker_prefs_get_window_height();
-  g_print ("window size loaded from the preferences: %d x %d\n", width, height);
+  guint width = marker_prefs_get_window_width ();
+  guint height = marker_prefs_get_window_height ();
   if (width == 0)
-  {
-    marker_prefs_set_window_width(900);
-  }
+    marker_prefs_set_window_width (900);
   if (height == 0)
-  {
-    marker_prefs_set_window_height(600);
-  }
-  gtk_window_set_default_size(GTK_WINDOW(window), width, height);
-  gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+    marker_prefs_set_window_height (600);
 
-  gint pos_x = 0, pos_y = 0;
-  marker_prefs_get_window_position( &pos_x, &pos_y);
-  g_print ("window position loaded from the preferences: %d, %d\n", pos_x, pos_y);
-  // require restored window position to be positive
-  if (pos_y >= 0 && pos_x >= 0)
+  gtk_window_set_default_size (GTK_WINDOW (window),
+                               width ? width : 900,
+                               height ? height : 600);
+
+  if (marker_prefs_get_show_sidebar ())
   {
-    gtk_window_move (GTK_WINDOW(window), pos_x, pos_y);
+    g_action_group_activate_action (G_ACTION_GROUP (window), "sidebar", NULL);
   }
 
-  if (marker_prefs_get_show_sidebar())
-  {
-    // show sidebar and set the "Sidebar" button as activated
-    g_action_group_activate_action(G_ACTION_GROUP (window), "sidebar", NULL);
-  }
-  g_signal_connect(window, "delete-event", G_CALLBACK(window_deleted_event_cb), window);
-
+  g_signal_connect (window, "close-request", G_CALLBACK (window_close_request_cb), window);
   g_object_unref (builder);
 }
 
 static void
-marker_window_constructed (GObject *object)
+marker_window_dispose (GObject *object)
 {
-  G_OBJECT_CLASS (marker_window_parent_class)->constructed (object);
-  gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (object), FALSE);
+  MarkerWindow *window = MARKER_WINDOW (object);
+
+  if (window->outline_timeout_id > 0)
+  {
+    g_source_remove (window->outline_timeout_id);
+    window->outline_timeout_id = 0;
+  }
+
+  g_clear_object (&window->outline_store);
+
+  G_OBJECT_CLASS (marker_window_parent_class)->dispose (object);
 }
 
 static void
 marker_window_class_init (MarkerWindowClass *class)
 {
-  G_OBJECT_CLASS (class)->constructed = marker_window_constructed;
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+  object_class->dispose = marker_window_dispose;
 }
 
-
 void
-marker_window_add_editor(MarkerWindow *window,
-                         MarkerEditor *editor)
+marker_window_add_editor (MarkerWindow *window,
+                          MarkerEditor *editor)
 {
   window->active_editor = editor;
-  gchar * name = g_strnfill(8,0);
-  g_sprintf(name, "edit%u", window->editors_counter);
+  g_autofree gchar *name = g_strdup_printf ("edit%u", window->editors_counter);
 
-  gtk_stack_add_named(window->editors_stack, GTK_WIDGET(editor), name);
-  marker_editor_refresh_preview(editor);
-  gtk_widget_show(GTK_WIDGET(editor));
-  gtk_stack_set_visible_child_full(window->editors_stack, name, GTK_STACK_TRANSITION_TYPE_CROSSFADE);
+  gtk_stack_add_named (window->editors_stack, GTK_WIDGET (editor), name);
+  marker_editor_refresh_preview (editor);
+  gtk_widget_set_visible (GTK_WIDGET (editor), TRUE);
+  gtk_stack_set_visible_child_name (window->editors_stack, name);
 
-  g_autofree gchar *title = marker_editor_get_title (marker_window_get_active_editor (window));
-  g_autofree gchar *subtitle = marker_editor_get_subtitle (marker_window_get_active_editor (window));
-  gtk_header_bar_set_title (window->header_bar, title);
-  gtk_header_bar_set_subtitle (window->header_bar, subtitle);
+  if (window->window_title)
+  {
+    g_autofree gchar *title = marker_editor_get_title (editor);
+    g_autofree gchar *subtitle = marker_editor_get_subtitle (editor);
+    adw_window_title_set_title (window->window_title, title);
+    adw_window_title_set_subtitle (window->window_title, subtitle);
+  }
 
-
-  GtkTreeIter   iter;
-
-  gtk_tree_store_append (window->documents_tree_store, &iter, NULL);  /* Acquire an iterator */
-
-  GdkPixbuf * icon = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
-                                              "window-close",
-                                              16,
-                                              GTK_ICON_LOOKUP_FORCE_SYMBOLIC, NULL);
+  GtkTreeIter iter;
+  gtk_tree_store_append (window->documents_tree_store, &iter, NULL);
 
   gtk_tree_store_set (window->documents_tree_store, &iter,
-                      TITLE_COLUMN, marker_editor_get_title(editor),
-                      ICON_COLUMN, icon,
+                      TITLE_COLUMN, marker_editor_get_title (editor),
+                      ICON_COLUMN, "window-close-symbolic",
                       NAME_COLUMN, name,
                       EDITOR_COLUMN, editor,
                       -1);
 
-  gtk_tree_selection_select_iter(gtk_tree_view_get_selection(window->documents_tree_view),
-                                 &iter);
+  gtk_tree_selection_select_iter (gtk_tree_view_get_selection (window->documents_tree_view),
+                                  &iter);
 
   if (window->editors_counter >= 1)
   {
     marker_window_show_sidebar (window);
   }
 
-  g_signal_connect(editor, "title-changed",
-                   G_CALLBACK(title_changed_cb),
-                   window);
-  g_signal_connect(editor, "subtitle-changed",
-                   G_CALLBACK(subtitle_changed_cb),
-                   window);
-  g_signal_connect(marker_editor_get_preview(editor), "zoom-changed",
-                   G_CALLBACK(preview_zoom_changed_cb),
-                   window);
-  preview_zoom_changed_cb(marker_editor_get_preview(editor),
-                          window);
-  window->editors_counter ++;
+  g_signal_connect (editor, "title-changed",
+                    G_CALLBACK (title_changed_cb),
+                    window);
+  g_signal_connect (editor, "subtitle-changed",
+                    G_CALLBACK (subtitle_changed_cb),
+                    window);
+  g_signal_connect (marker_editor_get_preview (editor), "zoom-changed",
+                    G_CALLBACK (preview_zoom_changed_cb),
+                    window);
+  g_signal_connect (marker_editor_get_preview (editor), "open-file-requested",
+                    G_CALLBACK (preview_open_file_requested_cb),
+                    window);
+  preview_zoom_changed_cb (marker_editor_get_preview (editor), window);
+  window->editors_counter++;
 
   GtkWidget *source_view = GTK_WIDGET (marker_editor_get_source_view (editor));
   gtk_widget_grab_focus (source_view);
+  marker_window_update_outline (window);
 }
 
 void
 marker_window_new_editor (MarkerWindow *window)
 {
-  MarkerEditor * editor = marker_editor_new();
+  MarkerEditor *editor = marker_editor_new ();
   if (window->untitled_files)
   {
-    marker_editor_rename_file(editor, g_strdup_printf("Untitled_%u.md", window->untitled_files));
+    g_autofree gchar *new_name = g_strdup_printf ("Untitled_%u.md", window->untitled_files);
+    marker_editor_rename_file (editor, new_name);
   }
-  window->untitled_files ++;
-  marker_window_add_editor(window, editor);
+  window->untitled_files++;
+  marker_window_add_editor (window, editor);
 }
 
 void
 marker_window_new_editor_from_file (MarkerWindow *window,
                                     GFile        *file)
 {
-  GList *children = gtk_container_get_children (GTK_CONTAINER (window->editors_stack));
-  bool duplicate = false;
+  gboolean duplicate = FALSE;
 
-  for (GList *current = children; current != NULL; current = current->next) {
-    GFile *editor_file = marker_editor_get_file (MARKER_EDITOR (current->data));
-    if (editor_file != NULL) {
-      char *uri1, *uri2;
-      uri1 = g_file_get_uri (editor_file);
-      uri2 = g_file_get_uri (file);
-      if (g_strcmp0 (uri1, uri2) == 0) {
+  for (GtkWidget *child = gtk_widget_get_first_child (GTK_WIDGET (window->editors_stack));
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+  {
+    if (!MARKER_IS_EDITOR (child))
+      continue;
+
+    GFile *editor_file = marker_editor_get_file (MARKER_EDITOR (child));
+    if (editor_file != NULL)
+    {
+      g_autofree char *uri1 = g_file_get_uri (editor_file);
+      g_autofree char *uri2 = g_file_get_uri (file);
+      if (g_strcmp0 (uri1, uri2) == 0)
+      {
         GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
         GtkTreeIter iter;
+        duplicate = TRUE;
 
-        duplicate = true;
-
-        g_free (uri1);
-        g_free (uri2);
-
-        /**
-         * Now that we've found a duplicate, show the relevant editor.
-         */
-        if (gtk_tree_model_get_iter_first (model, &iter)) {
-          do {
-            MarkerEditor *editor;
-
+        if (gtk_tree_model_get_iter_first (model, &iter))
+        {
+          do
+          {
+            MarkerEditor *editor = NULL;
             gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-
-            if (editor == MARKER_EDITOR (current->data)) {
-              GtkTreeSelection *selection;
-
-              selection = gtk_tree_view_get_selection (window->documents_tree_view);
+            if (editor == MARKER_EDITOR (child))
+            {
+              GtkTreeSelection *selection = gtk_tree_view_get_selection (window->documents_tree_view);
               gtk_tree_selection_select_iter (selection, &iter);
               break;
             }
@@ -1031,35 +1210,27 @@ marker_window_new_editor_from_file (MarkerWindow *window,
         }
         break;
       }
-
-      g_free (uri1);
-      g_free (uri2);
     }
   }
 
-  g_list_free (children);
+  if (!duplicate)
+  {
+    MarkerEditor *editor = marker_window_get_active_editor (window);
+    if (editor != NULL)
+    {
+      GFile *active_file = marker_editor_get_file (editor);
+      MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+      g_autofree gchar *md = marker_source_view_get_text (source_view, FALSE);
 
-  if (!duplicate) {
-    MarkerEditor *editor = NULL;
-    MarkerSourceView *source_view = NULL;
-    g_autofree gchar *md = NULL;
-    GFile *active_file = NULL;
-   
-    editor = marker_window_get_active_editor (window);
-
-    if (editor != NULL) {
-        active_file = marker_editor_get_file (editor);
-        source_view = marker_editor_get_source_view (editor);
-        md = marker_source_view_get_text (source_view, false);
-
-        if (strcmp (md, "") == 0 && active_file == NULL) {
-          window->editors_counter ++;
-          marker_window_close_current_document (window);
-          window->editors_counter --;
-        }
+      if (g_strcmp0 (md, "") == 0 && active_file == NULL)
+      {
+        window->editors_counter++;
+        marker_window_close_current_document (window);
+        window->editors_counter--;
+      }
     }
-    editor = marker_editor_new_from_file(file);
-    marker_window_add_editor(window, editor);
+    editor = marker_editor_new_from_file (file);
+    marker_window_add_editor (window, editor);
   }
 }
 
@@ -1067,7 +1238,7 @@ MarkerWindow *
 marker_window_new (GtkApplication *app)
 {
   MarkerWindow *window = g_object_new (MARKER_TYPE_WINDOW, "application", app, NULL);
-  marker_window_new_editor(window);
+  marker_window_new_editor (window);
   return window;
 }
 
@@ -1076,8 +1247,36 @@ marker_window_new_from_file (GtkApplication *app,
                              GFile          *file)
 {
   MarkerWindow *window = g_object_new (MARKER_TYPE_WINDOW, "application", app, NULL);
-  marker_window_new_editor_from_file(window, file);
+  marker_window_new_editor_from_file (window, file);
   return window;
+}
+
+static void
+on_open_file_dialog_cb (GObject      *source_object,
+                        GAsyncResult *result,
+                        gpointer      user_data)
+{
+  GtkFileDialog *dialog = GTK_FILE_DIALOG (source_object);
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  GError *error = NULL;
+
+  GFile *file = gtk_file_dialog_open_finish (dialog, result, &error);
+  if (file != NULL)
+  {
+    if (MARKER_IS_WINDOW (window))
+    {
+      marker_window_new_editor_from_file (window, file);
+    }
+    g_object_unref (file);
+  }
+  else if (error && !g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
+  {
+    g_warning ("Failed to open file: %s", error->message);
+  }
+
+  if (error)
+    g_error_free (error);
+  g_object_unref (dialog);
 }
 
 void
@@ -1085,56 +1284,118 @@ marker_window_open_file (MarkerWindow *window)
 {
   g_assert (MARKER_IS_WINDOW (window));
 
-  g_autoptr (GtkFileChooserNative) dialog = gtk_file_chooser_native_new (_("Open"),
-                                                              GTK_WINDOW (window),
-                                                              GTK_FILE_CHOOSER_ACTION_OPEN,
-                                                              _("_Open"), _("_Cancel"));
-  gint response = gtk_native_dialog_run (GTK_NATIVE_DIALOG (dialog));
+  GtkFileDialog *dialog = gtk_file_dialog_new ();
+  gtk_file_dialog_set_title (dialog, _("Open Document"));
 
-  if (response == GTK_RESPONSE_ACCEPT)
+  gtk_file_dialog_open (dialog,
+                        GTK_WINDOW (window),
+                        NULL,
+                        on_open_file_dialog_cb,
+                        window);
+}
+
+static void
+on_open_file_in_new_window_dialog_cb (GObject      *source_object,
+                                      GAsyncResult *result,
+                                      gpointer      user_data)
+{
+  GtkFileDialog *dialog = GTK_FILE_DIALOG (source_object);
+  GError *error = NULL;
+
+  GFile *file = gtk_file_dialog_open_finish (dialog, result, &error);
+  if (file != NULL)
   {
-    GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
-    marker_window_new_editor_from_file(window, file);
+    marker_create_new_window_from_file (file);
+    g_object_unref (file);
   }
+  else if (error && !g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
+  {
+    g_warning ("Failed to open file in new window: %s", error->message);
+  }
+
+  if (error)
+    g_error_free (error);
+  g_object_unref (dialog);
 }
 
 void
 marker_window_open_file_in_new_window (MarkerWindow *window)
 {
   g_assert (MARKER_IS_WINDOW (window));
-  g_autoptr (GtkFileChooserNative) dialog = gtk_file_chooser_native_new (_("Open"),
-                                                              GTK_WINDOW (window),
-                                                              GTK_FILE_CHOOSER_ACTION_OPEN,
-                                                              _("_Open"), _("_Cancel"));
 
-  gint response = gtk_native_dialog_run (GTK_NATIVE_DIALOG (dialog));
+  GtkFileDialog *dialog = gtk_file_dialog_new ();
+  gtk_file_dialog_set_title (dialog, _("Open Document"));
 
-  if (response == GTK_RESPONSE_ACCEPT)
+  gtk_file_dialog_open (dialog,
+                        GTK_WINDOW (window),
+                        NULL,
+                        on_open_file_in_new_window_dialog_cb,
+                        window);
+}
+
+static void
+on_save_file_dialog_cb (GObject      *source_object,
+                        GAsyncResult *result,
+                        gpointer      user_data)
+{
+  GtkFileDialog *dialog = GTK_FILE_DIALOG (source_object);
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  GError *error = NULL;
+
+  GFile *file = gtk_file_dialog_save_finish (dialog, result, &error);
+  if (file != NULL)
   {
-    GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
-    marker_create_new_window_from_file(file);
+    if (MARKER_IS_WINDOW (window))
+    {
+      MarkerEditor *editor = marker_window_get_active_editor (window);
+      if (editor && MARKER_IS_EDITOR (editor))
+        marker_editor_save_file_as (editor, file);
+    }
+    g_object_unref (file);
   }
+  else if (error && !g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
+  {
+    g_warning ("Failed to save file: %s", error->message);
+  }
+
+  if (error)
+    g_error_free (error);
+  g_object_unref (dialog);
 }
 
 void
 marker_window_save_active_file_as (MarkerWindow *window)
 {
   g_assert (MARKER_IS_WINDOW (window));
-  g_autoptr (GtkFileChooserNative) dialog = gtk_file_chooser_native_new (_("Save As"),
-                                                                         GTK_WINDOW (window),
-                                                                         GTK_FILE_CHOOSER_ACTION_SAVE,
-                                                                         _("_Save"), _("_Cancel"));
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (!editor)
+    return;
 
-  gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+  GtkFileDialog *dialog = gtk_file_dialog_new ();
+  gtk_file_dialog_set_title (dialog, _("Save Document As"));
 
-
-  gint response = gtk_native_dialog_run (GTK_NATIVE_DIALOG (dialog));
-
-  if (response == GTK_RESPONSE_ACCEPT)
+  GFile *current_file = marker_editor_get_file (editor);
+  if (current_file != NULL)
   {
-    GFile *file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
-    marker_editor_save_file_as (marker_window_get_active_editor (window), file);
+    g_autofree gchar *basename = g_file_get_basename (current_file);
+    gtk_file_dialog_set_initial_name (dialog, basename);
+    GFile *parent = g_file_get_parent (current_file);
+    if (parent)
+    {
+      gtk_file_dialog_set_initial_folder (dialog, parent);
+      g_object_unref (parent);
+    }
   }
+  else
+  {
+    gtk_file_dialog_set_initial_name (dialog, "Untitled.md");
+  }
+
+  gtk_file_dialog_save (dialog,
+                        GTK_WINDOW (window),
+                        NULL,
+                        on_save_file_dialog_cb,
+                        window);
 }
 
 void
@@ -1142,6 +1403,9 @@ marker_window_save_active_file (MarkerWindow *window)
 {
   g_assert (MARKER_IS_WINDOW (window));
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (!editor)
+    return;
+
   if (marker_editor_get_file (editor))
   {
     marker_editor_save_file (editor);
@@ -1151,7 +1415,6 @@ marker_window_save_active_file (MarkerWindow *window)
     marker_window_save_active_file_as (window);
   }
 }
-
 
 void
 marker_window_toggle_fullscreen (MarkerWindow *window)
@@ -1196,67 +1459,68 @@ marker_window_open_sketcher (MarkerWindow *window)
   g_assert (MARKER_IS_WINDOW (window));
 
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (!editor)
+    return;
+
   GFile *file = marker_editor_get_file (editor);
   MarkerSourceView *source_view = marker_editor_get_source_view (editor);
 
   marker_sketcher_window_show (GTK_WINDOW (window), file, source_view);
 }
 
-gboolean
-marker_window_try_close (MarkerWindow *window)
+static void
+on_close_document_warning_cb (MarkerWindow *window,
+                              gboolean      proceed,
+                              gpointer      user_data)
 {
-  g_assert (MARKER_IS_WINDOW (window));
+  if (!proceed)
+    return;
 
-  gboolean status = TRUE;
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
+  GtkTreeIter iter;
+  gboolean found = FALSE;
 
-  gboolean has_unsaved = FALSE;
-  GtkTreeModel * model = GTK_TREE_MODEL(window->documents_tree_store);
-  gint rows = gtk_tree_model_iter_n_children (model, NULL);
-
-  // Save window size and position in the preferences
-  gint width, height;
-  gtk_window_get_size (GTK_WINDOW (window), &width, &height);
-  g_print ("saved window size: %d x %d\n", width, height);
-  marker_prefs_set_window_width (width);
-  marker_prefs_set_window_height (height);
-
-  gint pos_x = 0, pos_y = 0;
-  gtk_window_get_position(GTK_WINDOW (window), &pos_x, &pos_y);
-  g_print ("saved window position: %d, %d\n", pos_x, pos_y);
-  marker_prefs_set_window_position (pos_x, pos_y);
-
-  guint editor_width = marker_editor_get_pane_width (window->active_editor);
-  g_print ("saved editor pane width: %d\n", editor_width);
-  marker_prefs_set_editor_pane_width (editor_width);
-
-  if (rows > 0)
+  if (gtk_tree_model_get_iter_first (model, &iter))
   {
-    /** If there are documents open check for unsaved ones**/
-    gint i;
-    GtkTreeIter iter;
-    for (i = 0; i < rows; i++)
+    do
     {
-      gtk_tree_model_get_iter(model, &iter, gtk_tree_path_new_from_indices (i, -1));
-      MarkerEditor *editor;
-      gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-      has_unsaved = has_unsaved || marker_editor_has_unsaved_changes (editor);
-    }
-
-    if (has_unsaved)
-      status = show_unsaved_documents_warning (window);
-
-    MarkerEditor *editor = marker_window_get_active_editor (window);
-    if (status)
-    {
-      marker_editor_closing(editor);
-      gtk_widget_destroy (GTK_WIDGET (window));
-    }
-
-  }else {
-    /** Else just close **/
-    gtk_widget_destroy (GTK_WIDGET (window));
+      MarkerEditor *item_editor = NULL;
+      gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &item_editor, -1);
+      if (item_editor == editor)
+      {
+        found = TRUE;
+        break;
+      }
+    } while (gtk_tree_model_iter_next (model, &iter));
   }
-  return status;
+
+  if (found)
+  {
+    marker_editor_closing (editor);
+    gtk_tree_store_remove (window->documents_tree_store, &iter);
+    gtk_stack_remove (window->editors_stack, GTK_WIDGET (editor));
+    window->editors_counter--;
+
+    if (window->editors_counter == 1)
+    {
+      marker_window_hide_sidebar (window);
+    }
+    else if (window->editors_counter < 1)
+    {
+      marker_window_try_close (window);
+    }
+
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (window->documents_tree_view);
+    if (!gtk_tree_selection_get_selected (selection, &model, &iter))
+    {
+      gint rows = gtk_tree_model_iter_n_children (GTK_TREE_MODEL (window->documents_tree_store), NULL);
+      if (rows > 0)
+      {
+        gtk_tree_selection_select_path (selection, gtk_tree_path_new_from_indices (rows - 1, -1));
+      }
+    }
+  }
 }
 
 void
@@ -1265,70 +1529,35 @@ marker_window_close_current_document (MarkerWindow *window)
   g_assert (MARKER_IS_WINDOW (window));
 
   MarkerEditor *editor = marker_window_get_active_editor (window);
-  gboolean status = TRUE;
+  if (!editor)
+    return;
 
   if (marker_editor_has_unsaved_changes (editor))
-    status = show_unsaved_documents_warning (window);
-
-  if (status)
   {
-    GtkTreeIter iter;
-    GtkTreeModel *model;
-    GtkTreeSelection * selection = gtk_tree_view_get_selection (window->documents_tree_view);
-
-    if (gtk_tree_selection_get_selected (selection, &model, &iter))
-    {
-      marker_editor_closing (editor);
-      gtk_tree_store_remove (window->documents_tree_store, &iter);
-      gtk_widget_destroy (GTK_WIDGET (editor));
-      window->editors_counter--;
-
-      if (window->editors_counter == 1)
-      {
-        marker_window_hide_sidebar (window);
-      }
-      else if (window->editors_counter < 1)
-      {
-        marker_window_try_close (window);
-      }
-
-      /** Select the last available row if no new is automatically selected **/
-      if (!gtk_tree_selection_get_selected (selection, &model, &iter)){
-        gint rows = gtk_tree_model_iter_n_children (GTK_TREE_MODEL(window->documents_tree_store), NULL);
-        if (rows)
-        {
-          gtk_tree_selection_select_path (selection, gtk_tree_path_new_from_indices (rows - 1, -1));
-        }
-      }
-    }
-    else{
-      /** close if model is empty **/
-      if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL(window->documents_tree_store), &iter))
-      {
-        marker_window_try_close (window);
-      }
-    }
+    show_unsaved_documents_warning_async (window, editor, on_close_document_warning_cb, editor);
+    return;
   }
+
+  on_close_document_warning_cb (window, TRUE, editor);
 }
 
 void
 marker_window_toggle_sidebar (MarkerWindow *window)
 {
-    if (window->sidebar_visible) {
-        marker_window_hide_sidebar (window);
-    }
-    else {
-        marker_window_show_sidebar (window);
-    }
+  if (window->sidebar_visible) {
+    marker_window_hide_sidebar (window);
+  }
+  else {
+    marker_window_show_sidebar (window);
+  }
 }
 
 void
 marker_window_hide_sidebar (MarkerWindow *window)
 {
-  if (window->sidebar_visible) {
-    window->sidebar_visible = false;
-    g_object_ref (window->paned1);
-    gtk_container_remove (GTK_CONTAINER (window->main_paned), GTK_WIDGET (window->paned1));
+  if (window->sidebar_visible && window->paned1) {
+    window->sidebar_visible = FALSE;
+    gtk_widget_set_visible (window->paned1, FALSE);
     gtk_paned_set_position (window->main_paned, 0);
   }
 }
@@ -1336,41 +1565,49 @@ marker_window_hide_sidebar (MarkerWindow *window)
 void
 marker_window_show_sidebar (MarkerWindow *window)
 {
-  if (!window->sidebar_visible) {
-    window->sidebar_visible = true;
-    gtk_paned_add1 (window->main_paned, GTK_WIDGET (window->paned1));
-    g_object_unref (window->paned1);
+  if (!window->sidebar_visible && window->paned1) {
+    window->sidebar_visible = TRUE;
+    gtk_widget_set_visible (window->paned1, TRUE);
     gtk_paned_set_position (window->main_paned, 200);
   }
 }
 
 void
-marker_window_search (MarkerWindow       *window)
+marker_window_search (MarkerWindow *window)
 {
   if (window->active_editor)
   {
-    marker_editor_toggle_search_bar(window->active_editor);
+    marker_editor_toggle_search_bar (window->active_editor);
   }
 }
 
-void 
-marker_window_refresh_all_preview(MarkerWindow       *window)
+void
+marker_window_replace (MarkerWindow *window)
 {
-  GtkTreeModel * model = GTK_TREE_MODEL(window->documents_tree_store);
+  if (window->active_editor)
+  {
+    marker_editor_toggle_replace_bar (window->active_editor);
+  }
+}
+
+void
+marker_window_refresh_all_preview (MarkerWindow *window)
+{
+  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
   gint rows = gtk_tree_model_iter_n_children (model, NULL);
 
   if (rows > 0)
   {
-    /** If there are documents open check for unsaved ones**/
-    gint i;
-    GtkTreeIter iter;
-    for (i = 0; i < rows; i++)
+    for (gint i = 0; i < rows; i++)
     {
-      gtk_tree_model_get_iter(model, &iter, gtk_tree_path_new_from_indices (i, -1));
-      MarkerEditor *editor;
-      gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-      if (editor) {
-        marker_editor_refresh_preview (editor);  
+      GtkTreeIter iter;
+      if (gtk_tree_model_get_iter (model, &iter, gtk_tree_path_new_from_indices (i, -1)))
+      {
+        MarkerEditor *editor = NULL;
+        gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
+        if (editor) {
+          marker_editor_refresh_preview (editor);
+        }
       }
     }
   }

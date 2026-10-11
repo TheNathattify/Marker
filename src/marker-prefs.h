@@ -1,7 +1,7 @@
 /*
  * marker-prefs.h
  *
- * Copyright (C) 2017 - 2018 Fabio Colacio
+ * Copyright (C) 2017 - 2026 Marker Developers
  *
  * Marker is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -22,7 +22,11 @@
 #ifndef __MARKER_PREFS_H__
 #define __MARKER_PREFS_H__
 
+#include <gio/gio.h>
+#include <glib.h>
 #include "marker-editor.h"
+
+G_BEGIN_DECLS
 
 typedef struct {
   GSettings *editor_settings;
@@ -54,6 +58,8 @@ guint                marker_prefs_get_tab_width                  (void);
 void                 marker_prefs_set_tab_width                  (guint               width);
 gboolean             marker_prefs_get_auto_indent                (void);
 void                 marker_prefs_set_auto_indent                (gboolean            state);
+gboolean             marker_prefs_get_trim_trailing_whitespace   (void);
+void                 marker_prefs_set_trim_trailing_whitespace   (gboolean            state);
 gboolean             marker_prefs_get_show_spaces                (void);
 void                 marker_prefs_set_show_spaces                (gboolean            state);
 gboolean             marker_prefs_get_spell_check                (void);
@@ -78,7 +84,7 @@ char                *marker_prefs_get_highlight_theme            (void);
 void                 marker_prefs_set_highlight_theme            (const char         *theme);
 gboolean             marker_prefs_get_use_mathjs                 (void);
 void                 marker_prefs_set_use_mathjs                 (gboolean            state);
-gdouble              makrer_prefs_get_zoom_level                 (void);
+gdouble              marker_prefs_get_zoom_level                 (void);
 void                 marker_prefs_set_zoom_level                 (gdouble             val);
 gboolean             marker_prefs_get_use_highlight              (void);
 void                 marker_prefs_set_use_highlight              (gboolean            state);
@@ -95,6 +101,10 @@ void                 marker_prefs_set_math_backend               (MarkerMathBack
 void                 marker_prefs_load                           (void);
 void                 marker_prefs_show_window                    (void);
 GList               *marker_prefs_get_available_stylesheets      (void);
+GList               *marker_prefs_get_available_highlight_themes(void);
+GList               *marker_prefs_get_available_languages       (void);
 GList               *marker_prefs_get_available_syntax_themes    (void);
+
+G_END_DECLS
 
 #endif

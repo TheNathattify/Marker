@@ -22,6 +22,7 @@
 #ifndef __MARKER_WINDOW_H__
 #define __MARKER_WINDOW_H__
 
+#include <adwaita.h>
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
@@ -31,7 +32,7 @@ G_BEGIN_DECLS
 
 #define MARKER_TYPE_WINDOW (marker_window_get_type ())
 
-G_DECLARE_FINAL_TYPE (MarkerWindow, marker_window, MARKER, WINDOW, GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE (MarkerWindow, marker_window, MARKER, WINDOW, AdwApplicationWindow)
 
 MarkerWindow        *marker_window_new                           (GtkApplication     *app);
 MarkerWindow        *marker_window_new_from_file                 (GtkApplication     *app,
@@ -57,9 +58,9 @@ void                 marker_window_new_editor_from_file          (MarkerWindow  
                                                                   GFile              *file);
 
 void                 marker_window_search                        (MarkerWindow       *window);
+void                 marker_window_replace                       (MarkerWindow       *window);
 
-void 				 marker_window_refresh_all_preview			 (MarkerWindow       *window);
-
+void                 marker_window_refresh_all_preview           (MarkerWindow       *window);
 
 G_END_DECLS
 

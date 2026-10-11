@@ -25,7 +25,7 @@ td.eq_code {
 	text-align: center;
 }
 
-.eq_table > tr, td, th, {
+.eq_table tr, .eq_table td, .eq_table th {
 	border: 0;
 }
 
@@ -154,9 +154,37 @@ img {
 
 
 @media print {
-  body  {
+  body {
     margin: 0;
     padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    word-break: break-word;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  th, td {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  pre, code {
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .slide {

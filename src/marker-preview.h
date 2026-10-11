@@ -22,7 +22,7 @@
 #ifndef __MARKER_PREVIEW_H__
 #define __MARKER_PREVIEW_H__
 
-#include <webkit2/webkit2.h>
+#include <webkit/webkit.h>
 #include "scidown/src/constants.h"
 
 
@@ -42,15 +42,15 @@ void                 marker_preview_render_markdown              (MarkerPreview 
                                                                   const char         *markdown,
                                                                   const char         *css_theme,
                                                                   const char         *base_uri,
-                                                                  int  		        cursor);
+                                                                  int                 cursor);
 
-WebKitPrintOperationResponse                 
+WebKitPrintOperationResponse
                      marker_preview_run_print_dialog             (MarkerPreview      *preview,
                                                                   GtkWindow          *parent);
-void                 marker_preview_print_pdf                    (MarkerPreview*     preview,
-                                                                  const char*        outfile,
+void                 marker_preview_print_pdf                    (MarkerPreview      *preview,
+                                                                  const char         *outfile,
                                                                   enum scidown_paper_size paper_size,
-                                                                  GtkPageOrientation orientation);
+                                                                  GtkPageOrientation  orientation);
 void                 marker_preview_scroll_left                  (MarkerPreview      *preview);
 void                 marker_preview_scroll_right                 (MarkerPreview      *preview);
 void                 marker_preview_scroll_up                    (MarkerPreview      *preview);

@@ -27,6 +27,8 @@
 
 #include "marker-preview.h"
 #include "marker-source-view.h"
+#include "marker-document.h"
+#include "marker-search-controller.h"
 
 G_BEGIN_DECLS
 
@@ -47,33 +49,38 @@ typedef enum {
   MATHJAX
 } MarkerMathBackEnd;
 
-MarkerEditor        *marker_editor_new                           (void);
-MarkerEditor        *marker_editor_new_from_file                 (GFile              *file);
-MarkerViewMode       marker_editor_get_view_mode                 (MarkerEditor       *editor);
-void                 marker_editor_set_view_mode                 (MarkerEditor       *editor,
-                                                                  MarkerViewMode      view_mode);
-guint                marker_editor_get_pane_width                (MarkerEditor       *editor);
-void                 marker_editor_refresh_preview               (MarkerEditor       *editor);
-void                 marker_editor_open_file                     (MarkerEditor       *editor,
-                                                                  GFile              *file);
-void                 marker_editor_save_file                     (MarkerEditor       *editor);
-void                 marker_editor_save_file_as                  (MarkerEditor       *editor,
-                                                                  GFile              *file);
-void                 marker_editor_reload_file                   (MarkerEditor       *editor);
-gboolean             marker_editor_rename_file                   (MarkerEditor       *editor,
-                                                                  gchar*              name);
-GFile               *marker_editor_get_file                      (MarkerEditor       *editor);
-gboolean             marker_editor_has_unsaved_changes           (MarkerEditor       *editor);
-gchar               *marker_editor_get_title                     (MarkerEditor       *editor);
-gchar               *marker_editor_get_raw_title                 (MarkerEditor       *editor);
-gchar               *marker_editor_get_subtitle                  (MarkerEditor       *editor);
-MarkerPreview       *marker_editor_get_preview                   (MarkerEditor       *editor);
-MarkerSourceView    *marker_editor_get_source_view               (MarkerEditor       *editor);
-void                 marker_editor_apply_prefs                   (MarkerEditor       *editor);
-void                 marker_editor_closing                       (MarkerEditor       *editor);
+MarkerEditor           *marker_editor_new                           (void);
+MarkerEditor           *marker_editor_new_from_file                 (GFile                  *file);
+MarkerViewMode          marker_editor_get_view_mode                 (MarkerEditor           *editor);
+void                    marker_editor_set_view_mode                 (MarkerEditor           *editor,
+                                                                     MarkerViewMode          view_mode);
+guint                   marker_editor_get_pane_width                (MarkerEditor           *editor);
+void                    marker_editor_refresh_preview               (MarkerEditor           *editor);
+void                    marker_editor_open_file                     (MarkerEditor           *editor,
+                                                                     GFile                  *file);
+void                    marker_editor_save_file                     (MarkerEditor           *editor);
+void                    marker_editor_save_file_as                  (MarkerEditor           *editor,
+                                                                     GFile                  *file);
+void                    marker_editor_reload_file                   (MarkerEditor           *editor);
+gboolean                marker_editor_rename_file                   (MarkerEditor           *editor,
+                                                                     gchar                  *name);
+GFile                  *marker_editor_get_file                      (MarkerEditor           *editor);
+gboolean                marker_editor_has_unsaved_changes           (MarkerEditor           *editor);
+gchar                  *marker_editor_get_title                     (MarkerEditor           *editor);
+gchar                  *marker_editor_get_raw_title                 (MarkerEditor           *editor);
+gchar                  *marker_editor_get_subtitle                  (MarkerEditor           *editor);
+MarkerPreview          *marker_editor_get_preview                   (MarkerEditor           *editor);
+MarkerSourceView       *marker_editor_get_source_view               (MarkerEditor           *editor);
+MarkerDocument         *marker_editor_get_document                  (MarkerEditor           *editor);
+MarkerSearchController *marker_editor_get_search_controller         (MarkerEditor           *editor);
+void                    marker_editor_apply_prefs                   (MarkerEditor           *editor);
+void                    marker_editor_closing                       (MarkerEditor           *editor);
 
-void                 marker_editor_toggle_search_bar             (MarkerEditor       *editor);
-GtkSearchBar        *marker_editor_get_search_bar                (MarkerEditor       *editor);
+void                    marker_editor_toggle_search_bar             (MarkerEditor           *editor);
+void                    marker_editor_toggle_replace_bar            (MarkerEditor           *editor);
+void                    marker_editor_set_replace_bar_visible       (MarkerEditor           *editor,
+                                                                     gboolean                visible);
+GtkSearchBar           *marker_editor_get_search_bar                (MarkerEditor           *editor);
 
 G_END_DECLS
 

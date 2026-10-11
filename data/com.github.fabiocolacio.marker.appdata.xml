@@ -5,9 +5,10 @@
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0</project_license>
   <name>Marker</name>
-  <summary>Powerful markdown editor for the GNOME desktop.</summary>
+  <summary>Powerful markdown editor for the GNOME desktop</summary>
 
   <description>
+    <p>Marker is a fast and powerful markdown editor designed for the GNOME desktop with real-time preview and document export capabilities.</p>
     <p>Features:</p>
     <ul>
       <li>View and edit markdown documents</li>
@@ -42,7 +43,9 @@
     </screenshot>
   </screenshots>
 
-  <developer_name>Fábio Colácio</developer_name>
+  <developer id="com.github.fabiocolacio">
+    <name>Fábio Colácio</name>
+  </developer>
   <url type="homepage">https://github.com/fabiocolacio/Marker</url>
   <url type="bugtracker">https://github.com/fabiocolacio/Marker/issues</url>
   <url type="vcs-browser">https://github.com/fabiocolacio/Marker</url>

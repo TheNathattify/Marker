@@ -37,29 +37,34 @@
 #include "marker-exporter.h"
 
 MarkerExportFormat
-marker_exporter_str_to_fmt(const char* str)
+marker_exporter_str_to_fmt (const char *str)
 {
-  if (strcmp(str, "PDF") == 0)
+  if (str == NULL)
+  {
+    return HTML;
+  }
+
+  if (strstr (str, "PDF") != NULL || strcmp (str, "PDF") == 0)
   {
     return PDF;
   }
 
-  if (strcmp(str, "RTF") == 0)
+  if (strstr (str, "RTF") != NULL || strcmp (str, "RTF") == 0)
   {
     return RTF;
   }
 
-  if (strcmp(str, "ODT") == 0)
+  if (strstr (str, "ODT") != NULL || strcmp (str, "ODT") == 0)
   {
     return ODT;
   }
 
-  if (strcmp(str, "DOCX") == 0)
+  if (strstr (str, "DOCX") != NULL || strcmp (str, "DOCX") == 0)
   {
     return DOCX;
   }
 
-  if (strcmp(str, "LATEX") == 0)
+  if (strstr (str, "LATEX") != NULL || strstr (str, "LaTeX") != NULL || strstr (str, "tex") != NULL)
   {
     return LATEX;
   }
@@ -68,193 +73,279 @@ marker_exporter_str_to_fmt(const char* str)
 }
 
 void
-marker_exporter_export_pandoc(const char*        markdown,
-                              const char*        stylesheet_path,
-                              const char*        outfile)
+marker_exporter_export_pandoc (const char *markdown,
+                               const char *stylesheet_path,
+                               const char *outfile)
 {
-  const char* ftmp = ".marker_tmp_markdown.md";
-  char* path = marker_string_filename_get_path(outfile);
-  if (chdir(path) == 0)
+  if (markdown == NULL || outfile == NULL)
   {
-    FILE* fp = NULL;
-    fp = fopen(ftmp, "w");
-    if (fp)
+    return;
+  }
+
+  g_autofree gchar *dir = g_path_get_dirname (outfile);
+  g_autoptr(GSubprocessLauncher) launcher = g_subprocess_launcher_new (G_SUBPROCESS_FLAGS_STDIN_PIPE | G_SUBPROCESS_FLAGS_STDERR_SILENCE);
+  if (dir != NULL)
+  {
+    g_subprocess_launcher_set_cwd (launcher, dir);
+  }
+
+  const gchar *argv[] = {
+    "pandoc",
+    "-s",
+    "-c", (stylesheet_path != NULL) ? stylesheet_path : "",
+    "-o", outfile,
+    "-",
+    NULL
+  };
+
+  g_autoptr(GError) error = NULL;
+  g_autoptr(GSubprocess) proc = g_subprocess_launcher_spawnv (launcher, argv, &error);
+  if (proc != NULL)
+  {
+    g_subprocess_communicate_utf8 (proc, markdown, NULL, NULL, NULL, &error);
+  }
+}
+
+static void
+on_export_file_dialog_cb (GObject      *source_object,
+                          GAsyncResult *res,
+                          gpointer      user_data)
+{
+  GtkFileDialog *dialog = GTK_FILE_DIALOG (source_object);
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  g_autoptr(GError) error = NULL;
+
+  g_autoptr(GFile) file = gtk_file_dialog_save_finish (dialog, res, &error);
+  if (file == NULL)
+  {
+    if (error && !g_error_matches (error, GTK_DIALOG_ERROR, GTK_DIALOG_ERROR_DISMISSED))
     {
-      fputs(markdown, fp);
-      fclose(fp);
-      char* command = NULL;
+      g_warning ("Failed to export file: %s", error->message);
+    }
+    return;
+  }
 
-      asprintf(&command,
-               "pandoc -s -c \"%s\" -o \"%s\" \"%s\"",
-               stylesheet_path,
-               outfile,
-               ftmp);
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
 
-      if (command)
-      {
-        system(command);
-      }
+  g_autofree gchar *filename = g_file_get_path (file);
+  if (filename == NULL)
+    return;
 
-      free(command);
-      remove(ftmp);
+  MarkerSourceView *source_view = marker_editor_get_source_view (editor);
+  if (source_view == NULL)
+    return;
+
+  g_autofree gchar *markdown = marker_source_view_get_text (source_view, false);
+  if (markdown == NULL)
+    return;
+
+  g_autofree gchar *stylesheet_path = marker_prefs_get_css_theme ();
+
+  GFile *source = marker_editor_get_file (editor);
+  g_autofree gchar *base_folder = NULL;
+  if (source != NULL)
+  {
+    g_autoptr(GFile) parent = g_file_get_parent (source);
+    if (parent != NULL)
+      base_folder = g_file_get_path (parent);
+  }
+
+  size_t len = strlen (markdown);
+  metadata *meta = marker_markdown_metadata (markdown, len);
+  enum scidown_paper_size paper_size = B43;
+  GtkPageOrientation orientation = GTK_PAGE_ORIENTATION_PORTRAIT;
+  if (meta != NULL)
+  {
+    paper_size = meta->paper_size;
+    if (meta->doc_class == CLASS_BEAMER && !(paper_size == B43 || paper_size == B169))
+      paper_size = B43;
+    orientation = meta->doc_class == CLASS_BEAMER ? GTK_PAGE_ORIENTATION_LANDSCAPE : GTK_PAGE_ORIENTATION_PORTRAIT;
+  }
+
+  MarkerExportFormat fmt = HTML;
+  if (marker_string_ends_with (filename, ".pdf"))
+  {
+    fmt = PDF;
+  }
+  else if (marker_string_ends_with (filename, ".tex"))
+  {
+    fmt = LATEX;
+  }
+  else if (marker_string_ends_with (filename, ".rtf"))
+  {
+    fmt = RTF;
+  }
+  else if (marker_string_ends_with (filename, ".docx"))
+  {
+    fmt = DOCX;
+  }
+  else if (marker_string_ends_with (filename, ".odt"))
+  {
+    fmt = ODT;
+  }
+  else if (marker_string_ends_with (filename, ".html") || marker_string_ends_with (filename, ".htm"))
+  {
+    fmt = HTML;
+  }
+  else
+  {
+    GtkFileFilter *filter = gtk_file_dialog_get_default_filter (dialog);
+    if (filter != NULL)
+    {
+      const gchar *file_type = gtk_file_filter_get_name (filter);
+      fmt = marker_exporter_str_to_fmt (file_type);
     }
   }
-  free(path);
+
+  switch (fmt)
+  {
+    case HTML:
+      marker_markdown_to_html_file_with_css_inline (markdown,
+                                                    len,
+                                                    base_folder,
+                                                    (marker_prefs_get_use_mathjs ())
+                                                      ? MATHJS_NET
+                                                      : MATHJS_OFF,
+                                                    (marker_prefs_get_use_highlight ())
+                                                      ? HIGHLIGHT_NET
+                                                      : HIGHLIGHT_OFF,
+                                                    (marker_prefs_get_use_mermaid ())
+                                                      ? MERMAID_NET
+                                                      : MERMAID_OFF,
+                                                    stylesheet_path,
+                                                    filename);
+      break;
+
+    case PDF:
+    {
+      MarkerPreview *preview = marker_editor_get_preview (editor);
+      marker_preview_print_pdf (preview, filename, paper_size, orientation);
+      break;
+    }
+
+    case LATEX:
+      marker_markdown_to_latex_file (markdown,
+                                     len,
+                                     base_folder,
+                                     (marker_prefs_get_use_mathjs ())
+                                       ? MATHJS_NET
+                                       : MATHJS_OFF,
+                                     (marker_prefs_get_use_highlight ())
+                                       ? HIGHLIGHT_NET
+                                       : HIGHLIGHT_OFF,
+                                     (marker_prefs_get_use_mermaid ())
+                                       ? MERMAID_NET
+                                       : MERMAID_OFF,
+                                     filename);
+      break;
+
+    default:
+    {
+      char *html = marker_markdown_to_html_with_css_inline (markdown,
+                                                            len,
+                                                            base_folder,
+                                                            (marker_prefs_get_use_mathjs ())
+                                                              ? MATHJS_NET
+                                                              : MATHJS_OFF,
+                                                            (marker_prefs_get_use_highlight ())
+                                                              ? HIGHLIGHT_NET
+                                                              : HIGHLIGHT_OFF,
+                                                            (marker_prefs_get_use_mermaid ())
+                                                              ? MERMAID_NET
+                                                              : MERMAID_OFF,
+                                                            stylesheet_path,
+                                                            -1);
+      if (html != NULL)
+      {
+        marker_exporter_export_pandoc (html, stylesheet_path, filename);
+        free (html);
+      }
+      break;
+    }
+  }
 }
 
 void
-marker_exporter_show_export_dialog(MarkerWindow* window)
+marker_exporter_show_export_dialog (MarkerWindow *window)
 {
-  GtkDialog *dialog = GTK_DIALOG(gtk_file_chooser_dialog_new (_("Export"),
-                                                              GTK_WINDOW(window),
-                                                              GTK_FILE_CHOOSER_ACTION_SAVE,
-                                                              _("Cancel"), GTK_RESPONSE_CANCEL,
-                                                              _("Export"), GTK_RESPONSE_ACCEPT,
-                                                              NULL));
+  g_return_if_fail (MARKER_IS_WINDOW (window));
 
-  GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
-  gtk_file_chooser_set_do_overwrite_confirmation (chooser, TRUE);
-  gtk_file_chooser_set_create_folders (chooser, TRUE);
-  gtk_file_chooser_set_select_multiple (chooser, FALSE);
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
 
-  GtkFileFilter *filter = NULL;
+  g_autoptr(GtkFileDialog) dialog = gtk_file_dialog_new ();
+  gtk_file_dialog_set_title (dialog, _("Export"));
 
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "HTML");
-  gtk_file_filter_add_pattern (filter, "*.html");
-  gtk_file_chooser_add_filter (chooser, filter);
+  g_autoptr(GListStore) filters = g_list_store_new (GTK_TYPE_FILE_FILTER);
 
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "PDF");
-  gtk_file_filter_add_pattern (filter, "*.pdf");
-  gtk_file_chooser_add_filter (chooser, filter);
+  GtkFileFilter *filter_html = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_html, "HTML (*.html)");
+  gtk_file_filter_add_pattern (filter_html, "*.html");
+  g_list_store_append (filters, filter_html);
 
-  gchar *pandoc_path = g_find_program_in_path ("pandoc");
-  if (pandoc_path != NULL)
+  GtkFileFilter *filter_pdf = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_pdf, "PDF (*.pdf)");
+  gtk_file_filter_add_pattern (filter_pdf, "*.pdf");
+  g_list_store_append (filters, filter_pdf);
+
+  GtkFileFilter *filter_rtf = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_rtf, "RTF (*.rtf)");
+  gtk_file_filter_add_pattern (filter_rtf, "*.rtf");
+  g_list_store_append (filters, filter_rtf);
+
+  GtkFileFilter *filter_docx = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_docx, "DOCX (*.docx)");
+  gtk_file_filter_add_pattern (filter_docx, "*.docx");
+  g_list_store_append (filters, filter_docx);
+
+  GtkFileFilter *filter_odt = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_odt, "ODT (*.odt)");
+  gtk_file_filter_add_pattern (filter_odt, "*.odt");
+  g_list_store_append (filters, filter_odt);
+
+  GtkFileFilter *filter_latex = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter_latex, "LaTeX (*.tex)");
+  gtk_file_filter_add_pattern (filter_latex, "*.tex");
+  g_list_store_append (filters, filter_latex);
+
+  g_object_unref (filter_html);
+  g_object_unref (filter_pdf);
+  g_object_unref (filter_rtf);
+  g_object_unref (filter_docx);
+  g_object_unref (filter_odt);
+  g_object_unref (filter_latex);
+
+  gtk_file_dialog_set_filters (dialog, G_LIST_MODEL (filters));
+
+  GFile *source = marker_editor_get_file (editor);
+  if (source != NULL)
   {
-    g_free (pandoc_path);
-    
-    filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, "RTF");
-    gtk_file_filter_add_pattern (filter, "*.rtf");
-    gtk_file_chooser_add_filter (chooser, filter);
-
-    filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, "DOCX");
-    gtk_file_filter_add_pattern (filter, "*.docx");
-    gtk_file_chooser_add_filter (chooser, filter);
-
-    filter = gtk_file_filter_new ();
-    gtk_file_filter_set_name (filter, "ODT");
-    gtk_file_filter_add_pattern (filter, "*.odt");
-    gtk_file_chooser_add_filter (chooser, filter);
-  }
-
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, "LATEX");
-  gtk_file_filter_add_pattern (filter, "*.tex");
-  gtk_file_chooser_add_filter (chooser, filter);
-
-  filter = NULL;
-
-  gint ret = gtk_dialog_run (dialog);
-  if (ret == GTK_RESPONSE_ACCEPT)
-  {
-    g_autofree gchar *filename = gtk_file_chooser_get_filename(chooser);
-    g_autofree gchar *stylesheet_path = marker_prefs_get_css_theme();
-    g_autofree gchar *markdown = NULL;
-
-    filter = gtk_file_chooser_get_filter(chooser);
-    const gchar* file_type = gtk_file_filter_get_name(filter);
-    MarkerExportFormat fmt = marker_exporter_str_to_fmt(file_type);
-
-
-    MarkerEditor *editor = marker_window_get_active_editor (window);
-    MarkerPreview *preview = marker_editor_get_preview(editor);
-
-    MarkerSourceView *source_view = marker_editor_get_source_view (editor);
-    markdown = marker_source_view_get_text (source_view, false);
-
-    GFile * source = marker_editor_get_file(editor);
-    char * base_folder = NULL;
-
-    if (source)
-      base_folder = g_file_get_path(g_file_get_parent(source));
-    size_t len = strlen(markdown);
-    metadata * meta = marker_markdown_metadata(markdown, len);
-    enum scidown_paper_size paper_size = meta->paper_size;
-    if (meta->doc_class == CLASS_BEAMER && !(paper_size == B43 || paper_size == B169))
-      paper_size = B43;
-
-    if (!meta) {
-      fprintf(stderr, "marker-exporter.c#show_export_dialog: Document Metadata NULL!\n");
-      return;
-    }
-    GtkPageOrientation orientation = meta->doc_class == CLASS_BEAMER ? GTK_PAGE_ORIENTATION_LANDSCAPE : GTK_PAGE_ORIENTATION_PORTRAIT;
-    switch (fmt)
+    g_autofree gchar *basename = g_file_get_basename (source);
+    if (basename != NULL)
     {
-      case HTML:
-        marker_markdown_to_html_file_with_css_inline(markdown,
-                                                     len,
-                                                     base_folder,
-                                                     (marker_prefs_get_use_mathjs())
-                                                       ? MATHJS_NET
-                                                       : MATHJS_OFF,
-                                                     (marker_prefs_get_use_highlight())
-                                                       ? HIGHLIGHT_NET
-                                                       : HIGHLIGHT_OFF,
-                                                     (marker_prefs_get_use_mermaid()
-                                                       ? MERMAID_NET
-                                                       : MERMAID_OFF),
-                                                     stylesheet_path,
-                                                     filename);
-        break;
-
-      case PDF:
-        marker_preview_print_pdf(preview, filename, paper_size, orientation);
-        break;
-
-      case LATEX:
-        marker_markdown_to_latex_file(markdown,
-                                      len,
-                                      base_folder,
-                                      (marker_prefs_get_use_mathjs())
-                                        ? MATHJS_NET
-                                        : MATHJS_OFF,
-                                      (marker_prefs_get_use_highlight())
-                                        ? HIGHLIGHT_NET
-                                        : HIGHLIGHT_OFF,
-                                      (marker_prefs_get_use_mermaid()
-                                        ? MERMAID_NET
-                                        : MERMAID_OFF),
-                                      filename);
-        break;
-
-    default:
+      g_autofree gchar *name_noext = marker_string_filename_get_name_noext (basename);
+      if (name_noext != NULL && strlen (name_noext) > 0)
       {
-	char *html = marker_markdown_to_html_with_css_inline(markdown,
-							     len,
-							     base_folder,
-							     (marker_prefs_get_use_mathjs())
-							     ? MATHJS_NET
-							     : MATHJS_OFF,
-							     (marker_prefs_get_use_highlight())
-							     ? HIGHLIGHT_NET
-							     : HIGHLIGHT_OFF,
-							     (marker_prefs_get_use_mermaid()
-							      ? MERMAID_NET
-							      : MERMAID_OFF),
-							     stylesheet_path, 
-							     -1);
-	  
-        marker_exporter_export_pandoc(html, stylesheet_path, filename);
-
-	free(html);
+        g_autofree gchar *default_name = g_strdup_printf ("%s.html", name_noext);
+        gtk_file_dialog_set_initial_name (dialog, default_name);
       }
     }
+    GFile *parent = g_file_get_parent (source);
+    if (parent != NULL)
+    {
+      gtk_file_dialog_set_initial_folder (dialog, parent);
+      g_object_unref (parent);
+    }
   }
 
-  gtk_widget_destroy(GTK_WIDGET(dialog));
+  gtk_file_dialog_save (dialog,
+                        GTK_WINDOW (window),
+                        NULL,
+                        on_export_file_dialog_cb,
+                        window);
 }
 
 void
@@ -265,29 +356,37 @@ marker_exporter_export (const gchar *infile,
 
   long len = 0;
   g_autofree gchar *markdown = marker_utils_read_file (infile, &len);
+  if (markdown == NULL)
+    return;
+
   g_autofree gchar *stylesheet = marker_prefs_get_css_theme ();
   g_autofree gchar *base_folder = marker_string_filename_get_path (infile);
 
-  metadata *meta = marker_markdown_metadata(markdown, len);
-  enum scidown_paper_size paper_size = meta->paper_size; 
-  if (meta->doc_class == CLASS_BEAMER && !(paper_size == B43 || paper_size == B169))
-    paper_size = B43;
-  GtkPageOrientation orientation = meta->doc_class == CLASS_BEAMER ?
-    GTK_PAGE_ORIENTATION_LANDSCAPE :
-    GTK_PAGE_ORIENTATION_PORTRAIT;
+  metadata *meta = marker_markdown_metadata (markdown, len);
+  enum scidown_paper_size paper_size = B43;
+  GtkPageOrientation orientation = GTK_PAGE_ORIENTATION_PORTRAIT;
+  if (meta != NULL)
+  {
+    paper_size = meta->paper_size;
+    if (meta->doc_class == CLASS_BEAMER && !(paper_size == B43 || paper_size == B169))
+      paper_size = B43;
+    orientation = meta->doc_class == CLASS_BEAMER ?
+      GTK_PAGE_ORIENTATION_LANDSCAPE :
+      GTK_PAGE_ORIENTATION_PORTRAIT;
+  }
 
   if (marker_string_ends_with (outfile, ".html")) {
-    marker_markdown_to_html_file_with_css_inline(markdown, len, base_folder,
-                                                 (marker_prefs_get_use_mathjs())
-                                                   ? MATHJS_NET
-                                                   : MATHJS_OFF,
-                                                 (marker_prefs_get_use_highlight())
-                                                   ? HIGHLIGHT_NET
-                                                   : HIGHLIGHT_OFF,
-                                                 (marker_prefs_get_use_mermaid()
-                                                   ? MERMAID_NET
-                                                   : MERMAID_OFF),
-                                                 stylesheet, outfile);  
+    marker_markdown_to_html_file_with_css_inline (markdown, len, base_folder,
+                                                  (marker_prefs_get_use_mathjs ())
+                                                    ? MATHJS_NET
+                                                    : MATHJS_OFF,
+                                                  (marker_prefs_get_use_highlight ())
+                                                    ? HIGHLIGHT_NET
+                                                    : HIGHLIGHT_OFF,
+                                                  (marker_prefs_get_use_mermaid ())
+                                                    ? MERMAID_NET
+                                                    : MERMAID_OFF,
+                                                  stylesheet, outfile);
   }
   else if (marker_string_ends_with (outfile, ".pdf")) {
     /*
@@ -297,19 +396,19 @@ marker_exporter_export (const gchar *infile,
     */
   }
   else if (marker_string_ends_with (outfile, ".tex")) {
-    marker_markdown_to_latex_file(markdown, len, base_folder,
-                                  (marker_prefs_get_use_mathjs())
-                                    ? MATHJS_NET
-                                    : MATHJS_OFF,
-                                  (marker_prefs_get_use_highlight())
-                                    ? HIGHLIGHT_NET
-                                    : HIGHLIGHT_OFF,
-                                  (marker_prefs_get_use_mermaid()
-                                    ? MERMAID_NET
-                                    : MERMAID_OFF),
-                                  outfile);     
+    marker_markdown_to_latex_file (markdown, len, base_folder,
+                                   (marker_prefs_get_use_mathjs ())
+                                     ? MATHJS_NET
+                                     : MATHJS_OFF,
+                                   (marker_prefs_get_use_highlight ())
+                                     ? HIGHLIGHT_NET
+                                     : HIGHLIGHT_OFF,
+                                   (marker_prefs_get_use_mermaid ())
+                                     ? MERMAID_NET
+                                     : MERMAID_OFF,
+                                   outfile);
   }
   else {
-    marker_exporter_export_pandoc(markdown, stylesheet, outfile);
+    marker_exporter_export_pandoc (markdown, stylesheet, outfile);
   }
 }

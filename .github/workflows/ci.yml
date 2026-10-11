@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install validation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y appstream desktop-file-utils libglib2.0-bin
+
+      - name: Validate AppStream Metadata
+        run: |
+          appstreamcli validate --no-net --explain data/com.github.fabiocolacio.marker.appdata.xml
+
+      - name: Validate Desktop Entry
+        run: |
+          desktop-file-validate data/com.github.fabiocolacio.marker.desktop
+
+      - name: Compile GSettings Schema
+        run: |
+          glib-compile-schemas --strict --dry-run data/

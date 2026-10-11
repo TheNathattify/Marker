@@ -96,6 +96,12 @@
       <summary>Language for spell check</summary>
       <description>Selected language for spell check.</description>
     </key>
+
+    <key name="trim-trailing-whitespace" type="b">
+      <default>false</default>
+      <summary>Trim trailing whitespace</summary>
+      <description>Whether to trim trailing whitespace on save.</description>
+    </key>
   </schema>
 
   <schema path="/com/github/fabiocolacio/marker/preferences/preview/" id="com.github.fabiocolacio.marker.preferences.preview">
@@ -108,7 +114,7 @@
     <key name="css-toggle" type="b">
       <default>true</default>
       <summary>Enable CSS theme in Preview</summary>
-      <summary>Use a CSS theme in the live preview</summary>
+      <description>Use a CSS theme in the live preview.</description>
     </key>
 
     <key name="mathjs-toggle" type="b">

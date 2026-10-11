@@ -1,25 +1,30 @@
-project('Marker', 'c',
-  version : '2020.04.04',
-  license : 'GPL3'
+project(
+  'marker',
+  'c',
+  version: '2026.10.0',
+  meson_version: '>= 0.62.0',
+  default_options: [
+    'warning_level=2',
+    'c_std=gnu11',
+  ],
+  license: 'GPL-3.0-or-later'
 )
 
-PREFIX = get_option('prefix')
-DATA_DIR = join_paths(PREFIX, 'share')
-LIBS_DIR = join_paths(PREFIX, 'lib')
-APP_DIR = join_paths(DATA_DIR, 'com.github.fabiocolacio.marker')
-ICONS_DIR = join_paths(APP_DIR, 'icons')
-STYLES_DIR = join_paths(APP_DIR, 'styles')
-COMMON_DIR = join_paths(APP_DIR, 'common')
-SCRIPTS_DIR = join_paths(APP_DIR, 'scripts')
-HIGHLIGHT_STYLES_DIR = join_paths(join_paths(SCRIPTS_DIR, 'highlight'),'styles')
-WEB_EXTENSIONS_DIRECTORY = join_paths(LIBS_DIR, 'Marker.extensions')
-APPDATA_DIR = join_paths(DATA_DIR, 'metainfo')
-LOCALE_DIR = join_paths(PREFIX, get_option('localedir'))
+prefix = get_option('prefix')
+datadir = prefix / get_option('datadir')
+libdir = prefix / get_option('libdir')
+localedir = prefix / get_option('localedir')
+appdir = datadir / 'com.github.fabiocolacio.marker'
+icons_dir = appdir / 'icons'
+styles_dir = appdir / 'styles'
+common_dir = appdir / 'common'
+scripts_dir = appdir / 'scripts'
+highlight_styles_dir = scripts_dir / 'highlight' / 'styles'
+appdata_dir = datadir / 'metainfo'
 
-EXECUTABLE_NAME = 'marker'
+executable_name = 'marker'
 
 gnome = import('gnome')
-
 i18n = import('i18n')
 subdir('help')
 subdir('po')
@@ -33,6 +38,8 @@ res = gnome.compile_resources(
 marker_sources = [
   'src/marker.c',
   'src/marker-editor.c',
+  'src/marker-document.c',
+  'src/marker-search-controller.c',
   'src/marker-window.c',
   'src/marker-exporter.c',
   'src/marker-markdown.c',
@@ -43,15 +50,8 @@ marker_sources = [
   'src/marker-widget.c',
   'src/marker-sketcher-window.c',
   'src/marker-utils.c',
+  'src/marker-outline.c',
   res
-]
-
-scroll_extension = [
-  'src/webkit-extension/scroll-extension.c'
-]
-
-click_extension = [
-  'src/webkit-extension/click-extension.c'
 ]
 
 hoedown_sources = [
@@ -79,89 +79,80 @@ hoedown_sources = [
 ]
 
 deps = [
-  dependency('gtk+-3.0', version : '>=3.20'),
-  dependency('glib-2.0'),
-  dependency('gtksourceview-4'),
-  dependency('webkit2gtk-4.1'),
-  dependency('gtkspell3-3.0')
+  dependency('gtk4', version: '>= 4.10.0'),
+  dependency('libadwaita-1', version: '>= 1.4.0'),
+  dependency('glib-2.0', version: '>= 2.74.0'),
+  dependency('gio-2.0', version: '>= 2.74.0'),
+  dependency('gtksourceview-5', version: '>= 5.6.0'),
+  dependency('webkitgtk-6.0', version: '>= 2.40.0')
 ]
 
-ext_deps =[
-  dependency('webkit2gtk-4.1')
-]
-
-add_global_arguments(
-  '-DSTYLES_DIR="@0@/"'.format(STYLES_DIR),
-  '-DSCRIPTS_DIR="@0@/"'.format(SCRIPTS_DIR),
-  '-DICONS_DIR="@0@/"'.format(ICONS_DIR),
-  '-DHIGHLIGHT_STYLES_DIR="@0@/"'.format(HIGHLIGHT_STYLES_DIR),
+add_project_arguments(
+  '-DSTYLES_DIR="@0@/"'.format(styles_dir),
+  '-DSCRIPTS_DIR="@0@/"'.format(scripts_dir),
+  '-DICONS_DIR="@0@/"'.format(icons_dir),
+  '-DHIGHLIGHT_STYLES_DIR="@0@/"'.format(highlight_styles_dir),
   '-DMARKER_VERSION="@0@"'.format(meson.project_version()),
-  '-DLOCALE_DIR="@0@"'.format(LOCALE_DIR),
-  '-DCOMMON_DIR="@0@/"'.format(COMMON_DIR),
-  '-DWEB_EXTENSIONS_DIRECTORY="@0@"'.format(WEB_EXTENSIONS_DIRECTORY),
-  language : 'c'
-)
-
-shared_library(
-  'scroll-extension',
-  sources : [scroll_extension],
-  dependencies : ext_deps,
-  install : true,
-  link_args: '-lm',
-  install_dir: WEB_EXTENSIONS_DIRECTORY
+  '-DLOCALE_DIR="@0@"'.format(localedir),
+  '-DCOMMON_DIR="@0@/"'.format(common_dir),
+  language: 'c'
 )
 
 executable(
-  EXECUTABLE_NAME,
-  sources : [marker_sources, hoedown_sources],
-  dependencies : deps,
+  executable_name,
+  sources: [marker_sources, hoedown_sources],
+  dependencies: deps,
   link_args: '-lm',
-  install : true
+  install: true
 )
 
 install_data(
   'data/com.github.fabiocolacio.marker.svg',
-  install_dir : join_paths(DATA_DIR, 'icons/hicolor/scalable/apps')
+  install_dir: datadir / 'icons' / 'hicolor' / 'scalable' / 'apps'
 )
 
 install_data(
   'data/com.github.fabiocolacio.marker-symbolic.svg',
-  install_dir : join_paths(DATA_DIR, 'icons/hicolor/symbolic/apps')
+  install_dir: datadir / 'icons' / 'hicolor' / 'symbolic' / 'apps'
 )
 
 install_data(
   'data/com.github.fabiocolacio.marker.desktop',
-  install_dir : join_paths(DATA_DIR, 'applications')
+  install_dir: datadir / 'applications'
 )
 
 install_data(
   'data/com.github.fabiocolacio.marker.gschema.xml',
-  install_dir : join_paths(DATA_DIR, 'glib-2.0/schemas')
+  install_dir: datadir / 'glib-2.0' / 'schemas'
 )
 
 install_data(
   'data/com.github.fabiocolacio.marker.appdata.xml',
-  install_dir : APPDATA_DIR
+  install_dir: appdata_dir
 )
 
 install_subdir(
   'data/styles',
-  install_dir : APP_DIR
+  install_dir: appdir
 )
 
 install_subdir(
   'data/common',
-  install_dir : APP_DIR
+  install_dir: appdir
 )
 
 install_subdir(
   'data/scripts',
-  install_dir : APP_DIR
+  install_dir: appdir
 )
 
 install_subdir(
   'data/icons',
-  install_dir : APP_DIR
+  install_dir: appdir
 )
 
-meson.add_install_script('post-install.sh')
+gnome.post_install(
+  glib_compile_schemas: true,
+  gtk_update_icon_cache: true,
+  update_desktop_database: true
+)

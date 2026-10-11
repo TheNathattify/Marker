@@ -1,42 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.2 -->
-<interface>
-  <requires lib="gtk+" version="3.20"/>
+<interface domain="marker">
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
   <object class="GtkPaned" id="main_paned">
-    <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <child>
-      <object class="GtkScrolledWindow">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
+    <property name="orientation">horizontal</property>
+    <property name="shrink-start-child">true</property>
+    <property name="resize-start-child">false</property>
+    <property name="shrink-end-child">true</property>
+    <property name="resize-end-child">true</property>
+    <property name="start-child">
+      <object class="GtkBox" id="sidebar_box">
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkTreeView" id="documents_tree_view">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="enable_grid_lines">horizontal</property>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
+          <object class="GtkStackSwitcher" id="sidebar_switcher">
+            <property name="stack">sidebar_stack</property>
+            <property name="halign">center</property>
+            <property name="margin-top">6</property>
+            <property name="margin-bottom">6</property>
+            <property name="margin-start">6</property>
+            <property name="margin-end">6</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkStack" id="sidebar_stack">
+            <property name="vexpand">true</property>
+            <property name="hexpand">true</property>
+            <property name="transition-type">slide-left-right</property>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">documents</property>
+                <property name="title" translatable="yes">Documents</property>
+                <property name="icon-name">folder-symbolic</property>
+                <property name="child">
+                  <object class="GtkScrolledWindow" id="sidebar_scrolled_window">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="child">
+                      <object class="GtkTreeView" id="documents_tree_view">
+                        <property name="enable-grid-lines">horizontal</property>
+                        <property name="headers-visible">false</property>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">outline</property>
+                <property name="title" translatable="yes">Outline</property>
+                <property name="icon-name">format-indent-more-symbolic</property>
+                <property name="child">
+                  <object class="GtkScrolledWindow" id="outline_scrolled_window">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="child">
+                      <object class="GtkListBox" id="outline_list_box">
+                        <property name="selection-mode">single</property>
+                        <style>
+                          <class name="navigation-sidebar"/>
+                        </style>
+                      </object>
+                    </property>
+                  </object>
+                </property>
+              </object>
             </child>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="resize">False</property>
-        <property name="shrink">True</property>
-      </packing>
-    </child>
-    <child>
+    </property>
+    <property name="end-child">
       <object class="GtkStack" id="documents_stack">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <placeholder/>
-        </child>
+        <property name="vexpand">true</property>
+        <property name="hexpand">true</property>
+        <property name="transition-type">none</property>
       </object>
-      <packing>
-        <property name="resize">True</property>
-        <property name="shrink">True</property>
-      </packing>
-    </child>
+    </property>
   </object>
 </interface>

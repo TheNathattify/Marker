@@ -1,7 +1,7 @@
 /*
  * marker-prefs.c
  *
- * Copyright (C) 2017 - 2018 Fabio Colacio
+ * Copyright (C) 2017 - 2026 Marker Developers
  *
  * Marker is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License as
@@ -19,9 +19,10 @@
  *
  */
 
+#include <adwaita.h>
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksource.h>
-#include <gtkspell/gtkspell.h>
+#include <glib/gi18n.h>
 
 #include <dirent.h>
 #include <stdlib.h>
@@ -31,960 +32,922 @@
 #include "marker-widget.h"
 #include "marker-string.h"
 #include "marker-window.h"
-
 #include "marker-prefs.h"
+#include "marker-utils.h"
 
 MarkerPrefs prefs;
 
 gboolean
-marker_prefs_get_use_dark_theme()
+marker_prefs_get_use_dark_theme (void)
 {
-  return g_settings_get_boolean(prefs.window_settings, "enable-dark-mode");
+  return g_settings_get_boolean (prefs.window_settings, "enable-dark-mode");
 }
 
 void
-marker_prefs_set_use_dark_theme(gboolean state)
+marker_prefs_set_use_dark_theme (gboolean state)
 {
-  g_settings_set_boolean(prefs.window_settings, "enable-dark-mode", state);
+  g_settings_set_boolean (prefs.window_settings, "enable-dark-mode", state);
 }
 
 guint
-marker_prefs_get_window_width()
+marker_prefs_get_window_width (void)
 {
-  return g_settings_get_uint(prefs.window_settings, "window-width");
+  return g_settings_get_uint (prefs.window_settings, "window-width");
 }
 
 void
-marker_prefs_set_window_width(guint width)
+marker_prefs_set_window_width (guint width)
 {
-  g_settings_set_uint(prefs.window_settings, "window-width", width);
+  g_settings_set_uint (prefs.window_settings, "window-width", width);
 }
 
 guint
-marker_prefs_get_window_height()
+marker_prefs_get_window_height (void)
 {
-  return g_settings_get_uint(prefs.window_settings, "window-height");
+  return g_settings_get_uint (prefs.window_settings, "window-height");
 }
 
 void
-marker_prefs_set_window_height(guint height)
+marker_prefs_set_window_height (guint height)
 {
-  g_settings_set_uint(prefs.window_settings, "window-height", height);
+  g_settings_set_uint (prefs.window_settings, "window-height", height);
 }
 
 void
-marker_prefs_get_window_position(gint *pos_x,
-                                 gint *pos_y)
+marker_prefs_get_window_position (gint *pos_x,
+                                  gint *pos_y)
 {
-  g_settings_get(prefs.window_settings, "window-position", "(ii)", pos_x, pos_y);
+  g_settings_get (prefs.window_settings, "window-position", "(ii)", pos_x, pos_y);
 }
 
 void
-marker_prefs_set_window_position(gint pos_x,
-                                 gint pos_y)
+marker_prefs_set_window_position (gint pos_x,
+                                  gint pos_y)
 {
-  g_settings_set(prefs.window_settings, "window-position", "(ii)", pos_x, pos_y);
+  g_settings_set (prefs.window_settings, "window-position", "(ii)", pos_x, pos_y);
 }
 
 guint
-marker_prefs_get_editor_pane_width()
+marker_prefs_get_editor_pane_width (void)
 {
-  return g_settings_get_uint(prefs.window_settings, "editor-pane-width");
+  return g_settings_get_uint (prefs.window_settings, "editor-pane-width");
 }
 
 void
-marker_prefs_set_editor_pane_width(guint width)
+marker_prefs_set_editor_pane_width (guint width)
 {
-  g_settings_set_uint(prefs.window_settings, "editor-pane-width", width);
+  g_settings_set_uint (prefs.window_settings, "editor-pane-width", width);
 }
 
 gboolean
-marker_prefs_get_show_sidebar()
+marker_prefs_get_show_sidebar (void)
 {
-  return g_settings_get_boolean(prefs.window_settings, "show-sidebar");
+  return g_settings_get_boolean (prefs.window_settings, "show-sidebar");
 }
 
 void
-marker_prefs_set_show_sidebar(gboolean state)
+marker_prefs_set_show_sidebar (gboolean state)
 {
-  g_settings_set_boolean(prefs.window_settings, "show-sidebar", state);
+  g_settings_set_boolean (prefs.window_settings, "show-sidebar", state);
 }
 
 gboolean
-marker_prefs_get_use_syntax_theme()
+marker_prefs_get_use_syntax_theme (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "enable-syntax-theme");
+  return g_settings_get_boolean (prefs.editor_settings, "enable-syntax-theme");
 }
 
 void
-marker_prefs_set_use_syntax_theme(gboolean state)
+marker_prefs_set_use_syntax_theme (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "enable-syntax-theme", state);
+  g_settings_set_boolean (prefs.editor_settings, "enable-syntax-theme", state);
 }
 
-char*
-marker_prefs_get_css_theme()
+char *
+marker_prefs_get_css_theme (void)
 {
-  return g_settings_get_string(prefs.preview_settings, "css-theme");
+  return g_settings_get_string (prefs.preview_settings, "css-theme");
 }
 
 void
-marker_prefs_set_css_theme(const char* theme)
+marker_prefs_set_css_theme (const char *theme)
 {
-  g_settings_set_string(prefs.preview_settings, "css-theme", theme);
+  g_settings_set_string (prefs.preview_settings, "css-theme", theme);
 }
 
 gboolean
-marker_prefs_get_use_css_theme()
+marker_prefs_get_use_css_theme (void)
 {
-  return g_settings_get_boolean(prefs.preview_settings, "css-toggle");
+  return g_settings_get_boolean (prefs.preview_settings, "css-toggle");
 }
 
 void
-marker_prefs_set_use_css_theme(gboolean state)
+marker_prefs_set_use_css_theme (gboolean state)
 {
-  g_settings_set_boolean(prefs.preview_settings, "css-toggle", state);
+  g_settings_set_boolean (prefs.preview_settings, "css-toggle", state);
 }
 
-char*
-marker_prefs_get_highlight_theme()
+char *
+marker_prefs_get_highlight_theme (void)
 {
-  return g_settings_get_string(prefs.preview_settings, "highlight-theme");
+  return g_settings_get_string (prefs.preview_settings, "highlight-theme");
 }
-
 
 void
-marker_prefs_set_highlight_theme(const char* theme)
+marker_prefs_set_highlight_theme (const char *theme)
 {
-  g_settings_set_string(prefs.preview_settings, "highlight-theme", theme);
+  g_settings_set_string (prefs.preview_settings, "highlight-theme", theme);
 }
 
 gboolean
-marker_prefs_get_use_mathjs()
+marker_prefs_get_use_mathjs (void)
 {
-  return g_settings_get_boolean(prefs.preview_settings, "mathjs-toggle");
+  return g_settings_get_boolean (prefs.preview_settings, "mathjs-toggle");
 }
 
 void
-marker_prefs_set_use_mathjs(gboolean state)
+marker_prefs_set_use_mathjs (gboolean state)
 {
-  g_settings_set_boolean(prefs.preview_settings, "mathjs-toggle", state);
+  g_settings_set_boolean (prefs.preview_settings, "mathjs-toggle", state);
 }
 
 gdouble
-makrer_prefs_get_zoom_level()
+marker_prefs_get_zoom_level (void)
 {
-  return  g_settings_get_double(prefs.preview_settings, "preview-zoom-level");
+  return g_settings_get_double (prefs.preview_settings, "preview-zoom-level");
 }
 
 void
-marker_prefs_set_zoom_level(gdouble val)
+marker_prefs_set_zoom_level (gdouble val)
 {
-  g_settings_set_double(prefs.preview_settings, "preview-zoom-level", val);
+  g_settings_set_double (prefs.preview_settings, "preview-zoom-level", val);
 }
 
 gboolean
-marker_prefs_get_use_mermaid()
+marker_prefs_get_use_mermaid (void)
 {
-  return g_settings_get_boolean(prefs.preview_settings, "mermaid-toggle");
+  return g_settings_get_boolean (prefs.preview_settings, "mermaid-toggle");
 }
 
 void
-marker_prefs_set_use_mermaid(gboolean state)
+marker_prefs_set_use_mermaid (gboolean state)
 {
-  g_settings_set_boolean(prefs.preview_settings, "mermaid-toggle", state);
+  g_settings_set_boolean (prefs.preview_settings, "mermaid-toggle", state);
 }
 
 gboolean
-marker_prefs_get_use_charter()
+marker_prefs_get_use_charter (void)
 {
-  return g_settings_get_boolean(prefs.preview_settings, "charter-toggle");
+  return g_settings_get_boolean (prefs.preview_settings, "charter-toggle");
 }
 
 void
-marker_prefs_set_use_charter(gboolean state)
+marker_prefs_set_use_charter (gboolean state)
 {
-  g_settings_set_boolean(prefs.preview_settings, "charter-toggle", state);
+  g_settings_set_boolean (prefs.preview_settings, "charter-toggle", state);
 }
 
 gboolean
-marker_prefs_get_use_highlight()
+marker_prefs_get_use_highlight (void)
 {
-  return g_settings_get_boolean(prefs.preview_settings, "highlight-toggle");
+  return g_settings_get_boolean (prefs.preview_settings, "highlight-toggle");
 }
 
 void
-marker_prefs_set_use_highlight(gboolean state)
+marker_prefs_set_use_highlight (gboolean state)
 {
-  g_settings_set_boolean(prefs.preview_settings, "highlight-toggle", state);
+  g_settings_set_boolean (prefs.preview_settings, "highlight-toggle", state);
 }
 
-char*
-marker_prefs_get_syntax_theme()
+char *
+marker_prefs_get_syntax_theme (void)
 {
-  return g_settings_get_string(prefs.editor_settings, "syntax-theme");
+  return g_settings_get_string (prefs.editor_settings, "syntax-theme");
 }
 
 void
-marker_prefs_set_syntax_theme(const char* theme)
+marker_prefs_set_syntax_theme (const char *theme)
 {
-  g_settings_set_string(prefs.editor_settings, "syntax-theme", theme);
+  g_settings_set_string (prefs.editor_settings, "syntax-theme", theme);
 }
 
 guint
-marker_prefs_get_right_margin_position()
+marker_prefs_get_right_margin_position (void)
 {
-  return g_settings_get_uint(prefs.editor_settings, "show-right-margin-position");
+  return g_settings_get_uint (prefs.editor_settings, "show-right-margin-position");
 }
 
 void
-marker_prefs_set_right_margin_position(guint position)
+marker_prefs_set_right_margin_position (guint position)
 {
-  g_settings_set_uint(prefs.editor_settings, "show-right-margin-position", position);
+  g_settings_set_uint (prefs.editor_settings, "show-right-margin-position", position);
 }
 
 gboolean
-marker_prefs_get_replace_tabs()
+marker_prefs_get_replace_tabs (void)
 {
-  return  g_settings_get_boolean(prefs.editor_settings, "replace-tabs");
+  return g_settings_get_boolean (prefs.editor_settings, "replace-tabs");
 }
 
 void
-marker_prefs_set_replace_tabs(gboolean state)
+marker_prefs_set_replace_tabs (gboolean state)
 {
-   g_settings_set_boolean(prefs.editor_settings, "replace-tabs", state);
+  g_settings_set_boolean (prefs.editor_settings, "replace-tabs", state);
 }
 
 guint
-marker_prefs_get_tab_width()
+marker_prefs_get_tab_width (void)
 {
-  return g_settings_get_uint(prefs.editor_settings, "tab-width");
+  return g_settings_get_uint (prefs.editor_settings, "tab-width");
 }
 
 void
-marker_prefs_set_tab_width(guint width)
+marker_prefs_set_tab_width (guint width)
 {
-  g_settings_set_uint(prefs.editor_settings, "tab-width", width);
+  g_settings_set_uint (prefs.editor_settings, "tab-width", width);
 }
 
 gboolean
-marker_prefs_get_auto_indent()
+marker_prefs_get_auto_indent (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "auto-indent");
+  return g_settings_get_boolean (prefs.editor_settings, "auto-indent");
 }
 
 void
-marker_prefs_set_auto_indent(gboolean state)
+marker_prefs_set_auto_indent (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "auto-indent", state);
+  g_settings_set_boolean (prefs.editor_settings, "auto-indent", state);
+}
+
+gboolean
+marker_prefs_get_trim_trailing_whitespace (void)
+{
+  return g_settings_get_boolean (prefs.editor_settings, "trim-trailing-whitespace");
+}
+
+void
+marker_prefs_set_trim_trailing_whitespace (gboolean state)
+{
+  g_settings_set_boolean (prefs.editor_settings, "trim-trailing-whitespace", state);
 }
 
 gboolean
 marker_prefs_get_show_spaces (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "show-spaces");
+  return g_settings_get_boolean (prefs.editor_settings, "show-spaces");
 }
 
 void
 marker_prefs_set_show_spaces (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "show-spaces", state);
+  g_settings_set_boolean (prefs.editor_settings, "show-spaces", state);
 }
 
 gboolean
-marker_prefs_get_spell_check()
+marker_prefs_get_spell_check (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "spell-check");
+  return g_settings_get_boolean (prefs.editor_settings, "spell-check");
 }
 
 void
-marker_prefs_set_spell_check(gboolean state)
+marker_prefs_set_spell_check (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "spell-check", state);
+  g_settings_set_boolean (prefs.editor_settings, "spell-check", state);
 }
 
-gchar*
-marker_prefs_get_spell_check_language()
+gchar *
+marker_prefs_get_spell_check_language (void)
 {
-  return g_settings_get_string(prefs.editor_settings, "spell-check-lang");
+  return g_settings_get_string (prefs.editor_settings, "spell-check-lang");
 }
 
 void
-marker_prefs_set_spell_check_language(const char* lang)
+marker_prefs_set_spell_check_language (const gchar *lang)
 {
-  g_settings_set_string(prefs.editor_settings, "spell-check-lang", lang);
+  g_settings_set_string (prefs.editor_settings, "spell-check-lang", lang);
 }
 
 gboolean
-marker_prefs_get_show_line_numbers()
+marker_prefs_get_show_line_numbers (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "show-line-numbers");
+  return g_settings_get_boolean (prefs.editor_settings, "show-line-numbers");
 }
 
 void
-marker_prefs_set_show_line_numbers(gboolean state)
+marker_prefs_set_show_line_numbers (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "show-line-numbers", state);
+  g_settings_set_boolean (prefs.editor_settings, "show-line-numbers", state);
 }
 
 gboolean
-marker_prefs_get_highlight_current_line()
+marker_prefs_get_highlight_current_line (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "highlight-current-line");
+  return g_settings_get_boolean (prefs.editor_settings, "highlight-current-line");
 }
 
 void
-marker_prefs_set_highlight_current_line(gboolean state)
+marker_prefs_set_highlight_current_line (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "highlight-current-line", state);
+  g_settings_set_boolean (prefs.editor_settings, "highlight-current-line", state);
 }
 
 gboolean
-marker_prefs_get_wrap_text()
+marker_prefs_get_wrap_text (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "wrap-text");
+  return g_settings_get_boolean (prefs.editor_settings, "wrap-text");
 }
 
 void
-marker_prefs_set_wrap_text(gboolean state)
+marker_prefs_set_wrap_text (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "wrap-text", state);
+  g_settings_set_boolean (prefs.editor_settings, "wrap-text", state);
 }
 
 gboolean
-marker_prefs_get_show_right_margin()
+marker_prefs_get_show_right_margin (void)
 {
-  return g_settings_get_boolean(prefs.editor_settings, "show-right-margin");
+  return g_settings_get_boolean (prefs.editor_settings, "show-right-margin");
 }
 
 void
-marker_prefs_set_show_right_margin(gboolean state)
+marker_prefs_set_show_right_margin (gboolean state)
 {
-  g_settings_set_boolean(prefs.editor_settings, "show-right-margin", state);
+  g_settings_set_boolean (prefs.editor_settings, "show-right-margin", state);
 }
 
 MarkerViewMode
-marker_prefs_get_default_view_mode()
+marker_prefs_get_default_view_mode (void)
 {
-  return g_settings_get_enum(prefs.window_settings, "view-mode");
+  return g_settings_get_enum (prefs.window_settings, "view-mode");
 }
 
 void
-marker_prefs_set_default_view_mode(MarkerViewMode view_mode)
+marker_prefs_set_default_view_mode (MarkerViewMode view_mode)
 {
-  g_settings_set_enum(prefs.window_settings, "view-mode", view_mode);
+  g_settings_set_enum (prefs.window_settings, "view-mode", view_mode);
 }
-
 
 MarkerMathBackEnd
 marker_prefs_get_math_backend (void)
 {
-  return g_settings_get_enum(prefs.preview_settings, "math-backend");
+  return g_settings_get_enum (prefs.preview_settings, "math-backend");
 }
 
 void
-marker_prefs_set_math_backend (MarkerMathBackEnd   backend)
+marker_prefs_set_math_backend (MarkerMathBackEnd backend)
 {
-  g_settings_set_enum(prefs.preview_settings, "math-backend", backend);
+  g_settings_set_enum (prefs.preview_settings, "math-backend", backend);
 }
 
-GList*
-marker_prefs_get_available_stylesheets()
+gboolean
+marker_prefs_get_gnome_appmenu (void)
 {
-  GList* list = NULL;
-  char* list_item;
+  return FALSE;
+}
 
-  DIR* dir;
-  struct dirent* ent;
-  char* filename;
-  if ((dir = opendir(STYLES_DIR)) != NULL)
+void
+marker_prefs_set_gnome_appmenu (gboolean state)
+{
+  (void) state;
+}
+
+GList *
+marker_prefs_get_available_stylesheets (void)
+{
+  GList *list = NULL;
+  DIR *dir;
+  struct dirent *ent;
+  const gchar *styles_dir = marker_utils_get_styles_dir ();
+
+  if ((dir = opendir (styles_dir)) != NULL)
   {
-    while ((ent = readdir(dir)) != NULL)
+    while ((ent = readdir (dir)) != NULL)
     {
-      filename = ent->d_name;
-      if (marker_string_ends_with(filename, ".css"))
+      char *filename = ent->d_name;
+      if (marker_string_ends_with (filename, ".css"))
       {
-        list_item = marker_string_alloc(filename);
-        list = g_list_prepend(list, list_item);
+        list = g_list_prepend (list, marker_string_alloc (filename));
       }
     }
+    closedir (dir);
   }
-  closedir(dir);
 
-  return list;
+  return g_list_reverse (list);
 }
 
-GList*
-marker_prefs_get_available_highlight_themes()
+GList *
+marker_prefs_get_available_highlight_themes (void)
 {
-  GList* list = NULL;
-  char* list_item;
+  GList *list = NULL;
+  DIR *dir;
+  struct dirent *ent;
+  const gchar *highlight_dir = marker_utils_get_highlight_styles_dir ();
 
-  DIR* dir;
-  struct dirent* ent;
-  char* filename;
-
-  if ((dir = opendir(HIGHLIGHT_STYLES_DIR)) != NULL)
+  if ((dir = opendir (highlight_dir)) != NULL)
   {
-    while ((ent = readdir(dir)) != NULL)
+    while ((ent = readdir (dir)) != NULL)
     {
-      filename = ent->d_name;
-
-      if (marker_string_ends_with(filename, ".css"))
+      char *filename = ent->d_name;
+      if (marker_string_ends_with (filename, ".css"))
       {
-        list_item = marker_string_filename_get_name_noext(filename);
-        list = g_list_prepend(list, list_item);
+        list = g_list_prepend (list, marker_string_filename_get_name_noext (filename));
       }
     }
+    closedir (dir);
   }
-  closedir(dir);
 
+  return g_list_reverse (list);
+}
+
+GList *
+marker_prefs_get_available_languages (void)
+{
+  GList *list = NULL;
+  list = g_list_append (list, g_strdup ("en_US"));
   return list;
 }
 
-GList*
-marker_prefs_get_available_languages()
+GList *
+marker_prefs_get_available_syntax_themes (void)
 {
-  GList* list = gtk_spell_checker_get_language_list ();
-  return list;
-}
-
-GList*
-marker_prefs_get_available_syntax_themes()
-{
-  GList* list = NULL;
-
-  GtkSourceStyleSchemeManager* style_manager =
-    gtk_source_style_scheme_manager_get_default();
+  GList *list = NULL;
+  GtkSourceStyleSchemeManager *style_manager =
+    gtk_source_style_scheme_manager_get_default ();
   const gchar * const * ids =
-    gtk_source_style_scheme_manager_get_scheme_ids(style_manager);
+    gtk_source_style_scheme_manager_get_scheme_ids (style_manager);
 
-  for (int i = 0; ids[i] != NULL; ++i)
+  if (ids)
   {
-    const gchar* id = ids[i];
-    char* item = marker_string_alloc(id);
-    list = g_list_prepend(list, item);
+    for (int i = 0; ids[i] != NULL; ++i)
+    {
+      list = g_list_prepend (list, marker_string_alloc (ids[i]));
+    }
   }
 
-  return list;
+  return g_list_reverse (list);
 }
 
 static void
-update_editors ()
+update_editors (void)
 {
-  GtkApplication *app = marker_get_app();
-  GList *windows = gtk_application_get_windows(app);
+  GtkApplication *app = marker_get_app ();
+  if (!app)
+    return;
+
+  GList *windows = gtk_application_get_windows (app);
   for (GList *item = windows; item != NULL; item = item->next)
   {
-    if (MARKER_IS_WINDOW(item->data))
+    if (MARKER_IS_WINDOW (item->data))
     {
       MarkerWindow *window = item->data;
       MarkerEditor *editor = marker_window_get_active_editor (window);
-      marker_editor_apply_prefs (editor);
+      if (editor)
+        marker_editor_apply_prefs (editor);
     }
   }
 }
 
 static void
-refresh_preview ()
+refresh_preview (void)
 {
-  GtkApplication *app = marker_get_app();
-  GList *windows = gtk_application_get_windows(app);
+  GtkApplication *app = marker_get_app ();
+  if (!app)
+    return;
+
+  GList *windows = gtk_application_get_windows (app);
   for (GList *item = windows; item != NULL; item = item->next)
   {
-    if (MARKER_IS_WINDOW(item->data))
+    if (MARKER_IS_WINDOW (item->data))
     {
       MarkerWindow *window = item->data;
-      marker_window_refresh_all_preview(window);
+      marker_window_refresh_all_preview (window);
     }
   }
 }
 
 static void
-show_line_numbers_toggled(GtkToggleButton* button,
-                          gpointer         user_data)
+on_editor_settings_changed (GSettings   *settings,
+                            const gchar *key,
+                            gpointer     user_data)
 {
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_show_line_numbers(state);
+  (void) settings;
+  (void) key;
+  (void) user_data;
   update_editors ();
 }
 
 static void
-editor_syntax_toggled(GtkToggleButton* button,
-                      gpointer         user_data)
+on_preview_settings_changed (GSettings   *settings,
+                             const gchar *key,
+                             gpointer     user_data)
 {
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_syntax_theme(state);
+  (void) settings;
+  (void) key;
+  (void) user_data;
+  refresh_preview ();
+}
 
-  marker_prefs_set_use_highlight(state);
-  if (user_data)
+static void
+on_window_settings_changed (GSettings   *settings,
+                            const gchar *key,
+                            gpointer     user_data)
+{
+  (void) settings;
+  (void) user_data;
+  if (g_strcmp0 (key, "enable-dark-mode") == 0)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
+    gboolean dark = marker_prefs_get_use_dark_theme ();
+    AdwStyleManager *style_manager = adw_style_manager_get_default ();
+    adw_style_manager_set_color_scheme (
+      style_manager,
+      dark ? ADW_COLOR_SCHEME_FORCE_DARK : ADW_COLOR_SCHEME_DEFAULT);
   }
-
-  update_editors ();
 }
 
-static void
-css_toggled(GtkToggleButton* button,
-            gpointer         user_data)
+static gboolean
+uint_to_double_mapping (GValue   *value,
+                        GVariant *variant,
+                        gpointer  user_data)
 {
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_css_theme(state);
+  (void) user_data;
+  g_value_set_double (value, (gdouble) g_variant_get_uint32 (variant));
+  return TRUE;
+}
 
-  if (user_data)
+static GVariant *
+double_to_uint_mapping (const GValue       *value,
+                        const GVariantType *expected_type,
+                        gpointer            user_data)
+{
+  (void) expected_type;
+  (void) user_data;
+  return g_variant_new_uint32 ((guint32) g_value_get_double (value));
+}
+
+static GtkStringList *
+create_string_list_from_glist (GList *list)
+{
+  GtkStringList *string_list = gtk_string_list_new (NULL);
+  for (GList *l = list; l != NULL; l = l->next)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
+    if (l->data)
+      gtk_string_list_append (string_list, (const char *) l->data);
   }
-
-  refresh_preview();
+  return string_list;
 }
 
-static void
-highlight_current_line_toggled(GtkToggleButton* button,
-                               gpointer         user_data)
+static guint
+find_string_in_model (GListModel *model, const char *target)
 {
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_highlight_current_line(state);
-  update_editors ();
-}
+  if (!target)
+    return 0;
 
-static void
-enable_mathjs_toggled(GtkToggleButton* button,
-                       gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_mathjs(state);
-  if (user_data)
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
-  refresh_preview();
-}
-
-static void
-enable_mermaid_toggled(GtkToggleButton* button,
-                       gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_mermaid(state);
-  refresh_preview();
-}
-
-static void
-enable_charter_toggled(GtkToggleButton* button,
-                       gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_charter(state);
-  refresh_preview();
-}
-
-static void
-wrap_text_toggled(GtkToggleButton* button,
-                  gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_wrap_text(state);
-  update_editors ();
-}
-
-static void
-show_spaces_toggled(GtkToggleButton* button,
-                    gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_show_spaces(state);
-  update_editors ();
-}
-
-static void
-enable_dark_mode_toggled(GtkToggleButton* button,
-                         gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_dark_theme(state);
-  g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", state, NULL);
-}
-
-static void
-auto_indent_toggled(GtkToggleButton* button,
-                    gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_auto_indent(state);
-  update_editors ();
-}
-
-static void
-spell_lang_chosen(GtkComboBox* combo_box,
-              gpointer     user_data)
-{
-  char* choice = marker_widget_combo_box_get_active_str(combo_box);
-  marker_prefs_set_spell_check_language(choice);
-  update_editors ();
-}
-
-static void
-spell_check_toggled(GtkToggleButton* button,
-                     gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_spell_check(state);
-
-  if (user_data)
+  guint n_items = g_list_model_get_n_items (model);
+  for (guint i = 0; i < n_items; i++)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
+    const char *str = gtk_string_list_get_string (GTK_STRING_LIST (model), i);
+    if (str && g_strcmp0 (str, target) == 0)
+      return i;
   }
-
-  update_editors ();
+  return 0;
 }
 
 static void
-replace_tabs_toggled(GtkToggleButton* button,
-                     gpointer         user_data)
+on_syntax_theme_selected (AdwComboRow *row,
+                          GParamSpec  *pspec,
+                          gpointer     user_data)
 {
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_replace_tabs(state);
-  update_editors ();
-}
-
-static void
-tab_width_value_changed(GtkSpinButton *spin_button,
-                        gpointer       user_data)
-{
-  guint value = gtk_spin_button_get_value_as_int (spin_button);
-  marker_prefs_set_tab_width(value);
-  update_editors ();
-}
-
-static void
-right_margin_position_value_changed(GtkSpinButton* spin_button,
-                                    gpointer       user_data)
-{
-  guint value = gtk_spin_button_get_value_as_int(spin_button);
-  marker_prefs_set_right_margin_position(value);
-  update_editors ();
-}
-
-static void
-show_right_margin_toggled(GtkToggleButton* button,
-                          gpointer         user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_show_right_margin(state);
-
-  if (user_data)
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  GListModel *model = adw_combo_row_get_model (row);
+  if (model && selected != GTK_INVALID_LIST_POSITION)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
+    const char *str = gtk_string_list_get_string (GTK_STRING_LIST (model), selected);
+    if (str)
+      marker_prefs_set_syntax_theme (str);
   }
-
-  update_editors ();
 }
 
 static void
-syntax_chosen(GtkComboBox* combo_box,
-              gpointer     user_data)
+on_spell_lang_selected (AdwComboRow *row,
+                        GParamSpec  *pspec,
+                        gpointer     user_data)
 {
-  g_autofree gchar* choice = marker_widget_combo_box_get_active_str(combo_box);
-  marker_prefs_set_syntax_theme (choice);
-  update_editors ();
-}
-
-static void
-css_chosen(GtkComboBox* combo_box,
-           gpointer     user_data)
-{
-  char* choice = marker_widget_combo_box_get_active_str(combo_box);
-
-  marker_prefs_set_css_theme(choice);
-
-  free(choice);
-  refresh_preview();
-}
-
-static void
-highlight_css_chosen(GtkComboBox* combo_box,
-                     gpointer     user_data)
-{
-  char* choice = marker_widget_combo_box_get_active_str(combo_box);
-  marker_prefs_set_highlight_theme(choice);
-
-  free(choice);
-
-  refresh_preview();
-}
-
-static void
-code_highlight_toggled(GtkToggleButton* button,
-                       gpointer user_data)
-{
-  gboolean state = gtk_toggle_button_get_active(button);
-  marker_prefs_set_use_highlight(state);
-
-  if (user_data)
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  GListModel *model = adw_combo_row_get_model (row);
+  if (model && selected != GTK_INVALID_LIST_POSITION)
   {
-    gtk_widget_set_sensitive(GTK_WIDGET(user_data), state);
+    const char *str = gtk_string_list_get_string (GTK_STRING_LIST (model), selected);
+    if (str)
+      marker_prefs_set_spell_check_language (str);
   }
-
-  refresh_preview();
 }
 
 static void
-default_view_mode_chosen(GtkComboBox* combo_box,
-                         gpointer     user_data)
+on_css_theme_selected (AdwComboRow *row,
+                       GParamSpec  *pspec,
+                       gpointer     user_data)
 {
-  MarkerViewMode mode = gtk_combo_box_get_active(combo_box);
-  marker_prefs_set_default_view_mode(mode);
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  GListModel *model = adw_combo_row_get_model (row);
+  if (model && selected != GTK_INVALID_LIST_POSITION)
+  {
+    const char *str = gtk_string_list_get_string (GTK_STRING_LIST (model), selected);
+    if (str)
+      marker_prefs_set_css_theme (str);
+  }
 }
 
 static void
-math_backend_changed (GtkComboBox* combo_box,
-                         gpointer     user_data)
+on_code_highlight_theme_selected (AdwComboRow *row,
+                                  GParamSpec  *pspec,
+                                  gpointer     user_data)
 {
-  MarkerMathBackEnd backend = gtk_combo_box_get_active(combo_box);
-  marker_prefs_set_math_backend(backend);
-  refresh_preview();
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  GListModel *model = adw_combo_row_get_model (row);
+  if (model && selected != GTK_INVALID_LIST_POSITION)
+  {
+    const char *str = gtk_string_list_get_string (GTK_STRING_LIST (model), selected);
+    if (str)
+      marker_prefs_set_highlight_theme (str);
+  }
+}
+
+static void
+on_math_backend_selected (AdwComboRow *row,
+                          GParamSpec  *pspec,
+                          gpointer     user_data)
+{
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  if (selected != GTK_INVALID_LIST_POSITION)
+    marker_prefs_set_math_backend ((MarkerMathBackEnd) selected);
+}
+
+static void
+on_view_mode_selected (AdwComboRow *row,
+                       GParamSpec  *pspec,
+                       gpointer     user_data)
+{
+  (void) pspec;
+  (void) user_data;
+  guint selected = adw_combo_row_get_selected (row);
+  if (selected != GTK_INVALID_LIST_POSITION)
+    marker_prefs_set_default_view_mode ((MarkerViewMode) selected);
 }
 
 void
-marker_prefs_show_window()
-{
-  GtkBuilder* builder =
-    gtk_builder_new_from_resource(
-      "/com/github/fabiocolacio/marker/ui/marker-prefs-window.ui");
-
-  GList *list = NULL;
-  GtkComboBox* combo_box;
-  GtkToggleButton* check_button;
-  GtkSpinButton* spin_button;
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "syntax_chooser"));
-  list = marker_prefs_get_available_syntax_themes();
-  marker_widget_populate_combo_box_with_strings(combo_box, list);
-  char* syntax = marker_prefs_get_syntax_theme();
-  marker_widget_combo_box_set_active_str(combo_box,syntax, g_list_length(list));
-  gtk_widget_set_sensitive(GTK_WIDGET(combo_box), marker_prefs_get_use_highlight());
-  g_free(syntax);
-  g_list_free_full(list, free);
-  list = NULL;
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "css_chooser"));
-  list = marker_prefs_get_available_stylesheets();
-  marker_widget_populate_combo_box_with_strings(combo_box, list);
-  char* css = marker_prefs_get_css_theme();
-  char* css_filename = marker_string_filename_get_name(css);
-  marker_widget_combo_box_set_active_str(combo_box, css_filename, g_list_length(list));
-  gtk_widget_set_sensitive(GTK_WIDGET(combo_box), marker_prefs_get_use_css_theme());
-  free(css_filename);
-  g_free(css);
-  g_list_free_full(list, free);
-  list = NULL;
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "highlight_css_chooser"));
-  list = marker_prefs_get_available_highlight_themes();
-  marker_widget_populate_combo_box_with_strings(combo_box, list);
-  char* theme = marker_prefs_get_highlight_theme();
-  marker_widget_combo_box_set_active_str(combo_box, theme, g_list_length(list));
-  gtk_widget_set_sensitive(GTK_WIDGET(combo_box), marker_prefs_get_use_highlight());
-  g_free(theme);
-  g_list_free_full(list, free);
-  list = NULL;
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "view_mode_chooser"));
-  GtkCellRenderer* cell_renderer = gtk_cell_renderer_text_new();
-  gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo_box), cell_renderer, TRUE);
-  gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo_box),
-                                 cell_renderer,
-                                 "text", 0,
-                                 NULL);
-  gtk_combo_box_set_active(combo_box, marker_prefs_get_default_view_mode());
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "math_backends_combo"));
-  cell_renderer = gtk_cell_renderer_text_new();
-  gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo_box), cell_renderer, TRUE);
-  gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo_box),
-                                 cell_renderer,
-                                 "text", 0,
-                                 NULL);
-  gtk_combo_box_set_active(combo_box, marker_prefs_get_math_backend());
-  gtk_widget_set_sensitive(GTK_WIDGET(combo_box), marker_prefs_get_use_mathjs());
-
-  combo_box = GTK_COMBO_BOX(gtk_builder_get_object(builder, "spell_lang_chooser"));
-  list = marker_prefs_get_available_languages();
-  marker_widget_populate_combo_box_with_strings(combo_box, list);
-  char* lang = marker_prefs_get_spell_check_language();
-  marker_widget_combo_box_set_active_str(combo_box, lang, g_list_length(list));
-  gtk_widget_set_sensitive(GTK_WIDGET(combo_box), marker_prefs_get_spell_check());
-  g_free(lang);
-  g_list_free_full(list, free);
-  list = NULL;
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "editor_syntax_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_highlight());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "css_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_css_theme());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "editor_syntax_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_syntax_theme());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "mathjs_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_mathjs());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "mermaid_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_mermaid());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "charter_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_charter());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "code_highlight_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_highlight());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_line_numbers_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_show_line_numbers());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_right_margin_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_show_right_margin());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "wrap_text_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_wrap_text());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "show_spaces_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_show_spaces());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "highlight_current_line_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_highlight_current_line());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "auto_indent_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_auto_indent());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "replace_tabs_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_replace_tabs());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "spell_check_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_spell_check());
-
-  check_button =
-    GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, "enable_dark_mode_check_button"));
-  gtk_toggle_button_set_active(check_button, marker_prefs_get_use_dark_theme());
-
-  spin_button =
-    GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "right_margin_position_spin_button"));
-  gtk_widget_set_sensitive(GTK_WIDGET(spin_button), marker_prefs_get_show_right_margin());
-  gtk_spin_button_set_range(spin_button, 1, 1000);
-  gtk_spin_button_set_increments(spin_button, 1, 0);
-  gtk_spin_button_set_value(spin_button, marker_prefs_get_right_margin_position());
-
-  spin_button =
-    GTK_SPIN_BUTTON(gtk_builder_get_object(builder, "tab_width_spin_button"));
-  gtk_spin_button_set_range(spin_button, 1, 12);
-  gtk_spin_button_set_increments(spin_button, 1, 0);
-  gtk_spin_button_set_value(spin_button, marker_prefs_get_tab_width());
-
-  GtkWindow* window = GTK_WINDOW(gtk_builder_get_object(builder, "prefs_win"));
-	gtk_widget_show_all(GTK_WIDGET(window));
-  gtk_window_present(window);
-
-
-  gtk_builder_add_callback_symbol(builder,
-                                  "syntax_chosen",
-                                  G_CALLBACK(syntax_chosen));
-  gtk_builder_add_callback_symbol(builder,
-                                  "editor_syntax_toggled",
-                                  G_CALLBACK(editor_syntax_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "css_chosen",
-                                  G_CALLBACK(css_chosen));
-  gtk_builder_add_callback_symbol(builder,
-                                  "css_toggled",
-                                  G_CALLBACK(css_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "highlight_css_chosen",
-                                  G_CALLBACK(highlight_css_chosen));
-  gtk_builder_add_callback_symbol(builder,
-                                  "code_highlight_toggled",
-                                  G_CALLBACK(code_highlight_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "default_view_mode_chosen",
-                                  G_CALLBACK(default_view_mode_chosen));
-  gtk_builder_add_callback_symbol(builder,
-                                  "math_backends_combo_changed_cb",
-                                  G_CALLBACK(math_backend_changed));
-  gtk_builder_add_callback_symbol(builder,
-                                  "show_line_numbers_toggled",
-                                  G_CALLBACK(show_line_numbers_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "highlight_current_line_toggled",
-                                  G_CALLBACK(highlight_current_line_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "replace_tabs_toggled",
-                                  G_CALLBACK(replace_tabs_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "auto_indent_toggled",
-                                  G_CALLBACK(auto_indent_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "spell_check_toggled",
-                                  G_CALLBACK(spell_check_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "spell_lang_chosen",
-                                  G_CALLBACK(spell_lang_chosen));
-  gtk_builder_add_callback_symbol(builder,
-                                  "tab_width_value_changed",
-                                  G_CALLBACK(tab_width_value_changed));
-  gtk_builder_add_callback_symbol(builder,
-                                  "right_margin_position_value_changed",
-                                  G_CALLBACK(right_margin_position_value_changed));
-  gtk_builder_add_callback_symbol(builder,
-                                  "enable_mathjs_toggled",
-                                  G_CALLBACK(enable_mathjs_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "enable_mermaid_toggled",
-                                  G_CALLBACK(enable_mermaid_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "wrap_text_toggled",
-                                  G_CALLBACK(wrap_text_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "show_spaces_toggled",
-                                  G_CALLBACK(show_spaces_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "show_right_margin_toggled",
-                                  G_CALLBACK(show_right_margin_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "enable_dark_mode_toggled",
-                                  G_CALLBACK(enable_dark_mode_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "editor_syntax_toggled",
-                                  G_CALLBACK(editor_syntax_toggled));
-  gtk_builder_add_callback_symbol(builder,
-                                  "enable_charter_toggled",
-                                  G_CALLBACK(enable_charter_toggled));
-  gtk_builder_connect_signals(builder, NULL);
-
-  g_object_unref(builder);
-}
-
-void
-marker_prefs_load()
+marker_prefs_load (void)
 {
   prefs.editor_settings =
-    g_settings_new("com.github.fabiocolacio.marker.preferences.editor");
+    g_settings_new ("com.github.fabiocolacio.marker.preferences.editor");
   prefs.preview_settings =
-    g_settings_new("com.github.fabiocolacio.marker.preferences.preview");
+    g_settings_new ("com.github.fabiocolacio.marker.preferences.preview");
   prefs.window_settings =
-    g_settings_new("com.github.fabiocolacio.marker.preferences.window");
+    g_settings_new ("com.github.fabiocolacio.marker.preferences.window");
+
+  g_signal_connect (prefs.editor_settings, "changed",
+                    G_CALLBACK (on_editor_settings_changed), NULL);
+  g_signal_connect (prefs.preview_settings, "changed",
+                    G_CALLBACK (on_preview_settings_changed), NULL);
+  g_signal_connect (prefs.window_settings, "changed",
+                    G_CALLBACK (on_window_settings_changed), NULL);
+
+  gboolean dark = marker_prefs_get_use_dark_theme ();
+  AdwStyleManager *style_manager = adw_style_manager_get_default ();
+  adw_style_manager_set_color_scheme (
+    style_manager,
+    dark ? ADW_COLOR_SCHEME_FORCE_DARK : ADW_COLOR_SCHEME_DEFAULT);
 }
 
+void
+marker_prefs_show_window (void)
+{
+  GtkBuilder *builder =
+    gtk_builder_new_from_resource (
+      "/com/github/fabiocolacio/marker/ui/marker-prefs-window.ui");
+
+  AdwPreferencesWindow *prefs_win =
+    ADW_PREFERENCES_WINDOW (gtk_builder_get_object (builder, "prefs_win"));
+
+  AdwSwitchRow *show_line_numbers_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "show_line_numbers_row"));
+  AdwSwitchRow *highlight_current_line_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "highlight_current_line_row"));
+  AdwSwitchRow *wrap_text_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "wrap_text_row"));
+  AdwSwitchRow *show_spaces_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "show_spaces_row"));
+  AdwSwitchRow *show_right_margin_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "show_right_margin_row"));
+  AdwSpinRow *right_margin_position_row =
+    ADW_SPIN_ROW (gtk_builder_get_object (builder, "right_margin_position_row"));
+  AdwSwitchRow *syntax_highlight_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "syntax_highlight_row"));
+  AdwComboRow *syntax_theme_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "syntax_theme_row"));
+
+  AdwSwitchRow *auto_indent_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "auto_indent_row"));
+  AdwSwitchRow *replace_tabs_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "replace_tabs_row"));
+  AdwSpinRow *tab_width_row =
+    ADW_SPIN_ROW (gtk_builder_get_object (builder, "tab_width_row"));
+  AdwSwitchRow *trim_trailing_whitespace_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "trim_trailing_whitespace_row"));
+
+  AdwSwitchRow *spell_check_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "spell_check_row"));
+  AdwComboRow *spell_lang_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "spell_lang_row"));
+
+  AdwSwitchRow *css_theme_toggle_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "css_theme_toggle_row"));
+  AdwComboRow *css_theme_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "css_theme_row"));
+  AdwSwitchRow *code_highlight_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "code_highlight_row"));
+  AdwComboRow *code_highlight_theme_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "code_highlight_theme_row"));
+
+  AdwSwitchRow *mathjs_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "mathjs_row"));
+  AdwComboRow *math_backend_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "math_backend_row"));
+  AdwSwitchRow *mermaid_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "mermaid_row"));
+  AdwSwitchRow *charter_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "charter_row"));
+
+  AdwComboRow *view_mode_row =
+    ADW_COMBO_ROW (gtk_builder_get_object (builder, "view_mode_row"));
+  AdwSwitchRow *dark_mode_row =
+    ADW_SWITCH_ROW (gtk_builder_get_object (builder, "dark_mode_row"));
+
+  /* GSettings bindings for Editor page */
+  g_settings_bind (prefs.editor_settings, "show-line-numbers",
+                   show_line_numbers_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "highlight-current-line",
+                   highlight_current_line_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "wrap-text",
+                   wrap_text_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "show-spaces",
+                   show_spaces_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "show-right-margin",
+                   show_right_margin_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind_with_mapping (prefs.editor_settings, "show-right-margin-position",
+                                right_margin_position_row, "value",
+                                G_SETTINGS_BIND_DEFAULT,
+                                uint_to_double_mapping, double_to_uint_mapping,
+                                NULL, NULL);
+  g_settings_bind (prefs.editor_settings, "enable-syntax-theme",
+                   syntax_highlight_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "auto-indent",
+                   auto_indent_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "replace-tabs",
+                   replace_tabs_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind_with_mapping (prefs.editor_settings, "tab-width",
+                                tab_width_row, "value",
+                                G_SETTINGS_BIND_DEFAULT,
+                                uint_to_double_mapping, double_to_uint_mapping,
+                                NULL, NULL);
+  g_settings_bind (prefs.editor_settings, "trim-trailing-whitespace",
+                   trim_trailing_whitespace_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.editor_settings, "spell-check",
+                   spell_check_row, "active", G_SETTINGS_BIND_DEFAULT);
+
+  /* GSettings bindings for Preview page */
+  g_settings_bind (prefs.preview_settings, "css-toggle",
+                   css_theme_toggle_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.preview_settings, "highlight-toggle",
+                   code_highlight_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.preview_settings, "mathjs-toggle",
+                   mathjs_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.preview_settings, "mermaid-toggle",
+                   mermaid_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind (prefs.preview_settings, "charter-toggle",
+                   charter_row, "active", G_SETTINGS_BIND_DEFAULT);
+
+  /* GSettings bindings for Window page */
+  g_settings_bind (prefs.window_settings, "enable-dark-mode",
+                   dark_mode_row, "active", G_SETTINGS_BIND_DEFAULT);
+
+  /* Sensitivity bindings */
+  g_object_bind_property (show_right_margin_row, "active",
+                          right_margin_position_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (syntax_highlight_row, "active",
+                          syntax_theme_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (spell_check_row, "active",
+                          spell_lang_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (css_theme_toggle_row, "active",
+                          css_theme_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (code_highlight_row, "active",
+                          code_highlight_theme_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (mathjs_row, "active",
+                          math_backend_row, "sensitive",
+                          G_BINDING_SYNC_CREATE);
+
+  /* Populate ComboRows */
+  /* Syntax Theme */
+  GList *syntax_list = marker_prefs_get_available_syntax_themes ();
+  GtkStringList *syntax_model = create_string_list_from_glist (syntax_list);
+  adw_combo_row_set_model (syntax_theme_row, G_LIST_MODEL (syntax_model));
+  g_object_unref (syntax_model);
+  char *syntax_theme = marker_prefs_get_syntax_theme ();
+  adw_combo_row_set_selected (syntax_theme_row,
+                              find_string_in_model (G_LIST_MODEL (syntax_model), syntax_theme));
+  g_free (syntax_theme);
+  g_list_free_full (syntax_list, g_free);
+  g_signal_connect (syntax_theme_row, "notify::selected",
+                    G_CALLBACK (on_syntax_theme_selected), NULL);
+
+  /* Spell Language */
+  GList *lang_list = marker_prefs_get_available_languages ();
+  GtkStringList *lang_model = create_string_list_from_glist (lang_list);
+  adw_combo_row_set_model (spell_lang_row, G_LIST_MODEL (lang_model));
+  g_object_unref (lang_model);
+  char *lang = marker_prefs_get_spell_check_language ();
+  adw_combo_row_set_selected (spell_lang_row,
+                              find_string_in_model (G_LIST_MODEL (lang_model), lang));
+  g_free (lang);
+  g_list_free_full (lang_list, g_free);
+  g_signal_connect (spell_lang_row, "notify::selected",
+                    G_CALLBACK (on_spell_lang_selected), NULL);
+
+  /* CSS Theme */
+  GList *css_list = marker_prefs_get_available_stylesheets ();
+  GtkStringList *css_model = create_string_list_from_glist (css_list);
+  adw_combo_row_set_model (css_theme_row, G_LIST_MODEL (css_model));
+  g_object_unref (css_model);
+  char *css_theme = marker_prefs_get_css_theme ();
+  char *css_filename = marker_string_filename_get_name (css_theme);
+  adw_combo_row_set_selected (css_theme_row,
+                              find_string_in_model (G_LIST_MODEL (css_model),
+                                                    css_filename ? css_filename : css_theme));
+  free (css_filename);
+  g_free (css_theme);
+  g_list_free_full (css_list, g_free);
+  g_signal_connect (css_theme_row, "notify::selected",
+                    G_CALLBACK (on_css_theme_selected), NULL);
+
+  /* Highlight Theme */
+  GList *hl_list = marker_prefs_get_available_highlight_themes ();
+  GtkStringList *hl_model = create_string_list_from_glist (hl_list);
+  adw_combo_row_set_model (code_highlight_theme_row, G_LIST_MODEL (hl_model));
+  g_object_unref (hl_model);
+  char *hl_theme = marker_prefs_get_highlight_theme ();
+  adw_combo_row_set_selected (code_highlight_theme_row,
+                              find_string_in_model (G_LIST_MODEL (hl_model), hl_theme));
+  g_free (hl_theme);
+  g_list_free_full (hl_list, g_free);
+  g_signal_connect (code_highlight_theme_row, "notify::selected",
+                    G_CALLBACK (on_code_highlight_theme_selected), NULL);
+
+  /* Math Backend */
+  const char * const math_backends[] = { "KaTeX", "MathJax", NULL };
+  GtkStringList *math_model = gtk_string_list_new (math_backends);
+  adw_combo_row_set_model (math_backend_row, G_LIST_MODEL (math_model));
+  g_object_unref (math_model);
+  adw_combo_row_set_selected (math_backend_row,
+                              (guint) marker_prefs_get_math_backend ());
+  g_signal_connect (math_backend_row, "notify::selected",
+                    G_CALLBACK (on_math_backend_selected), NULL);
+
+  /* View Mode */
+  const char * const view_modes[] = {
+    _("Editor Only"),
+    _("Preview Only"),
+    _("Dual Pane"),
+    _("Dual Window"),
+    NULL
+  };
+  GtkStringList *view_mode_model = gtk_string_list_new (view_modes);
+  adw_combo_row_set_model (view_mode_row, G_LIST_MODEL (view_mode_model));
+  g_object_unref (view_mode_model);
+  adw_combo_row_set_selected (view_mode_row,
+                              (guint) marker_prefs_get_default_view_mode ());
+  g_signal_connect (view_mode_row, "notify::selected",
+                    G_CALLBACK (on_view_mode_selected), NULL);
+
+  GtkApplication *app = marker_get_app ();
+  GtkWindow *active_win = app ? gtk_application_get_active_window (app) : NULL;
+  if (active_win)
+    gtk_window_set_transient_for (GTK_WINDOW (prefs_win), active_win);
+
+  gtk_window_present (GTK_WINDOW (prefs_win));
+
+  g_object_unref (builder);
+}

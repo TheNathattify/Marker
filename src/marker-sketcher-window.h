@@ -1,5 +1,5 @@
 /*
- * marker-editor-window.h
+ * marker-sketcher-window.h
  *
  * Copyright (C) 2017 - 2018 Marker Project
  *
@@ -22,25 +22,27 @@
 #ifndef __MARKER_SKETCHER_WINDOW_H__
 #define __MARKER_SKETCHER_WINDOW_H__
 
+#include <adwaita.h>
 #include <gtk/gtk.h>
 #include "marker-source-view.h"
 
-
-enum{
-    PEN,
-    ERASER,
-    TEXT
-}typedef SketchTool;
+typedef enum {
+  PEN,
+  ERASER,
+  TEXT
+} SketchTool;
 
 G_BEGIN_DECLS
 
 #define MARKER_TYPE_SKETCHER_WINDOW (marker_sketcher_window_get_type ())
 
-G_DECLARE_FINAL_TYPE (MarkerSketcherWindow, marker_sketcher_window, MARKER, SKETCHER_WINDOW, GtkWindow)
+G_DECLARE_FINAL_TYPE (MarkerSketcherWindow, marker_sketcher_window, MARKER, SKETCHER_WINDOW, AdwWindow)
 
 MarkerSketcherWindow *marker_sketcher_window_new                 (GtkApplication     *application);
 MarkerSketcherWindow *marker_sketcher_window_show                (GtkWindow          *parent,
                                                                   GFile              *file,
                                                                   MarkerSourceView   *source_view);
+
+G_END_DECLS
 
 #endif
