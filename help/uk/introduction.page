@@ -20,12 +20,6 @@
 Праворуч від вікна панель меню містить інші можливості, зокрема друк,
 налаштування масштаб або зміна параметрів.</p>
 
-  <media type="image" mime="image/png" height="400" src="figures/scrot.png">
-    <!--This is the alt text, as read out by screen readers and if the image is
-    missing. It also describes how to re-create the image.-->
-    <p>Taking notes in the dual-pane mode.</p>
-  </media>
-
   <section id="mardown">
     <title>Формат Markdown</title>
 

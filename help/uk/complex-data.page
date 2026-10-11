@@ -23,21 +23,11 @@
     <title>KaTeX</title>
     <p>Додайте чудові математичні формули до ваших документів у вигляді позначок за допомогою KaTeX:</p>
     <p>Математичні формули можна писати у синтаксисі мови LaTeX між двома мітками <code>$$</code>.</p>
-    <media type="image" mime="image/png" height="400" src="figures/scrot1.png">
-      <!--This is the alt text, as read out by screen readers and if the image is
-      missing. It also describes how to re-create the image.-->
-      <p>Математична фомула, показана KaTeX.</p>
-    </media>
   </section>
 
   <section id="charter">
     <title>Charter</title>
     <p>Створіть лінійні графіки, стовпчикові графіки або графіки розсіювання у ваших документах за допомогою Charter.</p>
-    <media type="image" mime="image/png" height="400" src="figures/scrot2.png">
-      <!--This is the alt text, as read out by screen readers and if the image is
-      missing. It also describes how to re-create the image.-->
-      <p>Graph rendering using Charter.</p>
-    </media>
     <p>Додаткові відомості <link href="https://github.com/Mandarancio/charter/">тут</link>.</p>
   </section>
 

@@ -21,13 +21,7 @@
     <title>Sketcher, an integrated drawing tool</title>
 
     <p><app>Marker</app> provides <app>Sketcher</app> a dialog allowing the insertion of basic drawing into your document.</p>
-    <p>You can launch the <app>Sketcher</app> dialog with <key>Ctrl</key>+<key>D</key>.</p>
-    <media type="image" mime="image/png" height="400" src="figures/sketcher.png">
-      <!-- This is the alt text, as read out by screen readers and if the image is
-           missing. It also describes how to re-create the image. -->
-      <p>Using Sketcher for math formulas might not be the best idea.</p>
-    </media>
-    <p>A pencil, an eraser and a text insertion tool are available. You can change the color or the size of them.</p>
+
     <p>Undo and redo operations can be used from the keyboard.</p>
   </section>
 </page>

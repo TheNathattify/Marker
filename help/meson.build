@@ -10,10 +10,6 @@ gnome.yelp(
     'legal.xml'
   ],
   media: [
-  	'figures/icon.png',
-  	'figures/scrot.png',
-  	'figures/scrot1.png',
-  	'figures/scrot2.png',
-  	'figures/sketcher.png'
+  	'figures/icon.png'
   ]
 )

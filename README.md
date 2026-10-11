@@ -21,15 +21,6 @@ Marker combines a distraction-free writing environment with a powerful live prev
 - **Multi-Format Export**: Export your documents to HTML, PDF, LaTeX, RTF, ODT, and DOCX (powered by Pandoc and Scidown).
 - **Customizable Styling**: User-selectable editor themes and custom preview CSS stylesheets.
 
----
-
-## Screenshots
-
-![Main Window](help/C/figures/scrot1.png)
-
-![Plotting](help/C/figures/scrot2.png)
-
-![Sketch Editor](help/C/figures/sketcher.png)
 
 ---
 
