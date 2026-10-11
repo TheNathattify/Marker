@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install validation tools
         run: |
@@ -28,3 +30,20 @@ jobs:
       - name: Compile GSettings Schema
         run: |
           glib-compile-schemas --strict --dry-run data/
+
+  flatpak:
+    name: Flatpak Build
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: com.github.adrighem.marker.flatpak
+          manifest-path: com.github.adrighem.marker.json
+          cache: false
