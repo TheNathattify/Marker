@@ -6,6 +6,11 @@ on:
       - master
       - main
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release tag to rebuild and publish assets for
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -15,13 +20,14 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      releases_created: ${{ steps.release.outputs.releases_created || steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release-meta.outputs.tag_name }}
-      version: ${{ steps.release-meta.outputs.version }}
-      sha: ${{ steps.release-meta.outputs.sha }}
+      releases_created: ${{ steps.release.outputs.releases_created || steps.release.outputs.release_created || steps.recovery.outputs.releases_created }}
+      tag_name: ${{ steps.release-meta.outputs.tag_name || steps.recovery.outputs.tag_name }}
+      version: ${{ steps.release-meta.outputs.version || steps.recovery.outputs.version }}
+      sha: ${{ steps.release-meta.outputs.sha || steps.recovery.outputs.sha }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
+        if: github.event_name != 'workflow_dispatch' || inputs.release_tag == ''
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
@@ -41,6 +47,31 @@ jobs:
           echo "tag_name=${tag}" >> "$GITHUB_OUTPUT"
           echo "version=${ver}" >> "$GITHUB_OUTPUT"
           echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+      - name: Select existing release
+        id: recovery
+        if: github.event_name == 'workflow_dispatch' && inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG_NAME: ${{ inputs.release_tag }}
+        run: |
+          release_sha=$(
+            gh api "repos/${GH_REPO}/git/ref/tags/${TAG_NAME}" \
+              --jq 'select(.object.type == "commit") | .object.sha // empty'
+          )
+          if [ -z "$release_sha" ]; then
+            release_sha=$(gh api "repos/${GH_REPO}/git/ref/tags/${TAG_NAME}" --jq '.object.sha')
+          fi
+          target_type=$(gh api "repos/${GH_REPO}/git/tags/${release_sha}" --jq '.object.type // empty' 2>/dev/null || true)
+          if [ "$target_type" = "commit" ]; then
+            release_sha=$(gh api "repos/${GH_REPO}/git/tags/${release_sha}" --jq '.object.sha')
+          fi
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+          ver="${TAG_NAME#marker-v}"
+          ver="${ver#v}"
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+          echo "sha=${release_sha}" >> "$GITHUB_OUTPUT"
+          echo "releases_created=true" >> "$GITHUB_OUTPUT"
 
   build-deb:
     needs: release-please
