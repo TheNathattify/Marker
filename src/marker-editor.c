@@ -88,6 +88,7 @@ on_document_external_change (MarkerDocument *doc,
     gtk_text_buffer_begin_irreversible_action (buffer);
     marker_source_view_set_text (source_view, contents, size);
     gtk_text_buffer_end_irreversible_action (buffer);
+    gtk_text_buffer_set_modified (buffer, FALSE);
     marker_document_set_is_modified (doc, FALSE);
     editor->needs_refresh = TRUE;
     marker_editor_refresh_preview (editor);
@@ -117,14 +118,20 @@ on_document_notify_subtitle (GObject    *object,
 }
 
 static void
-buffer_changed_cb (GtkTextBuffer *buffer,
+buffer_modified_changed_cb (GtkTextBuffer *buffer,
+                            gpointer       user_data)
+{
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  gboolean modified = gtk_text_buffer_get_modified (buffer);
+  marker_document_set_is_modified (editor->document, modified);
+  emit_signal_title_changed (editor);
+}
+
+static void
+buffer_changed_cb (GtkTextBuffer *buffer G_GNUC_UNUSED,
                    gpointer       user_data)
 {
   MarkerEditor *editor = MARKER_EDITOR (user_data);
-  if (editor->view_mode != PREVIEW_ONLY_MODE)
-  {
-    marker_document_set_is_modified (editor->document, TRUE);
-  }
   editor->needs_refresh = TRUE;
   emit_signal_title_changed (editor);
 
@@ -260,6 +267,7 @@ marker_editor_init (MarkerEditor *editor)
 
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
   g_signal_connect (buffer, "changed", G_CALLBACK (buffer_changed_cb), editor);
+  g_signal_connect (buffer, "modified-changed", G_CALLBACK (buffer_modified_changed_cb), editor);
 
   gtk_box_append (editor->vbox, GTK_WIDGET (editor->source_scroll));
 
@@ -486,6 +494,7 @@ marker_editor_open_file (MarkerEditor *editor,
     gtk_text_buffer_begin_irreversible_action (buffer);
     marker_source_view_set_text (source_view, contents, size);
     gtk_text_buffer_end_irreversible_action (buffer);
+    gtk_text_buffer_set_modified (buffer, FALSE);
   }
   else if (error)
   {
@@ -493,6 +502,8 @@ marker_editor_open_file (MarkerEditor *editor,
     g_warning ("Failed to load file '%s': %s", path, error->message);
   }
 
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
+  gtk_text_buffer_set_modified (buffer, FALSE);
   marker_document_set_is_modified (editor->document, FALSE);
   editor->needs_refresh = TRUE;
   marker_editor_refresh_preview (editor);
@@ -532,6 +543,7 @@ marker_editor_reload_file (MarkerEditor *editor)
   gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
   g_signal_handlers_unblock_by_func (buffer, buffer_changed_cb, editor);
 
+  gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (buffer), FALSE);
   marker_document_set_is_modified (editor->document, FALSE);
   editor->needs_refresh = TRUE;
 
@@ -552,6 +564,8 @@ marker_editor_save_file (MarkerEditor *editor)
 
   if (marker_document_save_contents (editor->document, text, strlen (text), &error))
   {
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
+    gtk_text_buffer_set_modified (buffer, FALSE);
     marker_document_set_is_modified (editor->document, FALSE);
     emit_signal_title_changed (editor);
   }
@@ -573,6 +587,8 @@ marker_editor_save_file_as (MarkerEditor *editor,
 
   if (marker_document_save_as (editor->document, file, text, strlen (text), &error))
   {
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
+    gtk_text_buffer_set_modified (buffer, FALSE);
     marker_document_set_is_modified (editor->document, FALSE);
     emit_signal_title_changed (editor);
     emit_signal_subtitle_changed (editor);
@@ -720,26 +736,43 @@ marker_editor_closing (MarkerEditor *editor)
 
 gboolean
 marker_editor_rename_file (MarkerEditor *editor,
-                           gchar        *name)
+                           const gchar  *name)
 {
+  g_return_val_if_fail (MARKER_IS_EDITOR (editor), FALSE);
+  g_return_val_if_fail (name != NULL && *name != '\0', FALSE);
+
   GFile *current_file = marker_document_get_file (editor->document);
-  if (G_IS_FILE (current_file))
+  if (!G_IS_FILE (current_file))
+    return FALSE;
+
+  g_autoptr(GFile) parent = g_file_get_parent (current_file);
+  if (!parent)
+    return FALSE;
+
+  g_autoptr(GFile) new_file = g_file_get_child (parent, name);
+  if (!new_file)
+    return FALSE;
+
+  if (g_file_equal (current_file, new_file))
+    return TRUE;
+
+  if (g_file_query_exists (new_file, NULL))
   {
-    g_autofree gchar *parent = marker_editor_get_subtitle (editor);
-    g_autofree gchar *path = g_strdup_printf ("%s/%s", parent, name);
-    g_autoptr(GFile) new_file = g_file_new_for_path (path);
-    GError *error = NULL;
-
-    if (!g_file_move (current_file, new_file, G_FILE_COPY_NONE, NULL, NULL, NULL, &error))
-    {
-      g_warning ("Failed to rename file to '%s': %s",
-                 path, error ? error->message : "unknown error");
-      g_clear_error (&error);
-      return FALSE;
-    }
-
-    marker_document_set_file (editor->document, new_file);
+    g_warning ("Cannot rename: destination file already exists");
+    return FALSE;
   }
+
+  GError *error = NULL;
+  if (!g_file_move (current_file, new_file, G_FILE_COPY_NONE, NULL, NULL, NULL, &error))
+  {
+    g_autofree gchar *path = g_file_get_path (new_file);
+    g_warning ("Failed to rename file to '%s': %s",
+               path ? path : name, error ? error->message : "unknown error");
+    g_clear_error (&error);
+    return FALSE;
+  }
+
+  marker_document_set_file (editor->document, new_file);
   return TRUE;
 }
 

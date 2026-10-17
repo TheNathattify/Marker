@@ -47,6 +47,16 @@ void                 marker_preview_render_markdown              (MarkerPreview 
 WebKitPrintOperationResponse
                      marker_preview_run_print_dialog             (MarkerPreview      *preview,
                                                                   GtkWindow          *parent);
+typedef void (*MarkerPrintPdfCallback) (MarkerPreview *preview,
+                                        gboolean       success,
+                                        gpointer       user_data);
+
+void                 marker_preview_print_pdf_with_callback      (MarkerPreview      *preview,
+                                                                  const char         *outfile,
+                                                                  enum scidown_paper_size paper_size,
+                                                                  GtkPageOrientation  orientation,
+                                                                  MarkerPrintPdfCallback callback,
+                                                                  gpointer            user_data);
 void                 marker_preview_print_pdf                    (MarkerPreview      *preview,
                                                                   const char         *outfile,
                                                                   enum scidown_paper_size paper_size,

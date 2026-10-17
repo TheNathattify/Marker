@@ -305,12 +305,63 @@ load_changed_cb (WebKitWebView   *preview,
   }
 }
 
+typedef struct {
+  MarkerPreview          *preview;
+  MarkerPrintPdfCallback  callback;
+  gpointer                user_data;
+  gboolean                notified;
+} PrintCallbackData;
+
+static void
+pdf_dialog_print_failed_cb (WebKitPrintOperation *print_op,
+                            GError               *err,
+                            gpointer              user_data)
+{
+  (void) print_op;
+  (void) user_data;
+  g_printerr ("print failed with error: %s\n", err->message);
+}
+
+static void
+pdf_print_finished_cb (WebKitPrintOperation *print_op,
+                       gpointer              user_data)
+{
+  (void) print_op;
+  PrintCallbackData *data = (PrintCallbackData *) user_data;
+  if (data != NULL && !data->notified)
+  {
+    data->notified = TRUE;
+    if (MARKER_IS_PREVIEW (data->preview))
+    {
+      g_signal_emit_by_name (data->preview, "print-finished", TRUE);
+      if (data->callback != NULL)
+      {
+        data->callback (data->preview, TRUE, data->user_data);
+      }
+    }
+  }
+}
+
 static void
 pdf_print_failed_cb (WebKitPrintOperation *print_op,
                      GError               *err,
                      gpointer              user_data)
 {
+  (void) print_op;
   g_printerr ("print failed with error: %s\n", err->message);
+  PrintCallbackData *data = (PrintCallbackData *) user_data;
+  if (data != NULL && !data->notified)
+  {
+    data->notified = TRUE;
+    if (MARKER_IS_PREVIEW (data->preview))
+    {
+      g_signal_emit_by_name (data->preview, "print-finished", FALSE);
+      if (data->callback != NULL)
+      {
+        data->callback (data->preview, FALSE, data->user_data);
+      }
+    }
+  }
 }
 
 void
@@ -329,7 +380,7 @@ marker_preview_init (MarkerPreview *preview)
   if (settings)
   {
     webkit_settings_set_allow_file_access_from_file_urls (settings, TRUE);
-    webkit_settings_set_allow_universal_access_from_file_urls (settings, TRUE);
+    webkit_settings_set_allow_universal_access_from_file_urls (settings, FALSE);
     webkit_settings_set_enable_javascript (settings, TRUE);
     webkit_settings_set_enable_write_console_messages_to_stdout (settings, TRUE);
   }
@@ -368,6 +419,12 @@ marker_preview_class_init (MarkerPreviewClass *class)
                 G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE,
                 0, NULL, NULL, NULL,
                 G_TYPE_NONE, 1, G_TYPE_STRING);
+
+  g_signal_new ("print-finished",
+                G_TYPE_FROM_CLASS (class),
+                G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE,
+                0, NULL, NULL, NULL,
+                G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
   WEBKIT_WEB_VIEW_CLASS (class)->load_changed = load_changed_cb;
 }
@@ -450,7 +507,12 @@ marker_preview_render_markdown (MarkerPreview *preview,
 
   g_autofree char *base_folder = NULL;
   if (base_uri)
-    base_folder = marker_string_filename_get_path (base_uri);
+  {
+    if (g_file_test (base_uri, G_FILE_TEST_IS_DIR))
+      base_folder = g_strdup (base_uri);
+    else
+      base_folder = marker_string_filename_get_path (base_uri);
+  }
   char *html = marker_markdown_to_html (markdown,
                                         strlen (markdown),
                                         base_folder,
@@ -465,12 +527,23 @@ marker_preview_render_markdown (MarkerPreview *preview,
   g_autofree gchar *uri = NULL;
   if (base_uri)
   {
-    g_autofree gchar *locale_uri = g_locale_from_utf8 (base_uri, strlen (base_uri), NULL, NULL, NULL);
+    g_autofree gchar *abs_path = NULL;
+    if (!g_path_is_absolute (base_uri))
+    {
+      g_autofree gchar *current_dir = g_get_current_dir ();
+      abs_path = g_build_filename (current_dir, base_uri, NULL);
+    }
+    const gchar *path_to_convert = abs_path ? abs_path : base_uri;
+    g_autofree gchar *locale_uri = g_locale_from_utf8 (path_to_convert, strlen (path_to_convert), NULL, NULL, NULL);
     uri = g_filename_to_uri (locale_uri, NULL, NULL);
   }
   else
   {
-    uri = g_strdup_printf ("file://%s", g_get_home_dir ());
+    uri = g_strdup_printf ("file://%s", g_get_tmp_dir ());
+  }
+  if (uri == NULL)
+  {
+    uri = g_strdup_printf ("file://%s", g_get_tmp_dir ());
   }
   webkit_web_view_load_html (web_view,
                              html,
@@ -486,16 +559,49 @@ marker_preview_run_print_dialog (MarkerPreview *preview,
   g_autoptr (WebKitPrintOperation) print_op =
     webkit_print_operation_new (WEBKIT_WEB_VIEW (preview));
 
-  g_signal_connect (print_op, "failed", G_CALLBACK (pdf_print_failed_cb), NULL);
+  g_signal_connect (print_op, "failed", G_CALLBACK (pdf_dialog_print_failed_cb), NULL);
 
   return webkit_print_operation_run_dialog (print_op, parent);
 }
 
+/* GTK internal unix print symbols for virtual printer enumeration */
+typedef gboolean (*GtkPrinterFunc) (gpointer printer, gpointer data);
+void gtk_enumerate_printers (GtkPrinterFunc func, gpointer data, GDestroyNotify destroy, gboolean wait);
+gboolean gtk_printer_is_virtual (gpointer printer);
+const char *gtk_printer_get_name (gpointer printer);
+
+static gboolean
+find_virtual_printer_cb (gpointer printer,
+                         gpointer data)
+{
+  if (gtk_printer_is_virtual (printer))
+  {
+    *(gchar **) data = g_strdup (gtk_printer_get_name (printer));
+    return TRUE;
+  }
+  return FALSE;
+}
+
+static gchar *
+get_file_printer_name (void)
+{
+  gchar *name = NULL;
+  gtk_enumerate_printers (find_virtual_printer_cb, &name, NULL, TRUE);
+  if (name == NULL)
+  {
+    const gchar *translated = dgettext ("gtk40", "Print to File");
+    name = g_strdup (translated != NULL ? translated : "Print to File");
+  }
+  return name;
+}
+
 void
-marker_preview_print_pdf (MarkerPreview          *preview,
-                          const char             *outfile,
-                          enum scidown_paper_size paper_size,
-                          GtkPageOrientation      orientation)
+marker_preview_print_pdf_with_callback (MarkerPreview          *preview,
+                                        const char             *outfile,
+                                        enum scidown_paper_size paper_size,
+                                        GtkPageOrientation      orientation,
+                                        MarkerPrintPdfCallback  callback,
+                                        gpointer                user_data)
 {
   g_autoptr (WebKitPrintOperation) print_op = webkit_print_operation_new (WEBKIT_WEB_VIEW (preview));
   g_autoptr (GtkPrintSettings) print_s = gtk_print_settings_new ();
@@ -503,7 +609,16 @@ marker_preview_print_pdf (MarkerPreview          *preview,
   g_autoptr (GtkPaperSize) gtk_paper_size = NULL;
   g_autofree char *uri = g_strdup_printf ("file://%s", outfile);
 
-  g_signal_connect (print_op, "failed", G_CALLBACK (pdf_print_failed_cb), NULL);
+  PrintCallbackData *data = g_new0 (PrintCallbackData, 1);
+  data->preview = preview;
+  data->callback = callback;
+  data->user_data = user_data;
+  data->notified = FALSE;
+
+  g_object_set_data_full (G_OBJECT (print_op), "marker-print-callback-data", data, g_free);
+
+  g_signal_connect (print_op, "finished", G_CALLBACK (pdf_print_finished_cb), data);
+  g_signal_connect (print_op, "failed", G_CALLBACK (pdf_print_failed_cb), data);
 
   if (paper_size != B43 && paper_size != B169)
     gtk_paper_size = gtk_paper_size_new (paper_to_gtkstr (paper_size));
@@ -512,9 +627,10 @@ marker_preview_print_pdf (MarkerPreview          *preview,
   else
     gtk_paper_size = gtk_paper_size_new_custom ("B43", "B43", 166, 294, GTK_UNIT_MM);
 
+  g_autofree gchar *printer_name = get_file_printer_name ();
   gtk_print_settings_set (print_s, GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT, "pdf");
   gtk_print_settings_set (print_s, GTK_PRINT_SETTINGS_OUTPUT_URI, uri);
-  gtk_print_settings_set (print_s, GTK_PRINT_SETTINGS_PRINTER, dgettext ("gtk40", "Print to File"));
+  gtk_print_settings_set (print_s, GTK_PRINT_SETTINGS_PRINTER, printer_name);
 
   if (orientation == GTK_PAGE_ORIENTATION_PORTRAIT)
   {
@@ -548,6 +664,15 @@ marker_preview_print_pdf (MarkerPreview          *preview,
   webkit_print_operation_set_page_setup (print_op, gtk_page_setup);
 
   webkit_print_operation_print (print_op);
+}
+
+void
+marker_preview_print_pdf (MarkerPreview          *preview,
+                          const char             *outfile,
+                          enum scidown_paper_size paper_size,
+                          GtkPageOrientation      orientation)
+{
+  marker_preview_print_pdf_with_callback (preview, outfile, paper_size, orientation, NULL, NULL);
 }
 
 void

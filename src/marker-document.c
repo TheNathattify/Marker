@@ -581,6 +581,7 @@ marker_document_save_contents (MarkerDocument  *self,
   }
 
   g_autofree gchar *trimmed = NULL;
+  g_autofree gchar *with_newline = NULL;
   const gchar *data_to_save = contents;
   gsize data_length = (length == (gsize) -1) ? strlen (contents) : length;
 
@@ -589,6 +590,16 @@ marker_document_save_contents (MarkerDocument  *self,
     trimmed = trim_trailing_whitespace_from_text (contents);
     data_to_save = trimmed;
     data_length = strlen (trimmed);
+  }
+
+  if (data_length > 0 && data_to_save[data_length - 1] != '\n')
+  {
+    with_newline = g_malloc (data_length + 2);
+    memcpy (with_newline, data_to_save, data_length);
+    with_newline[data_length] = '\n';
+    with_newline[data_length + 1] = '\0';
+    data_to_save = with_newline;
+    data_length += 1;
   }
 
   self->is_saving = TRUE;
@@ -631,6 +642,7 @@ marker_document_save_as (MarkerDocument  *self,
   g_return_val_if_fail (contents != NULL, FALSE);
 
   g_autofree gchar *trimmed = NULL;
+  g_autofree gchar *with_newline = NULL;
   const gchar *data_to_save = contents;
   gsize data_length = (length == (gsize) -1) ? strlen (contents) : length;
 
@@ -639,6 +651,16 @@ marker_document_save_as (MarkerDocument  *self,
     trimmed = trim_trailing_whitespace_from_text (contents);
     data_to_save = trimmed;
     data_length = strlen (trimmed);
+  }
+
+  if (data_length > 0 && data_to_save[data_length - 1] != '\n')
+  {
+    with_newline = g_malloc (data_length + 2);
+    memcpy (with_newline, data_to_save, data_length);
+    with_newline[data_length] = '\n';
+    with_newline[data_length + 1] = '\0';
+    data_to_save = with_newline;
+    data_length += 1;
   }
 
   gboolean success = g_file_replace_contents (new_file,

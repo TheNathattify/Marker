@@ -674,40 +674,174 @@ marker_window_unfullscreen (MarkerWindow *window)
     gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), FALSE);
 }
 
+typedef struct {
+  MarkerWindow *window;
+  MarkerEditor *editor;
+  GtkWidget    *entry;
+  gchar        *current_basename;
+} RenameClosure;
+
 static void
-rename_file_action_cb (GtkCellRendererText *cell,
-                       gchar               *path_string,
-                       gchar               *new_text,
-                       gpointer             user_data)
+show_rename_warning_dialog (MarkerWindow *window,
+                            const gchar  *message)
 {
-  if (!new_text || strlen (new_text) == 0)
-    return;
+  AdwAlertDialog *alert = ADW_ALERT_DIALOG (adw_alert_dialog_new (_("Cannot Rename"), message));
+  adw_alert_dialog_add_response (alert, "ok", _("_OK"));
+  adw_alert_dialog_set_default_response (alert, "ok");
+  adw_alert_dialog_choose (alert, GTK_WIDGET (window), NULL, NULL, NULL);
+}
 
-  MarkerWindow *window = MARKER_WINDOW (user_data);
-  GtkTreeIter iter;
-  GtkTreeModel *model = GTK_TREE_MODEL (window->documents_tree_store);
-  MarkerEditor *editor = NULL;
+static void
+on_rename_dialog_response (AdwAlertDialog *dialog,
+                           GAsyncResult   *result,
+                           gpointer        user_data)
+{
+  RenameClosure *closure = user_data;
+  const char *response = adw_alert_dialog_choose_finish (dialog, result);
 
-  if (gtk_tree_model_get_iter_from_string (model, &iter, path_string))
+  if (g_strcmp0 (response, "rename") == 0)
   {
-    gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &editor, -1);
-    if (marker_editor_rename_file (editor, g_strdup (new_text)))
-    {
-      g_autofree gchar *markup_title = make_markup_title (editor, new_text);
-      gtk_tree_store_set (window->documents_tree_store,
-                          &iter,
-                          TITLE_COLUMN,
-                          markup_title, -1);
-      if (editor == window->active_editor && window->window_title)
-      {
-        g_autofree gchar *title = marker_editor_get_title (editor);
-        g_autofree gchar *subtitle = marker_editor_get_subtitle (editor);
+    const gchar *new_text = gtk_editable_get_text (GTK_EDITABLE (closure->entry));
+    g_autofree gchar *trimmed = g_strstrip (g_strdup (new_text));
 
-        adw_window_title_set_title (window->window_title, title);
-        adw_window_title_set_subtitle (window->window_title, subtitle);
+    if (trimmed == NULL || *trimmed == '\0')
+    {
+      show_rename_warning_dialog (closure->window, _("File name cannot be empty."));
+      goto out;
+    }
+
+    if (strchr (trimmed, '/') != NULL)
+    {
+      show_rename_warning_dialog (closure->window, _("File name cannot contain '/'."));
+      goto out;
+    }
+
+    if (g_strcmp0 (trimmed, closure->current_basename) == 0)
+    {
+      goto out;
+    }
+
+    GFile *current_file = marker_editor_get_file (closure->editor);
+    if (!current_file)
+    {
+      goto out;
+    }
+
+    g_autoptr(GFile) parent = g_file_get_parent (current_file);
+    if (parent)
+    {
+      g_autoptr(GFile) target_file = g_file_get_child (parent, trimmed);
+      if (g_file_query_exists (target_file, NULL))
+      {
+        show_rename_warning_dialog (closure->window, _("A file with that name already exists."));
+        goto out;
       }
     }
+
+    if (marker_editor_rename_file (closure->editor, trimmed))
+    {
+      GtkTreeModel *model = GTK_TREE_MODEL (closure->window->documents_tree_store);
+      gint rows = gtk_tree_model_iter_n_children (model, NULL);
+      GtkTreeIter iter;
+      gboolean found = FALSE;
+
+      for (gint i = 0; i < rows; i++)
+      {
+        g_autoptr(GtkTreePath) path = gtk_tree_path_new_from_indices (i, -1);
+        if (gtk_tree_model_get_iter (model, &iter, path))
+        {
+          MarkerEditor *row_editor = NULL;
+          gtk_tree_model_get (model, &iter, EDITOR_COLUMN, &row_editor, -1);
+          if (row_editor == closure->editor)
+          {
+            found = TRUE;
+            break;
+          }
+        }
+      }
+
+      if (found)
+      {
+        g_autofree gchar *markup_title = make_markup_title (closure->editor, trimmed);
+        gtk_tree_store_set (closure->window->documents_tree_store,
+                            &iter,
+                            TITLE_COLUMN,
+                            markup_title, -1);
+      }
+
+      if (closure->editor == closure->window->active_editor && closure->window->window_title)
+      {
+        g_autofree gchar *title = marker_editor_get_title (closure->editor);
+        g_autofree gchar *subtitle = marker_editor_get_subtitle (closure->editor);
+
+        adw_window_title_set_title (closure->window->window_title, title);
+        adw_window_title_set_subtitle (closure->window->window_title, subtitle);
+      }
+    }
+    else
+    {
+      show_rename_warning_dialog (closure->window, _("Failed to rename file."));
+    }
   }
+
+out:
+  g_free (closure->current_basename);
+  g_free (closure);
+}
+
+static void
+action_rename_document_cb (GSimpleAction *action G_GNUC_UNUSED,
+                           GVariant      *parameter G_GNUC_UNUSED,
+                           gpointer       user_data)
+{
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (!editor)
+    return;
+
+  GFile *file = marker_editor_get_file (editor);
+  if (!G_IS_FILE (file))
+  {
+    show_rename_warning_dialog (window, _("The document must be saved before it can be renamed."));
+    return;
+  }
+
+  gchar *current_name = g_file_get_basename (file);
+  if (!current_name)
+    return;
+
+  GtkWidget *entry = gtk_entry_new ();
+  gtk_editable_set_text (GTK_EDITABLE (entry), current_name);
+  gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+
+  const char *dot = g_utf8_strrchr (current_name, -1, '.');
+  if (dot && dot != current_name)
+  {
+    glong len = g_utf8_pointer_to_offset (current_name, dot);
+    gtk_editable_select_region (GTK_EDITABLE (entry), 0, len);
+  }
+  else
+  {
+    gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+  }
+
+  AdwAlertDialog *dialog = ADW_ALERT_DIALOG (adw_alert_dialog_new (_("Rename Document"), NULL));
+  adw_alert_dialog_set_extra_child (dialog, entry);
+  adw_alert_dialog_add_responses (dialog,
+                                  "cancel", _("_Cancel"),
+                                  "rename", _("_Rename"),
+                                  NULL);
+  adw_alert_dialog_set_response_appearance (dialog, "rename", ADW_RESPONSE_SUGGESTED);
+  adw_alert_dialog_set_default_response (dialog, "rename");
+  adw_alert_dialog_set_close_response (dialog, "cancel");
+
+  RenameClosure *closure = g_new0 (RenameClosure, 1);
+  closure->window = window;
+  closure->editor = editor;
+  closure->entry = entry;
+  closure->current_basename = current_name;
+
+  adw_alert_dialog_choose (dialog, GTK_WIDGET (window), NULL, (GAsyncReadyCallback) on_rename_dialog_response, closure);
 }
 
 static void
@@ -945,6 +1079,12 @@ marker_window_init (MarkerWindow *window)
     const gchar *sidebar_accels[] = { "F12", NULL };
     gtk_application_set_accels_for_action (app, "win.sidebar", sidebar_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
+
+    action = G_ACTION (g_simple_action_new ("rename-document", NULL));
+    g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_rename_document_cb), window);
+    const gchar *rename_accels[] = { "F2", NULL };
+    gtk_application_set_accels_for_action (app, "win.rename-document", rename_accels);
+    g_action_map_add_action (G_ACTION_MAP (window), action);
   }
 
   window->is_fullscreen = FALSE;
@@ -996,15 +1136,10 @@ marker_window_init (MarkerWindow *window)
   gtk_tree_view_column_set_title (column, _("Documents"));
 
   renderer = gtk_cell_renderer_text_new ();
-  g_object_set (renderer, "editable", TRUE, NULL);
   gtk_tree_view_column_pack_start (column, renderer, TRUE);
   gtk_tree_view_column_set_attributes (column, renderer,
                                        "markup", TITLE_COLUMN,
                                        NULL);
-
-  g_signal_connect (renderer, "edited",
-                    G_CALLBACK (rename_file_action_cb),
-                    window);
 
   renderer = gtk_cell_renderer_pixbuf_new ();
   gtk_tree_view_column_pack_start (column, renderer, FALSE);

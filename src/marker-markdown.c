@@ -118,7 +118,17 @@ char* html_header(MarkerMathJSMode    mathjs_mode,
       break;
   }
 
-  char * buffer = g_strdup_printf("%s\n%s\n%s\n%s\n%s\n%s\n",mathjs_css, highlight_css, mathjs_script, mathjs_auto, highlight_script, mermaid_script);
+  const char *csp_meta =
+    "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self' 'unsafe-inline' file: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' file: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' file: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; img-src * file: data: https: http:; font-src file: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; media-src file: data: https: http:; connect-src 'none'; frame-src 'none'; object-src 'none'; form-action 'none';\">";
+
+  char * buffer = g_strdup_printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+                                  csp_meta,
+                                  mathjs_css,
+                                  highlight_css,
+                                  mathjs_script,
+                                  mathjs_auto,
+                                  highlight_script,
+                                  mermaid_script);
 
   g_free(mathjs_script);
   g_free(mathjs_auto);

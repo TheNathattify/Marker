@@ -289,6 +289,7 @@ int
 main (int    argc,
       char **argv)
 {
+  setlocale (LC_ALL, "");
   bindtextdomain ("marker", LOCALE_DIR);
   bind_textdomain_codeset ("marker", "UTF-8");
   textdomain ("marker");

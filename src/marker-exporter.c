@@ -197,6 +197,37 @@ on_export_file_dialog_cb (GObject      *source_object,
       const gchar *file_type = gtk_file_filter_get_name (filter);
       fmt = marker_exporter_str_to_fmt (file_type);
     }
+
+    const gchar *ext = NULL;
+    switch (fmt)
+    {
+      case PDF:
+        ext = ".pdf";
+        break;
+      case LATEX:
+        ext = ".tex";
+        break;
+      case RTF:
+        ext = ".rtf";
+        break;
+      case DOCX:
+        ext = ".docx";
+        break;
+      case ODT:
+        ext = ".odt";
+        break;
+      case HTML:
+      default:
+        ext = ".html";
+        break;
+    }
+
+    if (ext != NULL)
+    {
+      gchar *new_filename = g_strconcat (filename, ext, NULL);
+      g_free (filename);
+      filename = new_filename;
+    }
   }
 
   switch (fmt)
@@ -348,6 +379,59 @@ marker_exporter_show_export_dialog (MarkerWindow *window)
                         window);
 }
 
+typedef struct {
+  GMainLoop *loop;
+  MarkerPreview *preview;
+  const gchar *outfile;
+  enum scidown_paper_size paper_size;
+  GtkPageOrientation orientation;
+  guint timeout_id;
+  gulong load_handler_id;
+  gulong print_handler_id;
+  gboolean printed;
+} HeadlessPdfContext;
+
+static void
+on_headless_pdf_load_changed (WebKitWebView   *web_view,
+                              WebKitLoadEvent  load_event,
+                              gpointer         user_data)
+{
+  (void) web_view;
+  HeadlessPdfContext *ctx = (HeadlessPdfContext *) user_data;
+  if (load_event == WEBKIT_LOAD_FINISHED && !ctx->printed)
+  {
+    ctx->printed = TRUE;
+    marker_preview_print_pdf (ctx->preview, ctx->outfile, ctx->paper_size, ctx->orientation);
+  }
+}
+
+static void
+on_headless_pdf_print_finished (MarkerPreview *preview,
+                                gboolean       success,
+                                gpointer       user_data)
+{
+  (void) preview;
+  (void) success;
+  HeadlessPdfContext *ctx = (HeadlessPdfContext *) user_data;
+  if (ctx->loop != NULL && g_main_loop_is_running (ctx->loop))
+  {
+    g_main_loop_quit (ctx->loop);
+  }
+}
+
+static gboolean
+on_headless_pdf_timeout (gpointer user_data)
+{
+  HeadlessPdfContext *ctx = (HeadlessPdfContext *) user_data;
+  g_warning ("PDF export timed out after 15 seconds");
+  ctx->timeout_id = 0;
+  if (ctx->loop != NULL && g_main_loop_is_running (ctx->loop))
+  {
+    g_main_loop_quit (ctx->loop);
+  }
+  return G_SOURCE_REMOVE;
+}
+
 void
 marker_exporter_export (const gchar *infile,
                         const gchar *outfile)
@@ -389,11 +473,48 @@ marker_exporter_export (const gchar *infile,
                                                   stylesheet, outfile);
   }
   else if (marker_string_ends_with (outfile, ".pdf")) {
-    /*
-    g_autoptr (MarkerPreview) preview = marker_preview_new ();
-    marker_preview_render_markdown (preview, markdown, stylesheet, base_folder);
-    marker_preview_print_pdf (preview, outfile, paper_size, orientation);
-    */
+    g_autoptr (MarkerPreview) preview = g_object_ref_sink (marker_preview_new ());
+    GMainLoop *loop = g_main_loop_new (NULL, FALSE);
+
+    HeadlessPdfContext ctx = {
+      .loop = loop,
+      .preview = preview,
+      .outfile = outfile,
+      .paper_size = paper_size,
+      .orientation = orientation,
+      .timeout_id = 0,
+      .load_handler_id = 0,
+      .print_handler_id = 0,
+      .printed = FALSE
+    };
+
+    ctx.load_handler_id = g_signal_connect (preview, "load-changed",
+                                            G_CALLBACK (on_headless_pdf_load_changed), &ctx);
+    ctx.print_handler_id = g_signal_connect (preview, "print-finished",
+                                             G_CALLBACK (on_headless_pdf_print_finished), &ctx);
+    ctx.timeout_id = g_timeout_add_seconds (15, on_headless_pdf_timeout, &ctx);
+
+    marker_preview_render_markdown (preview, markdown, stylesheet, base_folder, -1);
+
+    g_main_loop_run (loop);
+
+    if (ctx.timeout_id > 0)
+    {
+      g_source_remove (ctx.timeout_id);
+      ctx.timeout_id = 0;
+    }
+    if (ctx.load_handler_id > 0 && g_signal_handler_is_connected (preview, ctx.load_handler_id))
+    {
+      g_signal_handler_disconnect (preview, ctx.load_handler_id);
+      ctx.load_handler_id = 0;
+    }
+    if (ctx.print_handler_id > 0 && g_signal_handler_is_connected (preview, ctx.print_handler_id))
+    {
+      g_signal_handler_disconnect (preview, ctx.print_handler_id);
+      ctx.print_handler_id = 0;
+    }
+
+    g_main_loop_unref (loop);
   }
   else if (marker_string_ends_with (outfile, ".tex")) {
     marker_markdown_to_latex_file (markdown, len, base_folder,

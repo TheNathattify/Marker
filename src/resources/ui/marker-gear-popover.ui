@@ -30,6 +30,10 @@
         <attribute name="action">win.saveas</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">_Rename Document…</attribute>
+        <attribute name="action">win.rename-document</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_Reload from Disk</attribute>
         <attribute name="action">win.reload</attribute>
       </item>
