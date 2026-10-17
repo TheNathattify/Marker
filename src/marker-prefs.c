@@ -417,22 +417,32 @@ marker_prefs_get_available_stylesheets (void)
   GList *list = NULL;
   DIR *dir;
   struct dirent *ent;
-  const gchar *styles_dir = marker_utils_get_styles_dir ();
+  const gchar *dirs[] = {
+    marker_utils_get_user_styles_dir (),
+    marker_utils_get_styles_dir (),
+    NULL
+  };
 
-  if ((dir = opendir (styles_dir)) != NULL)
+  for (gsize i = 0; dirs[i] != NULL; i++)
   {
-    while ((ent = readdir (dir)) != NULL)
+    if ((dir = opendir (dirs[i])) != NULL)
     {
-      char *filename = ent->d_name;
-      if (marker_string_ends_with (filename, ".css"))
+      while ((ent = readdir (dir)) != NULL)
       {
-        list = g_list_prepend (list, marker_string_alloc (filename));
+        char *filename = ent->d_name;
+        if (marker_string_ends_with (filename, ".css"))
+        {
+          if (!g_list_find_custom (list, filename, (GCompareFunc) g_strcmp0))
+          {
+            list = g_list_prepend (list, marker_string_alloc (filename));
+          }
+        }
       }
+      closedir (dir);
     }
-    closedir (dir);
   }
 
-  return g_list_reverse (list);
+  return g_list_sort (list, (GCompareFunc) g_strcmp0);
 }
 
 GList *

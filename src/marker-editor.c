@@ -191,6 +191,30 @@ marker_editor_key_pressed_cb (GtkEventControllerKey *controller,
   return GDK_EVENT_PROPAGATE;
 }
 
+static gboolean
+source_scroll_cb (GtkEventControllerScroll *controller,
+                  gdouble                   dx G_GNUC_UNUSED,
+                  gdouble                   dy,
+                  gpointer                  user_data)
+{
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (controller));
+  if ((state & GDK_CONTROL_MASK) != 0)
+  {
+    if (dy > 0)
+    {
+      marker_preview_zoom_out (editor->preview);
+      return TRUE;
+    }
+    else if (dy < 0)
+    {
+      marker_preview_zoom_in (editor->preview);
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 static void
 marker_editor_init (MarkerEditor *editor)
 {
@@ -264,6 +288,11 @@ marker_editor_init (MarkerEditor *editor)
   gtk_widget_set_hexpand (GTK_WIDGET (editor->source_scroll), TRUE);
   gtk_widget_set_vexpand (GTK_WIDGET (editor->source_scroll), TRUE);
   gtk_scrolled_window_set_child (editor->source_scroll, GTK_WIDGET (editor->source_view));
+
+  GtkEventController *source_scroll_controller =
+    gtk_event_controller_scroll_new (GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
+  g_signal_connect (source_scroll_controller, "scroll", G_CALLBACK (source_scroll_cb), editor);
+  gtk_widget_add_controller (GTK_WIDGET (editor->source_view), source_scroll_controller);
 
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
   g_signal_connect (buffer, "changed", G_CALLBACK (buffer_changed_cb), editor);
@@ -721,6 +750,8 @@ marker_editor_apply_prefs (MarkerEditor *editor)
 
   guint tab_width = marker_prefs_get_tab_width ();
   gtk_source_view_set_indent_width (source_view, tab_width);
+
+  marker_source_view_set_zoom_level (marker_prefs_get_zoom_level ());
 }
 
 void

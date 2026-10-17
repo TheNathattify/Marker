@@ -242,6 +242,33 @@ marker_source_view_set_language (MarkerSourceView *source_view,
   }
 }
 
+static GtkCssProvider *source_zoom_provider = NULL;
+
+void
+marker_source_view_set_zoom_level (gdouble zoom)
+{
+  if (source_zoom_provider == NULL)
+  {
+    source_zoom_provider = gtk_css_provider_new ();
+    GdkDisplay *display = gdk_display_get_default ();
+    if (display != NULL)
+    {
+      gtk_style_context_add_provider_for_display (display,
+                                                  GTK_STYLE_PROVIDER (source_zoom_provider),
+                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    }
+  }
+
+  int percent = (int) (zoom * 100.0 + 0.5);
+  if (percent < 20)
+    percent = 20;
+  if (percent > 500)
+    percent = 500;
+
+  g_autofree gchar *css = g_strdup_printf ("textview.marker-source-view, textview.marker-source-view text { font-size: %d%%; }", percent);
+  gtk_css_provider_load_from_string (source_zoom_provider, css);
+}
+
 static void
 marker_source_view_init (MarkerSourceView *source_view)
 {
@@ -251,6 +278,9 @@ marker_source_view_init (MarkerSourceView *source_view)
 
   marker_source_view_set_language (source_view, "markdown");
   gtk_widget_add_css_class (GTK_WIDGET (source_view), "monospace");
+  gtk_widget_add_css_class (GTK_WIDGET (source_view), "marker-source-view");
+
+  marker_source_view_set_zoom_level (marker_prefs_get_zoom_level ());
 
   gtk_source_view_set_insert_spaces_instead_of_tabs (GTK_SOURCE_VIEW (source_view), marker_prefs_get_replace_tabs ());
   gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (source_view), marker_prefs_get_tab_width ());

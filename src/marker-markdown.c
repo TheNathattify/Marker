@@ -245,13 +245,30 @@ marker_markdown_css(const char* css_link)
   {
     return g_strdup("");
   }
-  g_autofree gchar *path = g_strdup_printf("%s%s", marker_utils_get_styles_dir (), css_link);
+
   gchar *contents = NULL;
   gsize length = 0;
-  if (g_file_get_contents(path, &contents, &length, NULL))
+
+  if (g_path_is_absolute (css_link) && g_file_test (css_link, G_FILE_TEST_IS_REGULAR))
   {
-    return contents;
+    if (g_file_get_contents (css_link, &contents, &length, NULL))
+      return contents;
   }
+
+  g_autofree gchar *user_path = g_build_filename (marker_utils_get_user_styles_dir (), css_link, NULL);
+  if (g_file_test (user_path, G_FILE_TEST_IS_REGULAR))
+  {
+    if (g_file_get_contents (user_path, &contents, &length, NULL))
+      return contents;
+  }
+
+  g_autofree gchar *sys_path = g_build_filename (marker_utils_get_styles_dir (), css_link, NULL);
+  if (g_file_test (sys_path, G_FILE_TEST_IS_REGULAR))
+  {
+    if (g_file_get_contents (sys_path, &contents, &length, NULL))
+      return contents;
+  }
+
   return g_strdup("");
 }
 

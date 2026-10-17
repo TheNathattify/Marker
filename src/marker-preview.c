@@ -30,6 +30,7 @@
 #include "marker-markdown.h"
 #include "marker-prefs.h"
 #include "marker-string.h"
+#include "marker-source-view.h"
 #include "marker-preview.h"
 #include "marker.h"
 
@@ -205,14 +206,17 @@ key_pressed_cb (GtkEventControllerKey *controller,
     {
       case GDK_KEY_plus:
       case GDK_KEY_equal:
+      case GDK_KEY_KP_Add:
         marker_preview_zoom_in (preview);
         return TRUE;
 
       case GDK_KEY_minus:
+      case GDK_KEY_KP_Subtract:
         marker_preview_zoom_out (preview);
         return TRUE;
 
       case GDK_KEY_0:
+      case GDK_KEY_KP_0:
         marker_preview_zoom_original (preview);
         return TRUE;
     }
@@ -370,12 +374,19 @@ marker_preview_set_zoom_level (MarkerPreview *preview,
 {
   g_return_if_fail (MARKER_IS_PREVIEW (preview));
   webkit_web_view_set_zoom_level (WEBKIT_WEB_VIEW (preview), zoom_level);
+  marker_source_view_set_zoom_level (zoom_level);
   g_signal_emit_by_name (preview, "zoom-changed");
 }
 
 static void
 marker_preview_init (MarkerPreview *preview)
 {
+  WebKitWebContext *context = webkit_web_view_get_context (WEBKIT_WEB_VIEW (preview));
+  if (context != NULL)
+  {
+    webkit_web_context_set_cache_model (context, WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER);
+  }
+
   WebKitSettings *settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW (preview));
   if (settings)
   {
@@ -449,6 +460,7 @@ marker_preview_zoom_out (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (val);
   webkit_web_view_set_zoom_level (view, val);
+  marker_source_view_set_zoom_level (val);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -463,6 +475,7 @@ marker_preview_zoom_original (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (zoom);
   webkit_web_view_set_zoom_level (view, zoom);
+  marker_source_view_set_zoom_level (zoom);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -478,6 +491,7 @@ marker_preview_zoom_in (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (val);
   webkit_web_view_set_zoom_level (view, val);
+  marker_source_view_set_zoom_level (val);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -523,6 +537,20 @@ marker_preview_render_markdown (MarkerPreview *preview,
                                         cursor);
 
   WebKitWebView *web_view = WEBKIT_WEB_VIEW (preview);
+  WebKitNetworkSession *session = webkit_web_view_get_network_session (web_view);
+  if (session)
+  {
+    WebKitWebsiteDataManager *manager = webkit_network_session_get_website_data_manager (session);
+    if (manager)
+    {
+      webkit_website_data_manager_clear (manager,
+                                         WEBKIT_WEBSITE_DATA_MEMORY_CACHE | WEBKIT_WEBSITE_DATA_DISK_CACHE,
+                                         0,
+                                         NULL,
+                                         NULL,
+                                         NULL);
+    }
+  }
 
   g_autofree gchar *uri = NULL;
   if (base_uri)

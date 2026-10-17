@@ -338,6 +338,21 @@ marker_utils_get_styles_dir (void)
 }
 
 const gchar *
+marker_utils_get_user_styles_dir (void)
+{
+  static gchar *user_styles_dir = NULL;
+  if (user_styles_dir != NULL)
+    return user_styles_dir;
+
+  gchar *dir = g_build_filename (g_get_user_data_dir (), "marker", "styles", NULL);
+  user_styles_dir = g_str_has_suffix (dir, "/") ? dir : g_strdup_printf ("%s/", dir);
+  if (user_styles_dir != dir)
+    g_free (dir);
+
+  return user_styles_dir;
+}
+
+const gchar *
 marker_utils_get_highlight_styles_dir (void)
 {
   static gchar *highlight_styles_dir = NULL;

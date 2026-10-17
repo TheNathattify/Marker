@@ -130,6 +130,22 @@ on_stop_search (GtkSearchEntry         *entry,
   (void) entry;
   if (self->search_bar != NULL)
     gtk_search_bar_set_search_mode (self->search_bar, FALSE);
+  if (self->source_view != NULL)
+    gtk_widget_grab_focus (GTK_WIDGET (self->source_view));
+}
+
+static void
+on_search_bar_search_mode_notify (GObject                *object,
+                                  GParamSpec             *pspec,
+                                  MarkerSearchController *self)
+{
+  (void) object;
+  (void) pspec;
+  if (self->search_bar != NULL && !gtk_search_bar_get_search_mode (self->search_bar))
+    {
+      if (self->source_view != NULL)
+        gtk_widget_grab_focus (GTK_WIDGET (self->source_view));
+    }
 }
 
 static void
@@ -218,6 +234,11 @@ marker_search_controller_new (GtkSearchBar   *search_bar,
     {
       gtk_search_bar_connect_entry (self->search_bar, GTK_EDITABLE (self->search_entry));
       gtk_search_bar_set_show_close_button (self->search_bar, TRUE);
+      g_signal_connect_object (self->search_bar,
+                               "notify::search-mode-enabled",
+                               G_CALLBACK (on_search_bar_search_mode_notify),
+                               self,
+                               0);
     }
 
   if (source_view != NULL)
@@ -354,19 +375,45 @@ marker_search_controller_toggle (MarkerSearchController *self)
     return;
 
   gboolean active = gtk_search_bar_get_search_mode (self->search_bar);
+  gchar *selected_text = NULL;
+
+  if (self->source_view != NULL)
+    {
+      GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->source_view));
+      GtkTextIter start, end;
+      if (gtk_text_buffer_get_selection_bounds (buffer, &start, &end))
+        {
+          selected_text = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+        }
+    }
+
   if (!active)
     {
       gtk_search_bar_set_search_mode (self->search_bar, TRUE);
       if (self->search_entry != NULL)
         {
-          gtk_editable_set_text (GTK_EDITABLE (self->search_entry), "");
+          if (selected_text != NULL && *selected_text != '\0')
+            gtk_editable_set_text (GTK_EDITABLE (self->search_entry), selected_text);
+          else
+            gtk_editable_set_text (GTK_EDITABLE (self->search_entry), "");
+
           gtk_widget_grab_focus (GTK_WIDGET (self->search_entry));
+          gtk_editable_select_region (GTK_EDITABLE (self->search_entry), 0, -1);
         }
     }
   else
     {
-      gtk_search_bar_set_search_mode (self->search_bar, FALSE);
+      if (self->search_entry != NULL)
+        {
+          if (selected_text != NULL && *selected_text != '\0')
+            gtk_editable_set_text (GTK_EDITABLE (self->search_entry), selected_text);
+
+          gtk_widget_grab_focus (GTK_WIDGET (self->search_entry));
+          gtk_editable_select_region (GTK_EDITABLE (self->search_entry), 0, -1);
+        }
     }
+
+  g_free (selected_text);
 }
 
 void

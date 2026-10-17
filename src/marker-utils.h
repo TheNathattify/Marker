@@ -45,6 +45,7 @@ gchar               *marker_utils_escape_file_path               (const gchar   
 gboolean             marker_utils_is_url                         (const gchar        *str);
 const gchar         *marker_utils_get_scripts_dir                (void);
 const gchar         *marker_utils_get_styles_dir                 (void);
+const gchar         *marker_utils_get_user_styles_dir            (void);
 const gchar         *marker_utils_get_highlight_styles_dir       (void);
 
 G_END_DECLS

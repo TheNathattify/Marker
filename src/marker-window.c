@@ -992,19 +992,19 @@ marker_window_init (MarkerWindow *window)
 
     action = G_ACTION (g_simple_action_new ("zoomoriginal", NULL));
     g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_zoom_original), window);
-    const gchar *zoomoriginal_accels[] = { "<Ctrl>equal", NULL };
+    const gchar *zoomoriginal_accels[] = { "<Ctrl>0", "<Ctrl>KP_0", NULL };
     gtk_application_set_accels_for_action (app, "win.zoomoriginal", zoomoriginal_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
     action = G_ACTION (g_simple_action_new ("zoomin", NULL));
     g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_zoom_in), window);
-    const gchar *zoomin_accels[] = { "<Ctrl>plus", NULL };
+    const gchar *zoomin_accels[] = { "<Ctrl>plus", "<Ctrl>equal", "<Ctrl>KP_Add", NULL };
     gtk_application_set_accels_for_action (app, "win.zoomin", zoomin_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
     action = G_ACTION (g_simple_action_new ("zoomout", NULL));
     g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_zoom_out), window);
-    const gchar *zoomout_accels[] = { "<Ctrl>minus", NULL };
+    const gchar *zoomout_accels[] = { "<Ctrl>minus", "<Ctrl>KP_Subtract", NULL };
     gtk_application_set_accels_for_action (app, "win.zoomout", zoomout_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
