@@ -47,6 +47,18 @@ static const GOptionEntry CLI_OPTIONS[] =
   { NULL }
 };
 
+const int APP_MENU_ACTION_ENTRIES_LEN = 6;
+
+const GActionEntry APP_MENU_ACTION_ENTRIES[] =
+{
+  { "new", new_cb, NULL, NULL, NULL },
+  { "prefs", marker_prefs_cb, NULL, NULL, NULL },
+  { "shortcuts", marker_shortcuts_cb, NULL, NULL, NULL },
+  { "help", marker_help_cb, NULL, NULL, NULL },
+  { "about", marker_about_cb, NULL, NULL, NULL },
+  { "quit", marker_quit_cb, NULL, NULL, NULL }
+};
+
 GtkApplication *
 marker_get_app (void)
 {
@@ -68,6 +80,11 @@ marker_init (GtkApplication *app)
   AdwStyleManager *style_manager = adw_style_manager_get_default ();
   adw_style_manager_set_color_scheme (style_manager,
                                       marker_prefs_get_use_dark_theme () ? ADW_COLOR_SCHEME_PREFER_DARK : ADW_COLOR_SCHEME_DEFAULT);
+
+  g_action_map_add_action_entries (G_ACTION_MAP (app),
+                                   APP_MENU_ACTION_ENTRIES,
+                                   APP_MENU_ACTION_ENTRIES_LEN,
+                                   NULL);
 }
 
 static void
