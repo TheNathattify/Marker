@@ -1100,6 +1100,7 @@ marker_window_init (MarkerWindow *window)
   adw_application_window_set_content (ADW_APPLICATION_WINDOW (window), GTK_WIDGET (vbox));
 
   /** HeaderBar **/
+  gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-gear-popover.ui", NULL);
   gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-headerbar.ui", NULL);
   AdwHeaderBar *header_bar = ADW_HEADER_BAR (gtk_builder_get_object (builder, "header_bar"));
   window->header_bar = header_bar;
@@ -1114,7 +1115,6 @@ marker_window_init (MarkerWindow *window)
   }
 
   /** Popover / Gear Menu **/
-  gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-gear-popover.ui", NULL);
   window->zoom_original_btn = GTK_BUTTON (gtk_builder_get_object (builder, "zoom_original_btn"));
 
   /** Main View **/

@@ -168,6 +168,8 @@ marker_editor_dispose (GObject *object)
   g_clear_object (&editor->document);
   g_clear_object (&editor->search_controller);
 
+  g_clear_object ((GObject **) &editor->preview);
+  g_clear_object ((GObject **) &editor->vbox);
   G_OBJECT_CLASS (marker_editor_parent_class)->dispose (object);
 }
 
@@ -324,6 +326,8 @@ marker_editor_init (MarkerEditor *editor)
   editor->needs_refresh = FALSE;
   editor->timer_id = 0;
 
+  g_object_ref (editor->preview);
+  g_object_ref (editor->vbox);
   marker_editor_set_view_mode (editor, editor->view_mode);
 
   marker_editor_apply_prefs (editor);
@@ -405,7 +409,6 @@ marker_editor_set_view_mode (MarkerEditor   *editor,
   GtkWidget *preview_parent = gtk_widget_get_parent (preview);
   if (preview_parent)
   {
-    g_object_ref (preview);
     if (GTK_IS_PANED (preview_parent))
     {
       if (gtk_paned_get_start_child (GTK_PANED (preview_parent)) == preview)
@@ -422,13 +425,11 @@ marker_editor_set_view_mode (MarkerEditor   *editor,
     {
       gtk_box_remove (GTK_BOX (preview_parent), preview);
     }
-    g_object_unref (preview);
   }
 
   GtkWidget *source_parent = gtk_widget_get_parent (source_scroll);
   if (source_parent)
   {
-    g_object_ref (source_scroll);
     if (GTK_IS_PANED (source_parent))
     {
       if (gtk_paned_get_start_child (GTK_PANED (source_parent)) == source_scroll)
@@ -440,7 +441,6 @@ marker_editor_set_view_mode (MarkerEditor   *editor,
     {
       gtk_box_remove (GTK_BOX (source_parent), source_scroll);
     }
-    g_object_unref (source_scroll);
   }
 
   switch (view_mode)
