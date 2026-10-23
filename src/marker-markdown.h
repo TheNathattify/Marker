@@ -46,6 +46,11 @@ typedef enum{
 char                *marker_markdown_css                         (const char         *stylesheet_location);
 char                *marker_markdown_scidown_css                 ();
 
+gboolean             marker_markdown_get_task_item_offset        (const char         *markdown,
+                                                                  size_t              size,
+                                                                  guint               index,
+                                                                  gsize              *offset);
+
 char                *marker_markdown_to_html                     (const char         *markdown,
                                                                   size_t              size,
                                                                   char               *base_folder,

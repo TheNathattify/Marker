@@ -136,6 +136,24 @@ navigate (MarkerPreview        *preview,
   if (uri == NULL)
     return FALSE;
 
+  /* Interactive task-list toggling (see marker-markdown.c): the live
+   * preview reports checkbox clicks through this custom URI. */
+  if (g_str_has_prefix (uri, "marker://task-toggle/"))
+  {
+    const char *index_str = uri + strlen ("marker://task-toggle/");
+    char *endptr = NULL;
+    guint64 task_index = g_ascii_strtoull (index_str, &endptr, 10);
+
+    /* Only emit well-formed indices: anything else (hand-written
+     * marker:// links, stale anchors, raw private-use chars in the
+     * document) is swallowed without toggling. */
+    if (endptr != index_str && *endptr == '\0')
+      g_signal_emit_by_name (preview, "task-toggled", (guint) task_index);
+
+    webkit_policy_decision_ignore (decision);
+    return TRUE;
+  }
+
   const gchar *current_uri = webkit_web_view_get_uri (WEBKIT_WEB_VIEW (preview));
 
   if (webkit_navigation_action_get_navigation_type (action) == WEBKIT_NAVIGATION_TYPE_LINK_CLICKED &&
@@ -437,6 +455,12 @@ marker_preview_class_init (MarkerPreviewClass *class)
                 G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE,
                 0, NULL, NULL, NULL,
                 G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
+
+  g_signal_new ("task-toggled",
+                G_TYPE_FROM_CLASS (class),
+                G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE,
+                0, NULL, NULL, NULL,
+                G_TYPE_NONE, 1, G_TYPE_UINT);
 
   WEBKIT_WEB_VIEW_CLASS (class)->load_changed = load_changed_cb;
 }

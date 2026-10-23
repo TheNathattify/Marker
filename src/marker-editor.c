@@ -23,6 +23,7 @@
 #include <locale.h>
 #include <glib/gi18n.h>
 
+#include "marker-markdown.h"
 #include "marker-prefs.h"
 #include "marker-string.h"
 #include "marker-editor.h"
@@ -118,6 +119,61 @@ on_document_notify_subtitle (GObject    *object,
 }
 
 static void
+on_preview_task_toggled (MarkerPreview *preview G_GNUC_UNUSED,
+                         guint          task_index,
+                         gpointer       user_data)
+{
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+
+  GtkTextBuffer *buffer =
+    gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
+
+  /* Keep the typing cursor where the user left it: gtk_text_buffer_insert()
+   * would move it to the toggled checkbox, disturbing typing. */
+  GtkTextIter insert_iter;
+  gtk_text_buffer_get_iter_at_mark (buffer, &insert_iter,
+                                    gtk_text_buffer_get_insert (buffer));
+
+  GtkTextIter start_iter, end_iter;
+  gtk_text_buffer_get_start_iter (buffer, &start_iter);
+  gtk_text_buffer_get_end_iter (buffer, &end_iter);
+  g_autofree gchar *text =
+    gtk_text_buffer_get_text (buffer, &start_iter, &end_iter, FALSE);
+
+  gsize byte_offset = 0;
+  if (!marker_markdown_get_task_item_offset (text, strlen (text),
+                                             task_index, &byte_offset))
+    return;
+
+  /* GtkTextBuffer offsets count characters, not bytes */
+  const gint char_offset =
+    (gint) g_utf8_pointer_to_offset (text, text + byte_offset + 1);
+
+  GtkTextIter iter;
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, char_offset);
+
+  const gunichar current = gtk_text_iter_get_char (&iter);
+  const gchar *replacement = (current == 'x' || current == 'X') ? " " : "x";
+
+  GtkTextIter next = iter;
+  gtk_text_iter_forward_char (&next);
+
+  /* Undo/redo restore the selection recorded when the change was made
+   * (GtkTextHistory): anchor it at the toggled checkbox, otherwise undo
+   * sends the cursor -- and the preview, which follows the cursor -- back
+   * to the pre-click position (top of the document right after opening). */
+  gtk_text_buffer_place_cursor (buffer, &iter);
+
+  gtk_text_buffer_begin_user_action (buffer);
+  gtk_text_buffer_delete (buffer, &iter, &next);
+  gtk_text_buffer_insert (buffer, &iter, replacement, 1);
+  gtk_text_buffer_end_user_action (buffer);
+
+  /* Keep the typing cursor where the user left it. */
+  gtk_text_buffer_place_cursor (buffer, &insert_iter);
+}
+
+static void
 buffer_modified_changed_cb (GtkTextBuffer *buffer,
                             gpointer       user_data)
 {
@@ -187,6 +243,26 @@ marker_editor_key_pressed_cb (GtkEventControllerKey *controller,
   if ((state & GDK_CONTROL_MASK) && (keyval == GDK_KEY_h || keyval == GDK_KEY_H))
   {
     marker_editor_toggle_replace_bar (editor);
+    return GDK_EVENT_STOP;
+  }
+
+  /* Undo/redo are bound to the source view only; when the preview holds
+   * keyboard focus (e.g. right after clicking a task-list checkbox), the
+   * shortcuts never fire. Forward them to the buffer instead.
+   * gtk_text_buffer_undo/redo: GTK >= 4.16. */
+  if ((state & GDK_CONTROL_MASK) &&
+      (keyval == GDK_KEY_z || keyval == GDK_KEY_Z ||
+       keyval == GDK_KEY_y || keyval == GDK_KEY_Y))
+  {
+    GtkTextBuffer *buffer =
+      gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
+
+    if ((state & GDK_SHIFT_MASK) != 0 ||
+        keyval == GDK_KEY_y || keyval == GDK_KEY_Y)
+      gtk_text_buffer_redo (buffer);
+    else
+      gtk_text_buffer_undo (buffer);
+
     return GDK_EVENT_STOP;
   }
 
@@ -284,6 +360,9 @@ marker_editor_init (MarkerEditor *editor)
   gtk_box_append (GTK_BOX (editor), GTK_WIDGET (editor->paned));
 
   editor->preview = marker_preview_new ();
+
+  g_signal_connect (editor->preview, "task-toggled",
+                    G_CALLBACK (on_preview_task_toggled), editor);
 
   editor->source_view = marker_source_view_new ();
   editor->source_scroll = GTK_SCROLLED_WINDOW (gtk_scrolled_window_new ());

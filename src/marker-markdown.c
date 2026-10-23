@@ -300,15 +300,22 @@ marker_markdown_scidown_css(void)
  * "[ ]" and "[x]" are 3 bytes long, and so are the U+E000/U+E001 UTF-8
  * sequences: byte offsets (and therefore the cursor position passed to
  * scidown for preview scroll synchronization) are preserved exactly.
+ *
+ * The interactive preview maps the N-th rendered checkbox
+ * (data-task-index) back to the N-th source marker, so
+ * preprocess_task_lists() and marker_markdown_get_task_item_offset() must
+ * agree on what a task item is and in which order they appear: both drive
+ * the same TaskItemScanner below.
  */
 
-static const char TASKLIST_PLACEHOLDER_UNCHECKED[] = "\xEE\x80\x80"; /* U+E000 */
-static const char TASKLIST_PLACEHOLDER_CHECKED[]   = "\xEE\x80\x81"; /* U+E001 */
+static const char TASKLIST_PLACEHOLDER_UNCHECKED[]  = "\xEE\x80\x80"; /* U+E000 */
+static const char TASKLIST_PLACEHOLDER_CHECKED[]    = "\xEE\x80\x81"; /* U+E001 */
+static const char TASKLIST_PLACEHOLDER_NEUTRALIZED[] = "\xEE\x80\x82"; /* U+E002 */
 
-static const char TASKLIST_HTML_UNCHECKED[] =
-  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled>";
-static const char TASKLIST_HTML_CHECKED[] =
-  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled checked>";
+static const char TASKLIST_INPUT_UNCHECKED_FMT[] =
+  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" data-task-index=\"%u\">";
+static const char TASKLIST_INPUT_CHECKED_FMT[] =
+  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" data-task-index=\"%u\" checked>";
 
 static gboolean
 is_fence_marker (const char *start, const char *line_end, char *fence_char)
@@ -329,26 +336,45 @@ is_fence_marker (const char *start, const char *line_end, char *fence_char)
 }
 
 /*
- * Rewrites "- [ ]" / "- [x]" (and ordered variants) list-item markers
- * into U+E000/U+E001 placeholders. Returns NULL when the document
- * contains no task-list item, so the original buffer can be rendered
- * as-is. Content of fenced code blocks is left untouched.
+ * Iterates task-list items in document order. Fenced code blocks are
+ * skipped entirely.
  */
-static gchar*
-preprocess_task_lists (const char *markdown, size_t size)
+typedef struct
 {
-  GString *out = NULL;
-  const char *copied = markdown;
-  const char *line = markdown;
-  const char *end = markdown + size;
-  gboolean in_fence = FALSE;
-  char fence_char = 0;
+  const char *next_line; /* where to resume scanning */
+  const char *end;      /* one past the last byte */
+  gboolean    in_fence;
+  char        fence_char;
+} TaskItemScanner;
 
-  while (line < end)
+static void
+task_item_scanner_init (TaskItemScanner *scan, const char *text, size_t size)
+{
+  scan->next_line = text;
+  scan->end = text + size;
+  scan->in_fence = FALSE;
+  scan->fence_char = 0;
+}
+
+/*
+ * Advances to the next task-list item ("[ ]" / "[x]" following a list
+ * marker). Returns FALSE at the end of the document; otherwise
+ * *marker_start receives the position of the '[' byte and *checked whether
+ * the item is checked.
+ */
+static gboolean
+task_item_scanner_next (TaskItemScanner  *scan,
+                        const char      **marker_start,
+                        gboolean          *checked)
+{
+  while (scan->next_line < scan->end)
   {
-    const char *eol = (const char *) memchr (line, '\n', (size_t) (end - line));
-    const char *next = eol ? (eol + 1) : end;
-    const char *line_end = eol ? eol : end;
+    const char *line = scan->next_line;
+    const char *eol =
+      (const char *) memchr (line, '\n', (size_t) (scan->end - line));
+    const char *line_end = eol ? eol : scan->end;
+
+    scan->next_line = eol ? (eol + 1) : scan->end;
 
     const char *p = line;
     while (p < line_end && *p == ' ')
@@ -360,94 +386,147 @@ preprocess_task_lists (const char *markdown, size_t size)
       char c = 0;
       if (is_fence_marker (p, line_end, &c))
       {
-        if (!in_fence)
+        if (!scan->in_fence)
         {
-          in_fence = TRUE;
-          fence_char = c;
+          scan->in_fence = TRUE;
+          scan->fence_char = c;
         }
-        else if (c == fence_char)
+        else if (c == scan->fence_char)
         {
-          in_fence = FALSE;
+          scan->in_fence = FALSE;
         }
       }
     }
 
-    if (!in_fence && p < line_end)
+    if (scan->in_fence || p >= line_end)
+      continue;
+
+    /* list-item marker: '-', '*' or '+', or digits followed by '.' / ')' */
+    const char *m = p;
+    if (*m == '-' || *m == '*' || *m == '+')
+      m++;
+    else
     {
-      const char *m = p;
-
-      /* unordered marker: -, * or + */
-      if (*m == '-' || *m == '*' || *m == '+')
+      const char *d = m;
+      while (m < line_end && *m >= '0' && *m <= '9')
         m++;
-      /* ordered marker: digits followed by . or ) */
+      if (m == d || m >= line_end || (*m != '.' && *m != ')'))
+        m = p;
       else
-      {
-        const char *d = m;
-        while (m < line_end && *m >= '0' && *m <= '9')
-          m++;
-        if (m == d || m >= line_end || (*m != '.' && *m != ')'))
-          m = p;
-        else
-          m++;
-      }
-
-      if (m > p && m < line_end)
-      {
-        const char *s = m;
-        while (s < line_end && (*s == ' ' || *s == '\t'))
-          s++;
-
-        if (s > m &&
-            (s + 3) <= line_end &&
-            s[0] == '[' &&
-            (s[1] == ' ' || s[1] == 'x' || s[1] == 'X') &&
-            s[2] == ']' &&
-            (s + 3 == line_end || s[3] == ' ' || s[3] == '\t' || s[3] == '\r'))
-        {
-          if (!out)
-            out = g_string_sized_new (size + 32);
-
-          g_string_append_len (out, copied, (gssize) (s - copied));
-          g_string_append (out, (s[1] == ' ')
-                            ? TASKLIST_PLACEHOLDER_UNCHECKED
-                            : TASKLIST_PLACEHOLDER_CHECKED);
-          copied = s + 3;
-        }
-      }
+        m++;
     }
 
-    line = next;
+    if (m == p || m >= line_end)
+      continue;
+
+    const char *s = m;
+    while (s < line_end && (*s == ' ' || *s == '\t'))
+      s++;
+
+    /* "[ ]" / "[x]" followed by a space, a tab or the end of the line */
+    if (s > m &&
+        (s + 3) <= line_end &&
+        s[0] == '[' &&
+        (s[1] == ' ' || s[1] == 'x' || s[1] == 'X') &&
+        s[2] == ']' &&
+        (s + 3 == line_end || s[3] == ' ' || s[3] == '\t' || s[3] == '\r'))
+    {
+      *marker_start = s;
+      *checked = (s[1] != ' ');
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+
+/* Does the buffer contain a raw U+E000 / U+E001 sequence? */
+static gboolean
+contains_pua_placeholder (const char *buf, size_t size)
+{
+  for (size_t i = 0; (i + 3) <= size; i++)
+    if ((unsigned char) buf[i]     == 0xEE &&
+        (unsigned char) buf[i + 1] == 0x80 &&
+        ((unsigned char) buf[i + 2] == 0x80 ||
+         (unsigned char) buf[i + 2] == 0x81))
+      return TRUE;
+  return FALSE;
+}
+
+/* Rewrites every raw U+E000 / U+E001 to U+E002 (in place, 3 -> 3 bytes). */
+static void
+neutralize_pua_placeholders (char *buf, size_t size)
+{
+  for (size_t i = 0; (i + 3) <= size; i++)
+    if ((unsigned char) buf[i]     == 0xEE &&
+        (unsigned char) buf[i + 1] == 0x80 &&
+        ((unsigned char) buf[i + 2] == 0x80 ||
+         (unsigned char) buf[i + 2] == 0x81))
+      buf[i + 2] = (char) 0x82;
+}
+
+/*
+ * Rewrites "- [ ]" / "- [x]" (and ordered variants) list-item markers
+ * into U+E000/U+E001 placeholders. Returns NULL when the document
+ * contains no task-list item, so the original buffer can be rendered
+ * as-is. Content of fenced code blocks is left untouched.
+ */
+static gchar*
+preprocess_task_lists (const char *markdown, size_t size)
+{
+  g_autofree gchar *scratch = NULL;
+  const char *scan_text = markdown;
+  const char *copied = markdown;
+  GString *out = NULL;
+  TaskItemScanner scan;
+  const char *marker = NULL;
+  gboolean checked = FALSE;
+
+  /* A stray U+E000/U+E001 in the document would be mistaken for a
+   * placeholder by tasklists_postprocess() and shift the checkbox
+   * numbering. Rewrite such chars to U+E002 first: same UTF-8 length,
+   * so byte offsets (and the scidown cursor position) stay valid. */
+  if (contains_pua_placeholder (markdown, size))
+  {
+    scratch = g_memdup2 (markdown, size);
+    neutralize_pua_placeholders (scratch, size);
+    scan_text = scratch;
+    copied = scratch;
+  }
+
+  task_item_scanner_init (&scan, scan_text, size);
+  while (task_item_scanner_next (&scan, &marker, &checked))
+  {
+    if (!out)
+      out = g_string_sized_new (size + 32);
+
+    g_string_append_len (out, copied, (gssize) (marker - copied));
+    g_string_append (out, checked
+                       ? TASKLIST_PLACEHOLDER_CHECKED
+                       : TASKLIST_PLACEHOLDER_UNCHECKED);
+    copied = marker + 3;
   }
 
   if (!out)
     return NULL;
 
-  g_string_append_len (out, copied, (gssize) (end - copied));
+  g_string_append_len (out, copied, (gssize) ((scan_text + size) - copied));
   return g_string_free (out, FALSE);
 }
 
-static void
-tasklist_replace (GString *str, const char *placeholder, const char *replacement)
-{
-  const gsize placeholder_len = strlen (placeholder);
-  const char *found;
-
-  while ((found = strstr (str->str, placeholder)) != NULL)
-  {
-    const gsize pos = (gsize) (found - str->str);
-    g_string_erase (str, pos, placeholder_len);
-    g_string_insert (str, pos, replacement);
-  }
-}
-
 /*
- * Takes ownership of html; swaps the placeholders for checkbox inputs.
+ * Takes ownership of html; swaps the placeholders (in document order)
+ * for numbered checkbox inputs. data-task-index matches the 0-based
+ * task-item order used by marker_markdown_get_task_item_offset(), so
+ * the interactive preview can map a click back to the source buffer.
  * Returns html untouched when it contains no placeholder.
  */
 static gchar*
 tasklists_postprocess (gchar *html)
 {
   GString *str;
+  guint task_index = 0;
+  gsize search_from = 0;
 
   if (!html)
     return html;
@@ -459,10 +538,114 @@ tasklists_postprocess (gchar *html)
   str = g_string_new (html);
   g_free (html);
 
-  tasklist_replace (str, TASKLIST_PLACEHOLDER_UNCHECKED, TASKLIST_HTML_UNCHECKED);
-  tasklist_replace (str, TASKLIST_PLACEHOLDER_CHECKED, TASKLIST_HTML_CHECKED);
+  for (;;)
+  {
+    /* Resume after the input inserted during the previous iteration. */
+    const char *base = str->str + search_from;
+    const char *unchecked = strstr (base, TASKLIST_PLACEHOLDER_UNCHECKED);
+    const char *checked = strstr (base, TASKLIST_PLACEHOLDER_CHECKED);
+    const char *found;
+    gboolean is_checked;
+    gchar *input;
+    gsize pos;
+
+    if (unchecked != NULL && (checked == NULL || unchecked < checked))
+    {
+      found = unchecked;
+      is_checked = FALSE;
+    }
+    else if (checked != NULL)
+    {
+      found = checked;
+      is_checked = TRUE;
+    }
+    else
+    {
+      break;
+    }
+
+    pos = (gsize) (found - str->str);
+    input = g_strdup_printf (is_checked
+                               ? TASKLIST_INPUT_CHECKED_FMT
+                               : TASKLIST_INPUT_UNCHECKED_FMT,
+                             task_index++);
+    g_string_erase (str, pos, strlen (TASKLIST_PLACEHOLDER_UNCHECKED));
+    g_string_insert (str, pos, input);
+    search_from = pos + strlen (input);
+    g_free (input);
+  }
 
   return g_string_free (str, FALSE);
+}
+
+/*
+ * Script injected in the live preview only (cursor_position >= 0):
+ * checkbox clicks are reported to the application through a custom
+ * marker://task-toggle/<index> URI intercepted by MarkerPreview.
+ * Rendered exports (cursor_position < 0) do not include it.
+ */
+static const char TASKLIST_TOGGLE_SCRIPT[] =
+  "<script>\n"
+  "function initTaskListToggle() {\n"
+  "  try {\n"
+  "    if (sessionStorage.getItem('marker-tl-restore') === '1') {\n"
+  "      var y = parseInt(sessionStorage.getItem('marker-tl-scroll') || '0', 10);\n"
+  "      sessionStorage.removeItem('marker-tl-restore');\n"
+  "      sessionStorage.removeItem('marker-tl-scroll');\n"
+  "      var anchor = document.getElementById('cursor_pos');\n"
+  "      if (anchor) { anchor.removeAttribute('id'); }\n"
+  "      if (y > 0) { window.scrollTo(0, y); }\n"
+  "    }\n"
+  "  } catch (err) { }\n"
+  "  document.addEventListener('click', function (e) {\n"
+  "    var el = e.target;\n"
+  "    if (el && el.classList && el.classList.contains('task-list-item-checkbox')) {\n"
+  "      e.preventDefault();\n"
+  "      e.stopPropagation();\n"
+  "      try {\n"
+  "        sessionStorage.setItem('marker-tl-restore', '1');\n"
+  "        sessionStorage.setItem('marker-tl-scroll', String(window.scrollY));\n"
+  "      } catch (err2) { }\n"
+  "      window.location.href = 'marker://task-toggle/' + el.getAttribute('data-task-index');\n"
+  "    }\n"
+  "  }, true);\n"
+  "}\n"
+  "if (document.readyState === 'loading') {\n"
+  "  document.addEventListener('DOMContentLoaded', initTaskListToggle);\n"
+  "} else {\n"
+  "  initTaskListToggle();\n"
+  "}\n"
+  "</script>\n";
+
+/*
+ * Returns the byte offset of the "[" marker of the index-th (0-based)
+ * task-list item, in the same order used by preprocess_task_lists().
+ * Returns FALSE when the document has no such item.
+ */
+gboolean
+marker_markdown_get_task_item_offset (const char *markdown,
+                                       size_t      size,
+                                       guint       index,
+                                       gsize      *offset)
+{
+  TaskItemScanner scan;
+  const char *marker = NULL;
+  gboolean checked = FALSE;
+  guint current = 0;
+
+  task_item_scanner_init (&scan, markdown, size);
+  while (task_item_scanner_next (&scan, &marker, &checked))
+  {
+    if (current == index)
+    {
+      if (offset)
+        *offset = (gsize) (marker - markdown);
+      return TRUE;
+    }
+    current++;
+  }
+
+  return FALSE;
 }
 
 char*
@@ -494,6 +677,12 @@ marker_markdown_to_html(const char*         markdown,
                                             scidown_css ? scidown_css : "");
 
   g_autofree char *footer = html_footer(katex_mode, highlight_mode, mermaid_mode);
+  if (cursor_position >= 0)
+  {
+    char *interactive_footer = g_strconcat (footer, TASKLIST_TOGGLE_SCRIPT, NULL);
+    g_free (footer);
+    footer = interactive_footer;
+  }
 
   ext_definition def = {header, footer};
 
@@ -551,6 +740,12 @@ marker_markdown_to_html_with_css_inline(const char*         markdown,
                                             common_css ? common_css : "");
 
   g_autofree char *footer = html_footer(katex_mode, highlight_mode, mermaid_mode);
+  if (cursor_position >= 0)
+  {
+    char *interactive_footer = g_strconcat (footer, TASKLIST_TOGGLE_SCRIPT, NULL);
+    g_free (footer);
+    footer = interactive_footer;
+  }
 
   ext_definition def = {header, footer};
   document = hoedown_document_new(renderer,
