@@ -62,6 +62,7 @@
         <property name="menu-model">primary_menu</property>
       </object>
     </child>
+
     <child type="end">
       <object class="GtkButton" id="unfullscreen_btn">
         <property name="visible">false</property>
@@ -76,5 +77,44 @@
         <property name="menu-model">view_mode_menu</property>
       </object>
     </child>
-  </object>
+
+    <child type="end">
+      <object class="GtkBox" id="zoom_box">
+        <property name="orientation">horizontal</property>
+        <style>
+          <class name="linked"/>
+        </style>
+        <child>
+          <object class="GtkButton" id="zoom_out_btn">
+            <property name="icon-name">zoom-out-symbolic</property>
+            <property name="action-name">win.zoomout</property>
+            <property name="tooltip-text" translatable="yes">Zoom Out</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkEntry" id="zoom_entry">
+            <property name="width-chars">6</property>
+            <property name="max-width-chars">6</property>
+            <property name="xalign">0.5</property>
+            <property name="input-purpose">number</property>
+            <property name="show-emoji-icon">false</property>
+            <property name="tooltip-text" translatable="yes">Zoom level (%). Type a value and press Enter.</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="zoom_in_btn">
+            <property name="icon-name">zoom-in-symbolic</property>
+            <property name="action-name">win.zoomin</property>
+            <property name="tooltip-text" translatable="yes">Zoom In</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="zoom_fit_btn">
+            <property name="icon-name">zoom-fit-best-symbolic</property>
+            <property name="action-name">win.zoomfit</property>
+            <property name="tooltip-text" translatable="yes">Fit to Page Width</property>
+          </object>
+        </child>
+      </object>
+    </child>  </object>
 </interface>

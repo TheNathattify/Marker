@@ -86,6 +86,8 @@ gboolean             marker_prefs_get_use_mathjs                 (void);
 void                 marker_prefs_set_use_mathjs                 (gboolean            state);
 gdouble              marker_prefs_get_zoom_level                 (void);
 void                 marker_prefs_set_zoom_level                 (gdouble             val);
+gdouble              marker_prefs_get_source_zoom_level        (void);
+void                 marker_prefs_set_source_zoom_level        (gdouble             val);
 gboolean             marker_prefs_get_use_highlight              (void);
 void                 marker_prefs_set_use_highlight              (gboolean            state);
 gboolean             marker_prefs_get_use_mermaid                (void);

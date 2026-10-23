@@ -156,6 +156,11 @@
       <summary>Zoom level of the preview</summary>
       <description>Zoom level of the preview widget</description>
     </key>
+    <key name="source-zoom-level" type="d">
+      <default>1.0</default>
+      <summary>Zoom level of the source editor</summary>
+      <description>Zoom level of the source view widget</description>
+    </key>
   </schema>
 
   <schema path="/com/github/adrighem/marker/preferences/window/" id="com.github.adrighem.marker.preferences.window">

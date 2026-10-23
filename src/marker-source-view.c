@@ -251,31 +251,42 @@ marker_source_view_set_language (MarkerSourceView *source_view,
   }
 }
 
-static GtkCssProvider *source_zoom_provider = NULL;
-
 void
-marker_source_view_set_zoom_level (gdouble zoom)
+marker_source_view_set_zoom_level (MarkerSourceView *source_view,
+                                   gdouble           zoom)
 {
-  if (source_zoom_provider == NULL)
-  {
-    source_zoom_provider = gtk_css_provider_new ();
-    GdkDisplay *display = gdk_display_get_default ();
-    if (display != NULL)
-    {
-      gtk_style_context_add_provider_for_display (display,
-                                                  GTK_STYLE_PROVIDER (source_zoom_provider),
-                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    }
-  }
-
   int percent = (int) (zoom * 100.0 + 0.5);
   if (percent < 20)
     percent = 20;
   if (percent > 500)
     percent = 500;
 
+  /* Per-view provider (the editor and preview zooms are independent). */
+  GtkCssProvider *provider = g_object_get_data (G_OBJECT (source_view), "zoom-provider");
+  if (provider == NULL)
+  {
+    provider = gtk_css_provider_new ();
+    gtk_style_context_add_provider (gtk_widget_get_style_context (GTK_WIDGET (source_view)),
+                                    GTK_STYLE_PROVIDER (provider),
+                                    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_set_data_full (G_OBJECT (source_view), "zoom-provider", provider, g_object_unref);
+  }
+
   g_autofree gchar *css = g_strdup_printf ("textview.marker-source-view, textview.marker-source-view text { font-size: %d%%; }", percent);
-  gtk_css_provider_load_from_string (source_zoom_provider, css);
+  gtk_css_provider_load_from_string (provider, css);
+
+  g_object_set_data (G_OBJECT (source_view), "zoom-percent", GINT_TO_POINTER (percent));
+
+  g_signal_emit_by_name (source_view, "zoom-changed");
+}
+
+gdouble
+marker_source_view_get_zoom_level (MarkerSourceView *source_view)
+{
+  int percent = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (source_view), "zoom-percent"));
+  if (percent <= 0)
+    return marker_prefs_get_source_zoom_level ();
+  return percent / 100.0;
 }
 
 static void
@@ -289,7 +300,7 @@ marker_source_view_init (MarkerSourceView *source_view)
   gtk_widget_add_css_class (GTK_WIDGET (source_view), "monospace");
   gtk_widget_add_css_class (GTK_WIDGET (source_view), "marker-source-view");
 
-  marker_source_view_set_zoom_level (marker_prefs_get_zoom_level ());
+  marker_source_view_set_zoom_level (source_view, marker_prefs_get_source_zoom_level ());
 
   gtk_source_view_set_insert_spaces_instead_of_tabs (GTK_SOURCE_VIEW (source_view), marker_prefs_get_replace_tabs ());
   gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (source_view), marker_prefs_get_tab_width ());
@@ -302,8 +313,13 @@ marker_source_view_init (MarkerSourceView *source_view)
 }
 
 static void
-marker_source_view_class_init (MarkerSourceViewClass *class G_GNUC_UNUSED)
+marker_source_view_class_init (MarkerSourceViewClass *class)
 {
+  g_signal_new ("zoom-changed",
+                G_TYPE_FROM_CLASS (class),
+                G_SIGNAL_RUN_LAST,
+                0, NULL, NULL, NULL,
+                G_TYPE_NONE, 0);
 }
 
 MarkerSourceView *

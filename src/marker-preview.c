@@ -32,6 +32,7 @@
 #include "marker-string.h"
 #include "marker-source-view.h"
 #include "marker-preview.h"
+#include "marker-window.h"
 #include "marker.h"
 
 #define MAX_ZOOM  4.0
@@ -135,6 +136,18 @@ navigate (MarkerPreview        *preview,
 
   if (uri == NULL)
     return FALSE;
+
+  /* Zoom-fit : le JS de marker_preview_zoom_fit() renvoie le facteur via
+   * marker://zoomfit/<valeur>. On applique et on ignore la navigation
+   * (la page n'est pas rechargée). */
+  if (g_str_has_prefix (uri, "marker://zoomfit/"))
+  {
+    gdouble fit = g_ascii_strtod (uri + strlen ("marker://zoomfit/"), NULL);
+    if (fit > 0.0)
+      marker_preview_set_zoom_level (preview, fit);
+    webkit_policy_decision_ignore (decision);
+    return TRUE;
+  }
 
   /* Interactive task-list toggling (see marker-markdown.c): the live
    * preview reports checkbox clicks through this custom URI. */
@@ -283,21 +296,39 @@ scroll_cb (GtkEventControllerScroll *controller,
   MarkerPreview *preview = MARKER_PREVIEW (user_data);
 
   GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (controller));
-  if ((state & GDK_CONTROL_MASK) != 0)
+  if ((state & GDK_CONTROL_MASK) == 0)
+    return FALSE;
+
+  /* The topbar zoom widget follows the pane being zoomed (Ctrl+wheel). */
+  GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (preview));
+  if (MARKER_IS_WINDOW (root))
+    marker_window_set_zoom_pane (MARKER_WINDOW (root), MARKER_WINDOW_ZOOM_PANE_PREVIEW);
+
+  /* Accumulate smooth deltas so one wheel notch = one zoom step (10%).
+   * Without this, touchpads send many small events and the zoom runs to the
+   * MIN/MAX bounds in a single gesture. */
+  gdouble *accum = g_object_get_data (G_OBJECT (preview), "zoom-accum");
+  if (accum == NULL)
   {
-    if (dy > 0)
-    {
-      marker_preview_zoom_out (preview);
-      return TRUE;
-    }
-    else if (dy < 0)
-    {
-      marker_preview_zoom_in (preview);
-      return TRUE;
-    }
+    accum = g_new0 (gdouble, 1);
+    g_object_set_data_full (G_OBJECT (preview), "zoom-accum", accum, g_free);
   }
 
-  return FALSE;
+  GdkScrollUnit unit = gtk_event_controller_scroll_get_unit (controller);
+  *accum += (unit == GDK_SCROLL_UNIT_SURFACE) ? dy / 20.0 : dy;
+
+  while (*accum >= 1.0)
+  {
+    marker_preview_zoom_out (preview);
+    *accum -= 1.0;
+  }
+  while (*accum <= -1.0)
+  {
+    marker_preview_zoom_in (preview);
+    *accum += 1.0;
+  }
+
+  return TRUE;
 }
 
 static void
@@ -392,9 +423,64 @@ marker_preview_set_zoom_level (MarkerPreview *preview,
                                gdouble        zoom_level)
 {
   g_return_if_fail (MARKER_IS_PREVIEW (preview));
+  zoom_level = CLAMP (zoom_level, MIN_ZOOM, MAX_ZOOM);
   webkit_web_view_set_zoom_level (WEBKIT_WEB_VIEW (preview), zoom_level);
-  marker_source_view_set_zoom_level (zoom_level);
+  marker_prefs_set_zoom_level (zoom_level);
   g_signal_emit_by_name (preview, "zoom-changed");
+}
+
+static void
+zoom_fit_js_finished_cb (GObject      *web_view,
+                         GAsyncResult *result,
+                         gpointer      user_data)
+{
+  /* fire-and-forget : la valeur revient via marker://zoomfit/<facteur>,
+   * intercepté dans navigate() — rien à lire ici (pas de jsc.h requis). */
+}
+
+void
+marker_preview_zoom_fit (MarkerPreview *preview)
+{
+  g_return_if_fail (MARKER_IS_PREVIEW (preview));
+
+  /* Zoom-fit v3 : largeur du panneau depuis GTK (px logiques = px CSS à
+   * zoom 1) ÷ largeur CSS de la colonne de contenu. La v2 mesurait
+   * max(body.scrollWidth, documentElement.scrollWidth) mais le scrollWidth
+   * de l'élément RACINE est planché par la largeur du viewport (la zone de
+   * défilement du document, jamais plus petite que la fenêtre) → contenu
+   * letterboxé = mesure sur le panneau entier → fit = 100 % → bouton
+   * inerte. v3 : body.scrollWidth seul (le body plafonné par le max-width
+   * du thème n'est pas planché) + le max-width CALCULÉ du body : si le zoom
+   * dépasse déjà l'ajustement, le body rétrécit au viewport (texte reflué)
+   * et scrollWidth seul serait faussé — le max-width rend la largeur
+   * naturelle de la colonne depuis n'importe quel zoom de départ. */
+  const int pane_width = gtk_widget_get_width (GTK_WIDGET (preview));
+  if (pane_width <= 0)
+    return;
+
+  g_autofree gchar *script = g_strdup_printf (
+    "(function(){"
+    "var b=document.body;"
+    "if(!b)return;"
+    "var w=b.scrollWidth;"
+    "var cs=getComputedStyle(b);"
+    "var mw=cs.maxWidth;"
+    "if(mw&&mw!='none'&&mw.slice(-2)=='px'){"
+    "var v=parseFloat(mw);"
+    "if(!isNaN(v)){"
+    "var nat=v+((cs.boxSizing=='border-box')?0:"
+    "(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0)+"
+    "(parseFloat(cs.borderLeftWidth)||0)+(parseFloat(cs.borderRightWidth)||0));"
+    "if(nat>w)w=nat;}}"
+    "if(!w||w<=0)return;"
+    "var fit=(%d)/w;"
+    "if(isFinite(fit)&&fit>0)"
+    "window.location.href='marker://zoomfit/'+fit.toFixed(4);"
+    "})();",
+    pane_width);
+  webkit_web_view_evaluate_javascript (WEBKIT_WEB_VIEW (preview), script, -1,
+                                       NULL, NULL, NULL,
+                                       zoom_fit_js_finished_cb, NULL);
 }
 
 static void
@@ -429,8 +515,12 @@ marker_preview_init (MarkerPreview *preview)
   g_signal_connect (key_controller, "key-pressed", G_CALLBACK (key_pressed_cb), preview);
   gtk_widget_add_controller (GTK_WIDGET (preview), key_controller);
 
+  /* CAPTURE phase: WebKit's internal scroll controller (BUBBLE, registered
+   * before ours) consumes wheel events to scroll the page; without this we
+   * only ever see the ones the page cannot consume. */
   GtkEventController *scroll_controller =
     gtk_event_controller_scroll_new (GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
+  gtk_event_controller_set_propagation_phase (scroll_controller, GTK_PHASE_CAPTURE);
   g_signal_connect (scroll_controller, "scroll", G_CALLBACK (scroll_cb), preview);
   gtk_widget_add_controller (GTK_WIDGET (preview), scroll_controller);
 }
@@ -485,7 +575,6 @@ marker_preview_zoom_out (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (val);
   webkit_web_view_set_zoom_level (view, val);
-  marker_source_view_set_zoom_level (val);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -500,7 +589,6 @@ marker_preview_zoom_original (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (zoom);
   webkit_web_view_set_zoom_level (view, zoom);
-  marker_source_view_set_zoom_level (zoom);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -516,7 +604,6 @@ marker_preview_zoom_in (MarkerPreview *preview)
 
   marker_prefs_set_zoom_level (val);
   webkit_web_view_set_zoom_level (view, val);
-  marker_source_view_set_zoom_level (val);
 
   g_signal_emit_by_name (preview, "zoom-changed");
 }

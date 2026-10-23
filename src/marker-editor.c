@@ -27,6 +27,7 @@
 #include "marker-prefs.h"
 #include "marker-string.h"
 #include "marker-editor.h"
+#include "marker-window.h"
 
 struct _MarkerEditor
 {
@@ -269,6 +270,23 @@ marker_editor_key_pressed_cb (GtkEventControllerKey *controller,
   return GDK_EVENT_PROPAGATE;
 }
 
+void
+marker_editor_set_source_zoom_level (MarkerEditor *editor,
+                                     gdouble       zoom)
+{
+  zoom = CLAMP (zoom, 0.2, 5.0);
+  marker_prefs_set_source_zoom_level (zoom);
+  marker_source_view_set_zoom_level (editor->source_view, zoom);
+}
+
+void
+marker_editor_zoom_source (MarkerEditor *editor,
+                           gdouble       delta)
+{
+  marker_editor_set_source_zoom_level (editor,
+                                       marker_source_view_get_zoom_level (editor->source_view) + delta);
+}
+
 static gboolean
 source_scroll_cb (GtkEventControllerScroll *controller,
                   gdouble                   dx G_GNUC_UNUSED,
@@ -277,20 +295,38 @@ source_scroll_cb (GtkEventControllerScroll *controller,
 {
   MarkerEditor *editor = MARKER_EDITOR (user_data);
   GdkModifierType state = gtk_event_controller_get_current_event_state (GTK_EVENT_CONTROLLER (controller));
-  if ((state & GDK_CONTROL_MASK) != 0)
+  if ((state & GDK_CONTROL_MASK) == 0)
+    return FALSE;
+
+  /* The topbar zoom widget follows the pane being zoomed (Ctrl+wheel). */
+  GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (editor));
+  if (MARKER_IS_WINDOW (root))
+    marker_window_set_zoom_pane (MARKER_WINDOW (root), MARKER_WINDOW_ZOOM_PANE_SOURCE);
+
+  /* Accumulate smooth deltas so one wheel notch = one zoom step (10%). */
+  GtkWidget *scroll_widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (controller));
+  gdouble *accum = g_object_get_data (G_OBJECT (scroll_widget), "zoom-accum");
+  if (accum == NULL)
   {
-    if (dy > 0)
-    {
-      marker_preview_zoom_out (editor->preview);
-      return TRUE;
-    }
-    else if (dy < 0)
-    {
-      marker_preview_zoom_in (editor->preview);
-      return TRUE;
-    }
+    accum = g_new0 (gdouble, 1);
+    g_object_set_data_full (G_OBJECT (scroll_widget), "zoom-accum", accum, g_free);
   }
-  return FALSE;
+
+  GdkScrollUnit unit = gtk_event_controller_scroll_get_unit (controller);
+  *accum += (unit == GDK_SCROLL_UNIT_SURFACE) ? dy / 20.0 : dy;
+
+  while (*accum >= 1.0)
+  {
+    marker_editor_zoom_source (editor, -0.1);
+    *accum -= 1.0;
+  }
+  while (*accum <= -1.0)
+  {
+    marker_editor_zoom_source (editor, +0.1);
+    *accum += 1.0;
+  }
+
+  return TRUE;
 }
 
 static void
@@ -370,10 +406,15 @@ marker_editor_init (MarkerEditor *editor)
   gtk_widget_set_vexpand (GTK_WIDGET (editor->source_scroll), TRUE);
   gtk_scrolled_window_set_child (editor->source_scroll, GTK_WIDGET (editor->source_view));
 
+  /* Attach the Ctrl+wheel zoom controller to the scrolled window in the
+   * CAPTURE phase: GtkScrolledWindow installs its own capture-phase scroll
+   * controller on the child, which would otherwise consume wheel events
+   * (for text scrolling) before ours ever runs. */
   GtkEventController *source_scroll_controller =
     gtk_event_controller_scroll_new (GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
+  gtk_event_controller_set_propagation_phase (source_scroll_controller, GTK_PHASE_CAPTURE);
   g_signal_connect (source_scroll_controller, "scroll", G_CALLBACK (source_scroll_cb), editor);
-  gtk_widget_add_controller (GTK_WIDGET (editor->source_view), source_scroll_controller);
+  gtk_widget_add_controller (GTK_WIDGET (editor->source_scroll), source_scroll_controller);
 
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->source_view));
   g_signal_connect (buffer, "changed", G_CALLBACK (buffer_changed_cb), editor);
@@ -830,7 +871,7 @@ marker_editor_apply_prefs (MarkerEditor *editor)
   guint tab_width = marker_prefs_get_tab_width ();
   gtk_source_view_set_indent_width (source_view, tab_width);
 
-  marker_source_view_set_zoom_level (marker_prefs_get_zoom_level ());
+  marker_source_view_set_zoom_level (MARKER_SOURCE_VIEW (source_view), marker_prefs_get_source_zoom_level ());
 }
 
 void

@@ -34,6 +34,12 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (MarkerWindow, marker_window, MARKER, WINDOW, AdwApplicationWindow)
 
+typedef enum
+{
+  MARKER_WINDOW_ZOOM_PANE_PREVIEW,
+  MARKER_WINDOW_ZOOM_PANE_SOURCE
+} MarkerWindowZoomPane;
+
 MarkerWindow        *marker_window_new                           (GtkApplication     *app);
 MarkerWindow        *marker_window_new_from_file                 (GtkApplication     *app,
                                                                   GFile              *file);
@@ -42,6 +48,8 @@ void                 marker_window_unfullscreen                  (MarkerWindow  
 void                 marker_window_toggle_fullscreen             (MarkerWindow       *window);
 gboolean             marker_window_is_fullscreen                 (MarkerWindow       *window);
 MarkerEditor        *marker_window_get_active_editor             (MarkerWindow       *window);
+void                 marker_window_set_zoom_pane                (MarkerWindow          *window,
+                                                                  MarkerWindowZoomPane   pane);
 void                 marker_window_open_file                     (MarkerWindow       *window);
 void                 marker_window_open_file_in_new_window       (MarkerWindow       *window);
 void                 marker_window_save_active_file              (MarkerWindow       *window);

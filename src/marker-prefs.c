@@ -183,6 +183,18 @@ marker_prefs_set_zoom_level (gdouble val)
   g_settings_set_double (prefs.preview_settings, "preview-zoom-level", val);
 }
 
+gdouble
+marker_prefs_get_source_zoom_level (void)
+{
+  return g_settings_get_double (prefs.preview_settings, "source-zoom-level");
+}
+
+void
+marker_prefs_set_source_zoom_level (gdouble val)
+{
+  g_settings_set_double (prefs.preview_settings, "source-zoom-level", val);
+}
+
 gboolean
 marker_prefs_get_use_mermaid (void)
 {

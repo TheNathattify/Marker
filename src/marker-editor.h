@@ -71,6 +71,10 @@ gchar                  *marker_editor_get_raw_title                 (MarkerEdito
 gchar                  *marker_editor_get_subtitle                  (MarkerEditor           *editor);
 MarkerPreview          *marker_editor_get_preview                   (MarkerEditor           *editor);
 MarkerSourceView       *marker_editor_get_source_view               (MarkerEditor           *editor);
+void                    marker_editor_set_source_zoom_level         (MarkerEditor           *editor,
+                                                                      gdouble                 zoom);
+void                    marker_editor_zoom_source                   (MarkerEditor           *editor,
+                                                                      gdouble                 delta);
 MarkerDocument         *marker_editor_get_document                  (MarkerEditor           *editor);
 MarkerSearchController *marker_editor_get_search_controller         (MarkerEditor           *editor);
 void                    marker_editor_apply_prefs                   (MarkerEditor           *editor);
