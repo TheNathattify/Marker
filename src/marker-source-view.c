@@ -221,6 +221,15 @@ marker_source_view_set_text (MarkerSourceView *source_view,
 {
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (source_view));
   gtk_text_buffer_set_text (buffer, text, size);
+
+  /* gtk_text_buffer_set_text() leaves the insert mark at the END of the
+   * inserted text, so opening a document put the cursor at the bottom
+   * and the preview (which scrolls to the #cursor_pos anchor on every
+   * refresh) started at the end of the document.
+   * Place the cursor at the start instead. */
+  GtkTextIter start_iter;
+  gtk_text_buffer_get_start_iter (buffer, &start_iter);
+  gtk_text_buffer_place_cursor (buffer, &start_iter);
 }
 
 void
