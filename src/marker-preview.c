@@ -138,7 +138,8 @@ navigate (MarkerPreview        *preview,
 
   const gchar *current_uri = webkit_web_view_get_uri (WEBKIT_WEB_VIEW (preview));
 
-  if (is_local_markdown_uri (uri, current_uri))
+  if (webkit_navigation_action_get_navigation_type (action) == WEBKIT_NAVIGATION_TYPE_LINK_CLICKED &&
+      is_local_markdown_uri (uri, current_uri))
   {
     g_autofree gchar *clean_uri = g_strdup (uri);
     char *hash = strchr (clean_uri, '#');
