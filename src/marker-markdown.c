@@ -285,6 +285,186 @@ marker_markdown_scidown_css(void)
   return g_strdup("");
 }
 
+
+/*
+ * GFM task lists --------------------------------------------------------------
+ *
+ * scidown has no task-list support (Mandarancio/scidown#7,
+ * fabiocolacio/Marker#218): the inline parser swallows the "[ ]" / "[x]"
+ * markers before they ever reach the HTML output, so a footer script can
+ * never recover them. Instead, rewrite the markers to private-use Unicode
+ * placeholders (U+E000 / U+E001) *before* rendering, then swap those
+ * placeholders for real <input type="checkbox"> elements *after* the HTML
+ * has been produced.
+ *
+ * "[ ]" and "[x]" are 3 bytes long, and so are the U+E000/U+E001 UTF-8
+ * sequences: byte offsets (and therefore the cursor position passed to
+ * scidown for preview scroll synchronization) are preserved exactly.
+ */
+
+static const char TASKLIST_PLACEHOLDER_UNCHECKED[] = "\xEE\x80\x80"; /* U+E000 */
+static const char TASKLIST_PLACEHOLDER_CHECKED[]   = "\xEE\x80\x81"; /* U+E001 */
+
+static const char TASKLIST_HTML_UNCHECKED[] =
+  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled>";
+static const char TASKLIST_HTML_CHECKED[] =
+  "<input type=\"checkbox\" class=\"task-list-item-checkbox\" disabled checked>";
+
+static gboolean
+is_fence_marker (const char *start, const char *line_end, char *fence_char)
+{
+  const char *p = start;
+  const char c = *p;
+  int count = 0;
+
+  while (p < line_end && *p == c) { count++; p++; }
+
+  if (count >= 3 && (c == '`' || c == '~'))
+  {
+    if (fence_char)
+      *fence_char = c;
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/*
+ * Rewrites "- [ ]" / "- [x]" (and ordered variants) list-item markers
+ * into U+E000/U+E001 placeholders. Returns NULL when the document
+ * contains no task-list item, so the original buffer can be rendered
+ * as-is. Content of fenced code blocks is left untouched.
+ */
+static gchar*
+preprocess_task_lists (const char *markdown, size_t size)
+{
+  GString *out = NULL;
+  const char *copied = markdown;
+  const char *line = markdown;
+  const char *end = markdown + size;
+  gboolean in_fence = FALSE;
+  char fence_char = 0;
+
+  while (line < end)
+  {
+    const char *eol = (const char *) memchr (line, '\n', (size_t) (end - line));
+    const char *next = eol ? (eol + 1) : end;
+    const char *line_end = eol ? eol : end;
+
+    const char *p = line;
+    while (p < line_end && *p == ' ')
+      p++;
+
+    /* Track fenced code blocks (``` / ~~~): never touch their content. */
+    if (p < line_end && (p - line) <= 3 && (*p == '`' || *p == '~'))
+    {
+      char c = 0;
+      if (is_fence_marker (p, line_end, &c))
+      {
+        if (!in_fence)
+        {
+          in_fence = TRUE;
+          fence_char = c;
+        }
+        else if (c == fence_char)
+        {
+          in_fence = FALSE;
+        }
+      }
+    }
+
+    if (!in_fence && p < line_end)
+    {
+      const char *m = p;
+
+      /* unordered marker: -, * or + */
+      if (*m == '-' || *m == '*' || *m == '+')
+        m++;
+      /* ordered marker: digits followed by . or ) */
+      else
+      {
+        const char *d = m;
+        while (m < line_end && *m >= '0' && *m <= '9')
+          m++;
+        if (m == d || m >= line_end || (*m != '.' && *m != ')'))
+          m = p;
+        else
+          m++;
+      }
+
+      if (m > p && m < line_end)
+      {
+        const char *s = m;
+        while (s < line_end && (*s == ' ' || *s == '\t'))
+          s++;
+
+        if (s > m &&
+            (s + 3) <= line_end &&
+            s[0] == '[' &&
+            (s[1] == ' ' || s[1] == 'x' || s[1] == 'X') &&
+            s[2] == ']' &&
+            (s + 3 == line_end || s[3] == ' ' || s[3] == '\t' || s[3] == '\r'))
+        {
+          if (!out)
+            out = g_string_sized_new (size + 32);
+
+          g_string_append_len (out, copied, (gssize) (s - copied));
+          g_string_append (out, (s[1] == ' ')
+                            ? TASKLIST_PLACEHOLDER_UNCHECKED
+                            : TASKLIST_PLACEHOLDER_CHECKED);
+          copied = s + 3;
+        }
+      }
+    }
+
+    line = next;
+  }
+
+  if (!out)
+    return NULL;
+
+  g_string_append_len (out, copied, (gssize) (end - copied));
+  return g_string_free (out, FALSE);
+}
+
+static void
+tasklist_replace (GString *str, const char *placeholder, const char *replacement)
+{
+  const gsize placeholder_len = strlen (placeholder);
+  const char *found;
+
+  while ((found = strstr (str->str, placeholder)) != NULL)
+  {
+    const gsize pos = (gsize) (found - str->str);
+    g_string_erase (str, pos, placeholder_len);
+    g_string_insert (str, pos, replacement);
+  }
+}
+
+/*
+ * Takes ownership of html; swaps the placeholders for checkbox inputs.
+ * Returns html untouched when it contains no placeholder.
+ */
+static gchar*
+tasklists_postprocess (gchar *html)
+{
+  GString *str;
+
+  if (!html)
+    return html;
+
+  if (!strstr (html, TASKLIST_PLACEHOLDER_UNCHECKED) &&
+      !strstr (html, TASKLIST_PLACEHOLDER_CHECKED))
+    return html;
+
+  str = g_string_new (html);
+  g_free (html);
+
+  tasklist_replace (str, TASKLIST_PLACEHOLDER_UNCHECKED, TASKLIST_HTML_UNCHECKED);
+  tasklist_replace (str, TASKLIST_PLACEHOLDER_CHECKED, TASKLIST_HTML_CHECKED);
+
+  return g_string_free (str, FALSE);
+}
+
 char*
 marker_markdown_to_html(const char*         markdown,
                         size_t              size,
@@ -326,10 +506,14 @@ marker_markdown_to_html(const char*         markdown,
                                   16);
 
   buffer = hoedown_buffer_new(500);
-  hoedown_document_render(document, buffer, (uint8_t*) markdown, size, cursor_position);
+  g_autofree gchar *tasklist_md = preprocess_task_lists(markdown, size);
+  hoedown_document_render(document, buffer,
+                          (uint8_t*) (tasklist_md ? tasklist_md : markdown),
+                          tasklist_md ? strlen(tasklist_md) : size,
+                          cursor_position);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = g_strdup(buf_cstr);
+  html = tasklists_postprocess(g_strdup(buf_cstr));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);
@@ -378,10 +562,14 @@ marker_markdown_to_html_with_css_inline(const char*         markdown,
                                   16);
 
   buffer = hoedown_buffer_new(500);
-  hoedown_document_render(document, buffer, (uint8_t*) markdown, size, cursor_position);
+  g_autofree gchar *tasklist_md = preprocess_task_lists(markdown, size);
+  hoedown_document_render(document, buffer,
+                          (uint8_t*) (tasklist_md ? tasklist_md : markdown),
+                          tasklist_md ? strlen(tasklist_md) : size,
+                          cursor_position);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = g_strdup(buf_cstr);
+  html = tasklists_postprocess(g_strdup(buf_cstr));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);
