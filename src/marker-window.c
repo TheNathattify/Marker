@@ -83,6 +83,8 @@ typedef struct {
   gpointer                user_data;
 } WarningClosure;
 
+static void sidebar_close_btn_clicked_cb (GtkButton *btn, gpointer user_data);
+
 gboolean
 get_current_iter (MarkerWindow *window,
                   GtkTreeIter  *iter)
@@ -1174,7 +1176,9 @@ marker_window_init (MarkerWindow *window)
   }
 
   window->is_fullscreen = FALSE;
-  window->sidebar_visible = FALSE;
+  /* TRUE car le widget GTK est visible par défaut — hide_sidebar() au démarrage
+   * pourra alors vraiment le cacher (son garde-fou vérifie sidebar_visible). */
+  window->sidebar_visible = TRUE;
   window->editors_counter = 0;
   window->last_click_ = 0;
 
@@ -1271,6 +1275,14 @@ marker_window_init (MarkerWindow *window)
     g_signal_connect (outline_list_box, "row-activated", G_CALLBACK (on_outline_row_activated), window);
   }
 
+  /** SIDEBAR CLOSE BUTTON **/
+  GtkButton *sidebar_close_btn = GTK_BUTTON (gtk_builder_get_object (builder, "sidebar_close_btn"));
+  if (sidebar_close_btn)
+  {
+    g_signal_connect_swapped (sidebar_close_btn, "clicked",
+                              G_CALLBACK (sidebar_close_btn_clicked_cb), window);
+  }
+
   /** EDITOR STACKS **/
   window->editors_stack = GTK_STACK (gtk_builder_get_object (builder, "documents_stack"));
 
@@ -1284,17 +1296,17 @@ marker_window_init (MarkerWindow *window)
   window->paned2 = gtk_paned_get_end_child (GTK_PANED (main_paned));
   window->main_paned = GTK_PANED (main_paned);
 
-  /* Largeur minimale de la sidebar = largeur naturelle du StackSwitcher
-   * (boutons Documents/Plan) + marges, pour éviter que les boutons ne
+  /* Largeur minimale de la sidebar = largeur naturelle du header
+   * (StackSwitcher + bouton fermer) pour éviter que les boutons ne
    * débordent quand on réduit la sidebar. */
   {
-    GtkWidget *switcher = GTK_WIDGET (gtk_builder_get_object (builder, "sidebar_switcher"));
-    if (switcher && window->paned1)
+    GtkWidget *header_box = GTK_WIDGET (gtk_builder_get_object (builder, "sidebar_header_box"));
+    if (header_box && window->paned1)
     {
       int nat_width = 0;
-      gtk_widget_measure (switcher, GTK_ORIENTATION_HORIZONTAL, -1, NULL, &nat_width, NULL, NULL);
-      int margin_start = gtk_widget_get_margin_start (switcher);
-      int margin_end = gtk_widget_get_margin_end (switcher);
+      gtk_widget_measure (header_box, GTK_ORIENTATION_HORIZONTAL, -1, NULL, &nat_width, NULL, NULL);
+      int margin_start = gtk_widget_get_margin_start (header_box);
+      int margin_end = gtk_widget_get_margin_end (header_box);
       int min_width = nat_width + margin_start + margin_end + 4; /* +4 marge de sécurité */
       gtk_widget_set_size_request (window->paned1, min_width, -1);
     }
@@ -1382,8 +1394,13 @@ marker_window_add_editor (MarkerWindow *window,
   gtk_tree_selection_select_iter (gtk_tree_view_get_selection (window->documents_tree_view),
                                   &iter);
 
-  /* La visibilité de la sidebar est contrôlée par l'utilisateur (menu/F12),
-   * pas automatiquement selon le nombre de documents. */
+  /* Auto-afficher la sidebar quand on passe à 2+ documents (1 → 2).
+   * On passe par l'action pour synchroniser état + pref + visibilité. */
+  if (window->editors_counter == 1)
+  {
+    g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
+                                        g_variant_new_boolean (TRUE));
+  }
 
   g_signal_connect (editor, "title-changed",
                     G_CALLBACK (title_changed_cb),
@@ -1471,11 +1488,12 @@ marker_window_new_editor_from_file (MarkerWindow *window,
       MarkerSourceView *source_view = marker_editor_get_source_view (editor);
       g_autofree gchar *md = marker_source_view_get_text (source_view, FALSE);
 
+      /* Si l'éditeur actif est vide et sans fichier, on charge le fichier
+       * dedans au lieu de fermer/créer — évite de faire clignoter la sidebar. */
       if (g_strcmp0 (md, "") == 0 && active_file == NULL)
       {
-        window->editors_counter++;
-        marker_window_close_current_document (window);
-        window->editors_counter--;
+        marker_editor_open_file (editor, file);
+        return;
       }
     }
     editor = marker_editor_new_from_file (file);
@@ -1751,6 +1769,13 @@ on_close_document_warning_cb (MarkerWindow *window,
     gtk_stack_remove (window->editors_stack, GTK_WIDGET (editor));
     window->editors_counter--;
 
+    /* Auto-cacher la sidebar quand on retombe à 1 seul document (2 → 1). */
+    if (window->editors_counter == 1)
+    {
+      g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
+                                          g_variant_new_boolean (FALSE));
+    }
+
     if (window->editors_counter < 1)
     {
       marker_window_try_close (window);
@@ -1805,6 +1830,16 @@ marker_window_hide_sidebar (MarkerWindow *window)
     gtk_widget_set_visible (window->paned1, FALSE);
     gtk_paned_set_position (window->main_paned, 0);
   }
+}
+
+static void
+sidebar_close_btn_clicked_cb (GtkButton *btn G_GNUC_UNUSED,
+                              gpointer   user_data)
+{
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+  /* Passe par l'action pour synchroniser état + pref + visibilité. */
+  g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
+                                      g_variant_new_boolean (FALSE));
 }
 
 void

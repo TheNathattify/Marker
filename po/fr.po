@@ -728,3 +728,7 @@ msgstr "Tout remplacer"
 #: src/marker-exporter.c
 msgid "Export"
 msgstr "Exporter"
+
+#: src/resources/ui/marker-window-main-view.ui
+msgid "Close Sidebar"
+msgstr "Fermer la barre latérale"
