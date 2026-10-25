@@ -1284,6 +1284,22 @@ marker_window_init (MarkerWindow *window)
   window->paned2 = gtk_paned_get_end_child (GTK_PANED (main_paned));
   window->main_paned = GTK_PANED (main_paned);
 
+  /* Largeur minimale de la sidebar = largeur naturelle du StackSwitcher
+   * (boutons Documents/Plan) + marges, pour éviter que les boutons ne
+   * débordent quand on réduit la sidebar. */
+  {
+    GtkWidget *switcher = GTK_WIDGET (gtk_builder_get_object (builder, "sidebar_switcher"));
+    if (switcher && window->paned1)
+    {
+      int nat_width = 0;
+      gtk_widget_measure (switcher, GTK_ORIENTATION_HORIZONTAL, -1, NULL, &nat_width, NULL, NULL);
+      int margin_start = gtk_widget_get_margin_start (switcher);
+      int margin_end = gtk_widget_get_margin_end (switcher);
+      int min_width = nat_width + margin_start + margin_end + 4; /* +4 marge de sécurité */
+      gtk_widget_set_size_request (window->paned1, min_width, -1);
+    }
+  }
+
   /** Window size & preferences **/
   marker_window_hide_sidebar (window);
   guint width = marker_prefs_get_window_width ();

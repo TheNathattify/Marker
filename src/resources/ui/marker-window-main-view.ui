@@ -5,7 +5,7 @@
 
   <object class="GtkPaned" id="main_paned">
     <property name="orientation">horizontal</property>
-    <property name="shrink-start-child">true</property>
+    <property name="shrink-start-child">false</property>
     <property name="resize-start-child">false</property>
     <property name="shrink-end-child">true</property>
     <property name="resize-end-child">true</property>
