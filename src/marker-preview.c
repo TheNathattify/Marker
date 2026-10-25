@@ -481,7 +481,7 @@ marker_preview_set_zoom_level (MarkerPreview *preview,
   /* Sauvegarde le ratio de scroll AVANT le zoom (scrollY / hauteur totale).
    * Le zoom change la hauteur du contenu → la position absolue en pixels
    * n'est plus valide. */
-  g_autofree gchar *save_script =
+  const gchar *save_script =
     "(function(){"
     "var h=document.body?document.body.scrollHeight:0;"
     "window.__markerScrollRatio=(h>0)?(window.scrollY/h):0;"
