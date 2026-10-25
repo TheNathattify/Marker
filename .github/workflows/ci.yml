@@ -26,7 +26,7 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False \
             meson ninja-build gcc \
             gtk4-devel libadwaita-devel gtksourceview5-devel webkitgtk6.0-devel \
-            glib2-devel gettext itstool
+            glib2-devel gettext itstool desktop-file-utils
 
       - name: Build and test
         run: |
