@@ -1174,7 +1174,7 @@ marker_window_init (MarkerWindow *window)
   }
 
   window->is_fullscreen = FALSE;
-  window->sidebar_visible = TRUE;
+  window->sidebar_visible = FALSE;
   window->editors_counter = 0;
   window->last_click_ = 0;
 
@@ -1315,7 +1315,10 @@ marker_window_init (MarkerWindow *window)
 
   if (marker_prefs_get_show_sidebar ())
   {
-    g_action_group_activate_action (G_ACTION_GROUP (window), "sidebar", NULL);
+    /* change_action_state (pas activate) pour une action stateful :
+     * déclenche action_sidebar → met à jour l'état, la pref et la visibilité. */
+    g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
+                                        g_variant_new_boolean (TRUE));
   }
 
   g_signal_connect (window, "close-request", G_CALLBACK (window_close_request_cb), window);
@@ -1379,10 +1382,8 @@ marker_window_add_editor (MarkerWindow *window,
   gtk_tree_selection_select_iter (gtk_tree_view_get_selection (window->documents_tree_view),
                                   &iter);
 
-  if (window->editors_counter >= 1)
-  {
-    marker_window_show_sidebar (window);
-  }
+  /* La visibilité de la sidebar est contrôlée par l'utilisateur (menu/F12),
+   * pas automatiquement selon le nombre de documents. */
 
   g_signal_connect (editor, "title-changed",
                     G_CALLBACK (title_changed_cb),
@@ -1750,11 +1751,7 @@ on_close_document_warning_cb (MarkerWindow *window,
     gtk_stack_remove (window->editors_stack, GTK_WIDGET (editor));
     window->editors_counter--;
 
-    if (window->editors_counter == 1)
-    {
-      marker_window_hide_sidebar (window);
-    }
-    else if (window->editors_counter < 1)
+    if (window->editors_counter < 1)
     {
       marker_window_try_close (window);
     }
