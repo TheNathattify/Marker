@@ -1,4 +1,5 @@
 build
+.flatpak-builder
 resources.c
 *~
 .vscode

@@ -7,6 +7,28 @@ on:
     branches: [ main ]
 
 jobs:
+  build:
+    name: Native build (Fedora)
+    runs-on: ubuntu-24.04
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          dnf install -y --setopt=install_weak_deps=False \
+            meson ninja-build gcc \
+            gtk4-devel libadwaita-devel gtksourceview5-devel webkitgtk6.0-devel \
+            glib2-devel gettext itstool
+
+      - name: Build and test
+        run: |
+          meson setup build
+          ninja -C build
+          meson test -C build
+
   validate:
     runs-on: ubuntu-24.04
     steps:
@@ -46,4 +68,4 @@ jobs:
         with:
           bundle: com.github.thenathattify.marker.flatpak
           manifest-path: com.github.thenathattify.marker.json
-          cache: false
+          cache: true
