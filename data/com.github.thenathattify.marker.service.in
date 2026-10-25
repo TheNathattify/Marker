@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.github.thenathattify.marker
+Exec=@BINDIR@/marker

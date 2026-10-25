@@ -1,7 +1,7 @@
 project(
   'marker',
   'c',
-  version: '2026.10.6',
+  version: '2026.10.7',
   meson_version: '>= 0.62.0',
   default_options: [
     'warning_level=2',
@@ -119,6 +119,16 @@ install_data(
 install_data(
   'data/com.github.thenathattify.marker.desktop',
   install_dir: datadir / 'applications'
+)
+
+dbus_service_conf = configuration_data()
+dbus_service_conf.set('BINDIR', prefix / get_option('bindir'))
+configure_file(
+  input: 'data/com.github.thenathattify.marker.service.in',
+  output: 'com.github.thenathattify.marker.service',
+  configuration: dbus_service_conf,
+  install: true,
+  install_dir: datadir / 'dbus-1' / 'services'
 )
 
 install_data(

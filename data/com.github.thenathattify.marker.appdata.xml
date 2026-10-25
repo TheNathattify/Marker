@@ -29,9 +29,7 @@
   <launchable type="desktop-id">com.github.thenathattify.marker.desktop</launchable>
   <translation type="gettext">marker</translation>
 
-  <screenshots>
-    <!-- TODO: add screenshots before publishing to Flathub -->
-  </screenshots>
+  <!-- TODO: add screenshots before publishing to Flathub -->
 
   <developer id="com.github.thenathattify">
     <name>Nathan Obry</name>
@@ -47,6 +45,14 @@
   </provides>
 
   <releases>
+    <release version="2026.10.7" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>Fix: ship a D-Bus service file matching the desktop entry's DBusActivatable flag (Flatpak builds failed at export with "service file not exported"). This also enables D-Bus activation and single-instance behavior.</li>
+          <li>Fix: removed the empty screenshots tag from the AppStream metadata that failed CI validation (screenshot-default-missing, tag-empty).</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.6" date="2026-10-25">
       <description translate="no">
         <ul>
