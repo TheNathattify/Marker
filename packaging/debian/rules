@@ -7,4 +7,4 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 override_dh_auto_install:
 	dh_auto_install
-	rm -f debian/marker/usr/share/com.github.adrighem.marker/icons/hicolor/generate.sh
+	rm -f debian/marker/usr/share/com.github.thenathattify.marker/icons/hicolor/generate.sh

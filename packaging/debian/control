@@ -1,7 +1,7 @@
 Source: marker
 Section: editors
 Priority: optional
-Maintainer: Vincent van Adrighem <vincent@vanadrighem.eu>
+Maintainer: Nathan Obry <TheNathattify@users.noreply.github.com>
 Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
@@ -9,19 +9,19 @@ Build-Depends:
  desktop-file-utils,
  gettext,
  itstool,
- libadwaita-1-dev (>= 1.4.0),
+ libadwaita-1-dev (>= 1.8.0),
  libglib2.0-bin (>= 2.74.0),
  libglib2.0-dev (>= 2.74.0),
- libgtk-4-dev (>= 4.10.0),
+ libgtk-4-dev (>= 4.16.0),
  libgtksourceview-5-dev (>= 5.6.0),
  libwebkitgtk-6.0-dev (>= 2.40.0),
  meson (>= 0.62.0),
  ninja-build,
  pkgconf
 Standards-Version: 4.7.2
-Homepage: https://github.com/adrighem/Marker
-Vcs-Git: https://github.com/adrighem/Marker.git
-Vcs-Browser: https://github.com/adrighem/Marker
+Homepage: https://github.com/TheNathattify/Marker
+Vcs-Git: https://github.com/TheNathattify/Marker.git
+Vcs-Browser: https://github.com/TheNathattify/Marker
 
 Package: marker
 Architecture: any

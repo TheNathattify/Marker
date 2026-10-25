@@ -1,5 +1,5 @@
-marker (@VERSION@-1) trixie; urgency=medium
+marker (@VERSION@-1) unstable; urgency=medium
 
   * Build the Marker @VERSION@ GitHub release.
 
- -- Vincent van Adrighem <vincent@vanadrighem.eu>  @DATE@
+ -- Nathan Obry <TheNathattify@users.noreply.github.com>  @DATE@

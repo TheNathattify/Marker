@@ -1,10 +1,11 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Marker
-Source: https://github.com/adrighem/Marker
+Source: https://github.com/TheNathattify/Marker
 
 Files: *
 Copyright: 2017-2020 Fabio Colacio
            2026 Vincent van Adrighem
+           2026 Nathan Obry
 License: GPL-3.0-or-later
  On Debian systems, the complete text of the GNU General Public License
  version 3 is available in /usr/share/common-licenses/GPL-3.
