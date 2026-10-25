@@ -61,5 +61,5 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/com.github.thenathatt
 %{_datadir}/metainfo/com.github.thenathattify.marker.appdata.xml
 
 %changelog
-* Sun Oct 25 2026 Nathan Obry <TheNathattify@users.noreply.github.com> - %{version}-1
+* Sun Oct 25 2026 Nathan Obry <nathan170262@proton.me> - %{version}-1
 - Automated GitHub release packaging.
