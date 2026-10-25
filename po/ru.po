@@ -7,264 +7,630 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 17:13+0100\n"
+"POT-Creation-Date: 2026-10-25 10:02+0100\n"
 "PO-Revision-Date: 2019-04-30 14:33+0300\n"
+"Last-Translator: Artem Polishchuk <ego.cordatus@gmail.com>\n"
 "Language-Team: \n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.1\n"
-"Last-Translator: Artem Polishchuk <ego.cordatus@gmail.com>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: src/resources/ui/marker-appmenu.ui:6
-#: src/resources/ui/marker-gear-popover.ui:88
-msgid "New Window"
-msgstr "Новое окно"
+#: data/com.github.thenathattify.marker.desktop:2
+#: data/com.github.thenathattify.marker.appdata.xml:8
+#: src/resources/ui/marker-headerbar.ui:49
+#, fuzzy
+msgid "Marker"
+msgstr "О Marker"
 
-#: src/resources/ui/marker-appmenu.ui:12
-#: src/resources/ui/marker-prefs-window.ui:46
-#: src/resources/ui/marker-gear-popover.ui:183
+#: data/com.github.thenathattify.marker.desktop:10
+#, fuzzy
+msgid "Markdown Editor"
+msgstr "Markdown редактор для GNOME"
+
+#: data/com.github.thenathattify.marker.desktop:11
+#, fuzzy
+msgid "A simple markdown editor for GTK+"
+msgstr "Markdown редактор для GNOME"
+
+#: data/com.github.thenathattify.marker.desktop:25
+msgid "marker;markdown;editor;web;"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:9
+#, fuzzy
+msgid "Powerful markdown editor for the GNOME desktop"
+msgstr "Markdown редактор для GNOME"
+
+#: data/com.github.thenathattify.marker.appdata.xml:12
+msgid ""
+"Marker is a fast and powerful markdown editor designed for the GNOME desktop "
+"with real-time preview and document export capabilities."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:13
+msgid "Features:"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:15
+msgid "View and edit markdown documents"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:16
+msgid "Convert markdown documents to HTML"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:17
+msgid "Tex math rendering"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:18
+msgid "Support for mermaid diagrams"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:19
+msgid "Support for charter plots"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:20
+msgid "Syntax highlighting for code blocks"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:21
+#, fuzzy
+msgid "Integrated sketch editor"
+msgstr "Вставить рисунок"
+
+#: data/com.github.thenathattify.marker.appdata.xml:22
+msgid "Exports to PDF, RTF, ODT, DOCx and LaTeX"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:23
+msgid "Custom CSS themes"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:24
+msgid "Custom syntax themes"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:25
+msgid "Figure captioning and numbering"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:34
+msgid "Nathan Obry"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:24
+msgid "Syntax Theme"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:25
+msgid "The syntax theme to use for the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:30
+#, fuzzy
+msgid "Enable Syntax Theme"
+msgstr "Включить тёмный режим"
+
+#: data/com.github.thenathattify.marker.gschema.xml:31
+msgid "Whether to use a syntax theme in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:36
+#, fuzzy
+msgid "Show Line Numbers"
+msgstr "Показать номера строк"
+
+#: data/com.github.thenathattify.marker.gschema.xml:37
+msgid "Whether to show line numbers in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:42
+msgid "Show Right Margin"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:43
+msgid "Whether to show a margin on the right side of the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:48
+msgid "The column at which the right margin should be shown"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:49
+msgid ""
+"Sets the column where the right margin will appear when 'show-right-margin' "
+"is enabled"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:54
+#, fuzzy
+msgid "Wrap Text"
+msgstr "Переносить текст"
+
+#: data/com.github.thenathattify.marker.gschema.xml:55
+msgid "Whether to wrap text in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:60
+#, fuzzy
+msgid "Show Spaces"
+msgstr "Показывать пробелы"
+
+#: data/com.github.thenathattify.marker.gschema.xml:61
+msgid "Whether to show spaces and tabulation in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:66
+#, fuzzy
+msgid "Highlight Current Line"
+msgstr "Подсвечивать текущую строку"
+
+#: data/com.github.thenathattify.marker.gschema.xml:67
+msgid "Whether to highlight the line with the cursor in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:72
+#, fuzzy
+msgid "Use spaces instead of tabs"
+msgstr "Вставлять пробелы вместо табуляций"
+
+#: data/com.github.thenathattify.marker.gschema.xml:73
+#, fuzzy
+msgid "Use spaces instead of tabs in the editor."
+msgstr "Вставлять пробелы вместо табуляций"
+
+#: data/com.github.thenathattify.marker.gschema.xml:78
+msgid "Width of tabulation in characters."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:79
+msgid "Set the width of tabulation in characters in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:84
+msgid "Auto-indent code"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:85
+msgid "Auto-indent code in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:90
+msgid "Spell Check"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:91
+msgid "Spell check using gtkspell."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:96
+msgid "Language for spell check"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:97
+msgid "Selected language for spell check."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:102
+msgid "Trim trailing whitespace"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:103
+msgid "Whether to trim trailing whitespace on save."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:108
+msgid "Editor font size"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:109
+msgid "Base font size in points for the editor. Combined with the zoom level."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:116
+msgid "CSS Theme"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:117
+msgid "The css theme to use for the preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:122
+msgid "Enable CSS theme in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:123
+msgid "Use a CSS theme in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:128
+msgid "Enable math in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:129
+msgid "Use js back-end to render math in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:134
+msgid "Math Back-end"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:135
+msgid "Select the js math rendering back-end."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:140
+msgid "Enable highlight.js in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:141
+msgid "Use highlight.js in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:146
+msgid "Enable mermaid.js in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:147
+msgid "Use mermaid.js to show diagram in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:152
+msgid "Highlight.js CSS theme."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:153
+msgid "The css theme to use for the synthax highlight."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:157
+msgid "Enable Charter extension in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:158
+msgid "Enable Charter extension in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:162
+msgid "Zoom level of the preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:163
+msgid "Zoom level of the preview widget"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:167
+msgid "Zoom level of the source editor"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:168
+msgid "Zoom level of the source view widget"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:175
+#: src/resources/ui/marker-headerbar.ui:109
+msgid "View Mode"
+msgstr "Режим просмотра"
+
+#: data/com.github.thenathattify.marker.gschema.xml:176
+msgid "Controls how to organize the editor and preview areas on the screen."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:181
+#, fuzzy
+msgid "Enter dark-mode"
+msgstr "Включить тёмный режим"
+
+#: data/com.github.thenathattify.marker.gschema.xml:182
+msgid ""
+"When this is enabled, the dark variant of the current gtk theme will be used."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:187
+#, fuzzy
+msgid "Window width"
+msgstr "Окно"
+
+#: data/com.github.thenathattify.marker.gschema.xml:192
+#, fuzzy
+msgid "Window height"
+msgstr "Окно"
+
+#: data/com.github.thenathattify.marker.gschema.xml:197
+msgid "Window position (x, y)"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:202
+msgid "Editor pane width (in Dual Pane mode)"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:207
+msgid "Whether the sidebar is shown"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:4
 msgid "Preferences"
 msgstr "Параметры"
 
-#: src/resources/ui/marker-appmenu.ui:18
-#: src/resources/ui/marker-gear-popover.ui:199
-msgid "Keyboard Shortcuts"
-msgstr "Комбинации клавиш"
-
-#: src/resources/ui/marker-appmenu.ui:22
-#: src/resources/ui/marker-gear-popover.ui:207
-msgid "Help"
-msgstr "Справка"
-
-#: src/resources/ui/marker-appmenu.ui:26
-msgid "About"
-msgstr "О приложении"
-
-#: src/resources/ui/marker-appmenu.ui:30
-msgid "Quit"
-msgstr "Завершить"
-
-#: src/resources/ui/marker-prefs-window.ui:31
-#: src/resources/ui/marker-gear-popover.ui:244
-msgid "Editor Only"
-msgstr "Только редактор"
-
-#: src/resources/ui/marker-prefs-window.ui:34
-#: src/resources/ui/marker-gear-popover.ui:252
-msgid "Preview Only"
-msgstr "Только предварительный просмотр"
-
-#: src/resources/ui/marker-prefs-window.ui:37
-#: src/resources/ui/marker-gear-popover.ui:260
-msgid "Dual Pane"
-msgstr "Двойная панель"
-
-#: src/resources/ui/marker-prefs-window.ui:40
-#: src/resources/ui/marker-gear-popover.ui:268
-msgid "Dual Window"
-msgstr "Двойное окно"
-
-#: src/resources/ui/marker-prefs-window.ui:71
-msgid "Show line numbers"
-msgstr "Показать номера строк"
-
-#: src/resources/ui/marker-prefs-window.ui:86
-msgid "Wrap text"
-msgstr "Переносить текст"
-
-#: src/resources/ui/marker-prefs-window.ui:105
-msgid "Show right margin at column: "
-msgstr ""
-
-#: src/resources/ui/marker-prefs-window.ui:145
-msgid "Check spelling for language: "
-msgstr "Проверить орографию для языка: "
-
-#: src/resources/ui/marker-prefs-window.ui:180
-msgid "Show spaces"
-msgstr "Показывать пробелы"
-
-#: src/resources/ui/marker-prefs-window.ui:197
-msgid "<b>Highlighting</b>"
-msgstr "<b>Подсветка</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:209
-msgid "Highlight current line"
-msgstr "Подсвечивать текущую строку"
-
-#: src/resources/ui/marker-prefs-window.ui:229
-msgid "Highlight syntax with theme:"
-msgstr ""
-
-#: src/resources/ui/marker-prefs-window.ui:266
-msgid "<b>Tab Stops</b>"
-msgstr ""
-
-#: src/resources/ui/marker-prefs-window.ui:278
-msgid "Enable automatic indentation"
-msgstr ""
-
-#: src/resources/ui/marker-prefs-window.ui:293
-msgid "Insert spaces instead of tabs"
-msgstr "Вставлять пробелы вместо табуляций"
-
-#: src/resources/ui/marker-prefs-window.ui:315
-msgid "Tabulation width:"
-msgstr "Ширина табуляции:"
-
-#: src/resources/ui/marker-prefs-window.ui:355
+#: src/resources/ui/marker-prefs-window.ui:9
 msgid "Editor"
 msgstr "Редактор"
 
-#: src/resources/ui/marker-prefs-window.ui:377
-msgid "Use css theme: "
-msgstr "Использовать css тему: "
-
-#: src/resources/ui/marker-prefs-window.ui:417
-msgid "Highlight code blocks with theme:"
+#: src/resources/ui/marker-prefs-window.ui:13
+msgid "Appearance"
 msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:452
-msgid "Enable Mermaid"
+#: src/resources/ui/marker-prefs-window.ui:16
+msgid "Show line numbers"
+msgstr "Показать номера строк"
+
+#: src/resources/ui/marker-prefs-window.ui:21
+msgid "Highlight current line"
+msgstr "Подсвечивать текущую строку"
+
+#: src/resources/ui/marker-prefs-window.ui:26
+msgid "Wrap text"
+msgstr "Переносить текст"
+
+#: src/resources/ui/marker-prefs-window.ui:31
+msgid "Show spaces"
+msgstr "Показывать пробелы"
+
+#: src/resources/ui/marker-prefs-window.ui:36
+msgid "Show right margin"
 msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:467
-msgid "Enable Charter"
+#: src/resources/ui/marker-prefs-window.ui:41
+msgid "Right margin column"
 msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:484
-msgid "<b>Math</b>"
+#: src/resources/ui/marker-prefs-window.ui:54
+msgid "Syntax highlighting"
 msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:500
-msgid "Render Math"
+#: src/resources/ui/marker-prefs-window.ui:59
+msgid "Syntax theme"
 msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:545
+#: src/resources/ui/marker-prefs-window.ui:64
+msgid "Font size"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:65
+msgid "Base font size in points (combined with zoom)"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:80
+msgid "Indentation"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:83
+msgid "Automatic indentation"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:88
+msgid "Insert spaces instead of tabs"
+msgstr "Вставлять пробелы вместо табуляций"
+
+#: src/resources/ui/marker-prefs-window.ui:93
+#, fuzzy
+msgid "Tab width"
+msgstr "Ширина табуляции:"
+
+#: src/resources/ui/marker-prefs-window.ui:106
+msgid "Trim trailing whitespace on save"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:113
+msgid "Spelling"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:116
+#, fuzzy
+msgid "Check spelling"
+msgstr "Проверить орографию для языка: "
+
+#: src/resources/ui/marker-prefs-window.ui:121
+msgid "Language"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:130 src/marker-editor.c:652
 msgid "Preview"
 msgstr "Предварительный просмотр"
 
-#: src/resources/ui/marker-prefs-window.ui:570
-msgid "Default view mode: "
-msgstr "Режим просмотра по умолчанию: "
+#: src/resources/ui/marker-prefs-window.ui:134
+msgid "Styling"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:603
-msgid "Enable dark mode"
-msgstr "Включить тёмный режим"
+#: src/resources/ui/marker-prefs-window.ui:137
+msgid "Custom CSS stylesheet"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:625
+#: src/resources/ui/marker-prefs-window.ui:142
+msgid "CSS stylesheet"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:147
+msgid "Code block syntax highlighting"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:152
+msgid "Code highlighting theme"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:159
+msgid "Extensions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:162
+msgid "Render math expressions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:167
+msgid "Math rendering backend"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:172
+msgid "Mermaid diagrams"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:177
+msgid "Charter charts"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:186
 msgid "Window"
 msgstr "Окно"
 
-#: src/resources/ui/marker-shortcuts-window.ui:14
+#: src/resources/ui/marker-prefs-window.ui:190
+msgid "General"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:193
+#, fuzzy
+msgid "Default view mode"
+msgstr "Режим просмотра по умолчанию: "
+
+#: src/resources/ui/marker-prefs-window.ui:198
+#, fuzzy
+msgid "Dark mode"
+msgstr "Включить тёмный режим"
+
+#: src/resources/ui/marker-shortcuts-window.ui:13
 msgctxt "shortcut window"
 msgid "Documents"
 msgstr "Документы"
 
-#: src/resources/ui/marker-shortcuts-window.ui:19
+#: src/resources/ui/marker-shortcuts-window.ui:17
 msgctxt "shortcut window"
 msgid "Create a new document"
 msgstr "Создать новый документ"
 
-#: src/resources/ui/marker-shortcuts-window.ui:26
+#: src/resources/ui/marker-shortcuts-window.ui:23
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Открыть документ"
 
-#: src/resources/ui/marker-shortcuts-window.ui:33
+#: src/resources/ui/marker-shortcuts-window.ui:29
+#: src/resources/ui/marker-shortcuts-window.ui:35
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:41
 msgctxt "shortcut window"
 msgid "Open a document in a new window"
 msgstr "Открыть документ в новом окне"
 
-#: src/resources/ui/marker-shortcuts-window.ui:40
+#: src/resources/ui/marker-shortcuts-window.ui:47
 msgctxt "shortcut window"
 msgid "Save the document"
 msgstr "Сохранить документ"
 
-#: src/resources/ui/marker-shortcuts-window.ui:47
+#: src/resources/ui/marker-shortcuts-window.ui:53
 msgctxt "shortcut window"
 msgid "Save the document with a new filename"
 msgstr "Сохранить документ с новым именем файла"
 
-#: src/resources/ui/marker-shortcuts-window.ui:54
+#: src/resources/ui/marker-shortcuts-window.ui:59
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "Открыть документ"
+
+#: src/resources/ui/marker-shortcuts-window.ui:65
 msgctxt "shortcut window"
 msgid "Close the document"
 msgstr "Закрыть документ"
 
-#: src/resources/ui/marker-shortcuts-window.ui:62
+#: src/resources/ui/marker-shortcuts-window.ui:72
 msgctxt "shortcut window"
 msgid "Editing"
 msgstr "Редактирование"
 
-#: src/resources/ui/marker-shortcuts-window.ui:67
+#: src/resources/ui/marker-shortcuts-window.ui:76
 msgctxt "shortcut window"
 msgid "Make selection bold"
 msgstr "Сделать выделенное жирным"
 
-#: src/resources/ui/marker-shortcuts-window.ui:74
+#: src/resources/ui/marker-shortcuts-window.ui:82
 msgctxt "shortcut window"
 msgid "Make selection italic"
 msgstr "Сделать выделенное курсивом"
 
-#: src/resources/ui/marker-shortcuts-window.ui:81
+#: src/resources/ui/marker-shortcuts-window.ui:88
 msgctxt "shortcut window"
 msgid "Make selection monospace"
 msgstr "Сделать выделенное моноширинным"
 
-#: src/resources/ui/marker-shortcuts-window.ui:88
+#: src/resources/ui/marker-shortcuts-window.ui:94
 msgctxt "shortcut window"
 msgid "Insert link"
 msgstr "Вставить ссылку"
 
-#: src/resources/ui/marker-shortcuts-window.ui:102
+#: src/resources/ui/marker-shortcuts-window.ui:100
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "Вставить рисунок"
+
+#: src/resources/ui/marker-shortcuts-window.ui:106
 msgctxt "shortcut window"
 msgid "Search in the document"
 msgstr "Поиск в документе"
 
-#: src/resources/ui/marker-shortcuts-window.ui:110
+#: src/resources/ui/marker-shortcuts-window.ui:112
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:119
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Инструменты"
 
-#: src/resources/ui/marker-shortcuts-window.ui:115
+#: src/resources/ui/marker-shortcuts-window.ui:123
 msgctxt "shortcut window"
 msgid "Print the document"
 msgstr "Распечатать документ"
 
-#: src/resources/ui/marker-shortcuts-window.ui:123
+#: src/resources/ui/marker-shortcuts-window.ui:130
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Окно"
 
-#: src/resources/ui/marker-shortcuts-window.ui:128
+#: src/resources/ui/marker-shortcuts-window.ui:134
 msgctxt "shortcut window"
 msgid "Open a new window"
 msgstr "Открыть новое окно"
 
-#: src/resources/ui/marker-shortcuts-window.ui:135
+#: src/resources/ui/marker-shortcuts-window.ui:140
 msgctxt "shortcut window"
 msgid "Close all windows"
 msgstr "Закрыть все окна"
 
-#: src/resources/ui/marker-shortcuts-window.ui:142
+#: src/resources/ui/marker-shortcuts-window.ui:146
 msgctxt "shortcut window"
 msgid "Toggle fullscreen mode"
 msgstr "Переключить полноэкранный режим"
 
-#: src/resources/ui/marker-shortcuts-window.ui:149
+#: src/resources/ui/marker-shortcuts-window.ui:152
 msgctxt "shortcut window"
 msgid "Switch to editor-only mode"
 msgstr "Переключить в режим только для редактирования"
 
-#: src/resources/ui/marker-shortcuts-window.ui:156
+#: src/resources/ui/marker-shortcuts-window.ui:158
 msgctxt "shortcut window"
 msgid "Switch to preview-only mode"
 msgstr "Переключить в режим только для предварительного просмотра"
 
-#: src/resources/ui/marker-shortcuts-window.ui:163
+#: src/resources/ui/marker-shortcuts-window.ui:164
 msgctxt "shortcut window"
 msgid "Switch to dual-pane mode"
 msgstr "Переключить в режим двойной панели"
@@ -274,100 +640,342 @@ msgctxt "shortcut window"
 msgid "Switch to dual-window mode"
 msgstr "Переключить в двухоконный режим"
 
-#: src/resources/ui/marker-shortcuts-window.ui:177
+#: src/resources/ui/marker-shortcuts-window.ui:176
 msgctxt "shortcut window"
 msgid "Quit the application"
 msgstr "Завершить приложение"
 
-#: src/resources/ui/marker-sketcher-window.ui:112
-msgid "Sketcher"
+#: src/resources/ui/marker-sketcher-window.ui:21
+msgid "Add Text"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:123
+#: src/resources/ui/marker-sketcher-window.ui:27
+msgid "Close"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:44
 msgid "Pen Tool"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:140
+#: src/resources/ui/marker-sketcher-window.ui:51
 msgid "Eraser Tool"
 msgstr "Ластик"
 
-#: src/resources/ui/marker-sketcher-window.ui:157
+#: src/resources/ui/marker-sketcher-window.ui:58
 msgid "Text Insertion Tool"
 msgstr "Инструмент для вставки текста"
 
-#: src/resources/ui/marker-sketcher-window.ui:179
+#: src/resources/ui/marker-sketcher-window.ui:67
 msgid "Color Chooser"
 msgstr "Выбор цвета"
 
-#: src/resources/ui/marker-sketcher-window.ui:271
-msgid "Insert the sketch"
-msgstr "Вставить рисунок"
-
-#: src/resources/ui/marker-sketcher-window.ui:286
-msgid "Cancel the sketch"
-msgstr "Отменить рисунок"
-
-#: src/resources/ui/marker-gear-popover.ui:22
-msgid "Zoom Out"
-msgstr "Уменьшить"
-
-#: src/resources/ui/marker-gear-popover.ui:41
-msgid "Zoom Reset"
+#: src/resources/ui/marker-sketcher-window.ui:81
+msgid "Small"
 msgstr ""
 
-#: src/resources/ui/marker-gear-popover.ui:54
-msgid "Zoom In"
-msgstr "Увеличить"
+#: src/resources/ui/marker-sketcher-window.ui:87
+msgid "Medium"
+msgstr ""
 
-#: src/resources/ui/marker-gear-popover.ui:112
-msgid "Fullscreen"
-msgstr "Полный экран"
+#: src/resources/ui/marker-sketcher-window.ui:95
+msgid "Large"
+msgstr ""
 
-#: src/resources/ui/marker-gear-popover.ui:120
-msgid "Sidebar"
-msgstr "Боковая панель"
+#: src/resources/ui/marker-sketcher-window.ui:111
+#, fuzzy
+msgid "Insert Sketch"
+msgstr "Вставить рисунок"
 
-#: src/resources/ui/marker-gear-popover.ui:136
-msgid "Save As…"
-msgstr "Сохранить как…"
+#: src/resources/ui/marker-sketcher-window.ui:117
+msgid "Cancel"
+msgstr ""
 
-#: src/resources/ui/marker-gear-popover.ui:144
-msgid "Export…"
-msgstr "Экспортировать…"
+#: src/resources/ui/marker-gear-popover.ui:8
+#, fuzzy
+msgid "_New Window"
+msgstr "Новое окно"
 
-#: src/resources/ui/marker-gear-popover.ui:152
-msgid "Print…"
+#: src/resources/ui/marker-gear-popover.ui:14
+#, fuzzy
+msgid "_Rename Document…"
+msgstr "Открыть документ"
+
+#: src/resources/ui/marker-gear-popover.ui:18
+msgid "_Reload from Disk"
+msgstr ""
+
+#: src/resources/ui/marker-gear-popover.ui:22
+#, fuzzy
+msgid "_Print…"
 msgstr "Печать…"
 
-#: src/resources/ui/marker-gear-popover.ui:168
-#: src/resources/ui/marker-gear-popover.ui:234
-msgid "View Mode"
-msgstr "Режим просмотра"
+#: src/resources/ui/marker-gear-popover.ui:28
+#, fuzzy
+msgid "_Preferences"
+msgstr "Параметры"
 
-#: src/resources/ui/marker-gear-popover.ui:215
-msgid "About Marker"
+#: src/resources/ui/marker-gear-popover.ui:32
+#, fuzzy
+msgid "_Keyboard Shortcuts"
+msgstr "Комбинации клавиш"
+
+#: src/resources/ui/marker-gear-popover.ui:36
+#, fuzzy
+msgid "_About Marker"
 msgstr "О Marker"
 
-#: src/resources/ui/marker-headerbar.ui:20
-msgid "Open…"
-msgstr "Открыть…"
+#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#, fuzzy
+msgid "Documents"
+msgstr "Документы"
 
-#: src/resources/ui/marker-headerbar.ui:30
+#: src/resources/ui/marker-window-main-view.ui:50
+msgid "Outline"
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:9
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/marker.c:184
+#: src/resources/ui/marker-headerbar.ui:13
+msgid "Save As…"
+msgstr "Сохранить как…"
+
+#: src/resources/ui/marker-headerbar.ui:19
+msgid "Export…"
+msgstr "Экспортировать…"
+
+#: src/resources/ui/marker-headerbar.ui:28
+msgid "Editor Only"
+msgstr "Только редактор"
+
+#: src/resources/ui/marker-headerbar.ui:32
+msgid "Preview Only"
+msgstr "Только предварительный просмотр"
+
+#: src/resources/ui/marker-headerbar.ui:36
+msgid "Dual Pane"
+msgstr "Двойная панель"
+
+#: src/resources/ui/marker-headerbar.ui:40
+msgid "Dual Window"
+msgstr "Двойное окно"
+
+#: src/resources/ui/marker-headerbar.ui:57
+#, fuzzy
+msgid "Toggle Sidebar"
+msgstr "Боковая панель"
+
+#: src/resources/ui/marker-headerbar.ui:63
+msgid "Open…"
+msgstr "Открыть…"
+
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
+#: src/marker-window.c:1848
+#, fuzzy
+msgid "Open Document"
+msgstr "Открыть документ"
+
+#: src/resources/ui/marker-headerbar.ui:76
+#, fuzzy
+msgid "Save Document"
+msgstr "Сохранить документ"
+
+#: src/resources/ui/marker-headerbar.ui:83
+msgid "Save Options"
+msgstr "Параметры сохранения"
+
+#: src/resources/ui/marker-headerbar.ui:92
+#, fuzzy
+msgid "New Document"
+msgstr "Документы"
+
+#: src/resources/ui/marker-headerbar.ui:101
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#, fuzzy
+msgid "Toggle Fullscreen"
+msgstr "Переключить полноэкранный режим"
+
+#: src/resources/ui/marker-headerbar.ui:132
+msgid "Zoom Out"
+msgstr "Уменьшить"
+
+#: src/resources/ui/marker-headerbar.ui:142
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:149
+msgid "Zoom In"
+msgstr "Увеличить"
+
+#: src/resources/ui/marker-headerbar.ui:155
+msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:15
+msgid "Bold"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:21
+msgid "Italic"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:27
+msgid "Underline"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:33
+msgid "Strikethrough"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:47
+#, fuzzy
+msgid "Insert Link"
+msgstr "Вставить ссылку"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:53
+#, fuzzy
+msgid "Insert Image"
+msgstr "Вставить ссылку"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:59
+msgid "Sketcher"
+msgstr ""
+
+#: src/marker.c:187
 msgid "A markdown editor for GNOME"
 msgstr "Markdown редактор для GNOME"
 
-#: src/marker.c:186
-msgid "Report bugs and ideas on github"
-msgstr "Сообщить об ошибках и идеях на github"
-
-#: src/marker.c:191
+#: src/marker.c:194
 msgid "translator-credits"
 msgstr "Artem Polishchuk <ego.cordatus@gmail.com>, 2019."
 
-#: src/marker-editor.c:248
+#: src/marker-editor.c:395
+msgid "Toggle Replace"
+msgstr ""
+
+#: src/marker-editor.c:401
+msgid "Previous Match"
+msgstr ""
+
+#: src/marker-editor.c:403
+msgid "Next Match"
+msgstr ""
+
+#: src/marker-editor.c:413
+msgid "Replace with..."
+msgstr ""
+
+#: src/marker-editor.c:416
+msgid "Replace"
+msgstr ""
+
+#: src/marker-editor.c:417
+msgid "Replace All"
+msgstr ""
+
+#: src/marker-editor.c:838
 msgid "Untitled.md"
 msgstr "Без названия.md"
+
+#: src/marker-exporter.c:311
+#, fuzzy
+msgid "Export"
+msgstr "Экспортировать…"
+
+#: src/marker-window.c:133
+#, fuzzy, c-format
+msgid "Discard changes to the document '%s'?"
+msgstr "Поиск в документе"
+
+#: src/marker-window.c:135 src/marker-window.c:140
+msgid "The document has unsaved changes that will be lost if it is closed now."
+msgstr ""
+
+#: src/marker-window.c:139
+#, fuzzy
+msgid "Discard changes to the document?"
+msgstr "Поиск в документе"
+
+#: src/marker-window.c:144 src/marker-window.c:1080
+msgid "_Cancel"
+msgstr ""
+
+#: src/marker-window.c:145
+msgid "_Discard"
+msgstr ""
+
+#: src/marker-window.c:181
+#, fuzzy
+msgid "Leave Fullscreen"
+msgstr "Полный экран"
+
+#: src/marker-window.c:940
+msgid "Cannot Rename"
+msgstr ""
+
+#: src/marker-window.c:941
+msgid "_OK"
+msgstr ""
+
+#: src/marker-window.c:958
+msgid "File name cannot be empty."
+msgstr ""
+
+#: src/marker-window.c:964
+msgid "File name cannot contain '/'."
+msgstr ""
+
+#: src/marker-window.c:981
+msgid "A file with that name already exists."
+msgstr ""
+
+#: src/marker-window.c:988
+msgid "Failed to rename file."
+msgstr ""
+
+#: src/marker-window.c:1054
+msgid "The document must be saved before it can be renamed."
+msgstr ""
+
+#: src/marker-window.c:1077
+#, fuzzy
+msgid "Rename Document"
+msgstr "Открыть документ"
+
+#: src/marker-window.c:1081
+msgid "_Rename"
+msgstr ""
+
+#: src/marker-window.c:1528
+msgid "No headings found"
+msgstr ""
+
+#: src/marker-window.c:1896
+#, fuzzy
+msgid "Save Document As"
+msgstr "Сохранить документ"
+
+#~ msgid "Help"
+#~ msgstr "Справка"
+
+#~ msgid "About"
+#~ msgstr "О приложении"
+
+#~ msgid "Quit"
+#~ msgstr "Завершить"
+
+#~ msgid "<b>Highlighting</b>"
+#~ msgstr "<b>Подсветка</b>"
+
+#~ msgid "Use css theme: "
+#~ msgstr "Использовать css тему: "
+
+#~ msgid "Cancel the sketch"
+#~ msgstr "Отменить рисунок"
+
+#~ msgid "Report bugs and ideas on github"
+#~ msgstr "Сообщить об ошибках и идеях на github"

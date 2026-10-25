@@ -44,6 +44,20 @@
   </provides>
 
   <releases>
+    <release version="2026.10.2" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>Single fullscreen toggle button in the headerbar.</li>
+          <li>Split save button with floppy icon and dropdown (Save, Save As, Export).</li>
+          <li>Rename button (pencil icon) in the sidebar next to the close button.</li>
+          <li>Sidebar always hidden at startup; auto-shows with 2+ documents.</li>
+          <li>Fixed GtkStack name collision when reopening a closed file.</li>
+          <li>Fixed sidebar icon click detection using bin-window coordinates.</li>
+          <li>Removed redundant items from the hamburger menu.</li>
+          <li>Removed the non-functional Help menu entry.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.1" date="2026-10-25">
       <description translate="no">
         <ul>

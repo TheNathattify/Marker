@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-06 17:59+0300\n"
+"POT-Creation-Date: 2026-10-25 10:02+0100\n"
 "PO-Revision-Date: 2024-01-04 18:08+0100\n"
 "Last-Translator: Amerey.eu <info@amerey.eu>\n"
 "Language-Team: \n"
@@ -18,140 +18,124 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
 "X-Generator: Poedit 3.4\n"
 
-#: data/com.github.adrighem.marker.desktop:3
-#: data/com.github.adrighem.marker.appdata.xml:7
+#: data/com.github.thenathattify.marker.desktop:2
+#: data/com.github.thenathattify.marker.appdata.xml:8
+#: src/resources/ui/marker-headerbar.ui:49
 msgid "Marker"
 msgstr "Marker"
 
-#: data/com.github.adrighem.marker.desktop:11
+#: data/com.github.thenathattify.marker.desktop:10
 msgid "Markdown Editor"
 msgstr "Markdown editor"
 
-#: data/com.github.adrighem.marker.desktop:12
+#: data/com.github.thenathattify.marker.desktop:11
 msgid "A simple markdown editor for GTK+"
 msgstr "Markdown editor pro GTK+"
 
-#: data/com.github.adrighem.marker.desktop:26
+#: data/com.github.thenathattify.marker.desktop:25
 msgid "marker;markdown;editor;web;"
 msgstr "marker;markdown;editor;web;"
 
-#: data/com.github.adrighem.marker.appdata.xml:8
-msgid "Powerful markdown editor for the GNOME desktop."
+#: data/com.github.thenathattify.marker.appdata.xml:9
+#, fuzzy
+msgid "Powerful markdown editor for the GNOME desktop"
 msgstr "Markdown editor pro GNOME."
 
-#: data/com.github.adrighem.marker.appdata.xml:11
+#: data/com.github.thenathattify.marker.appdata.xml:12
+msgid ""
+"Marker is a fast and powerful markdown editor designed for the GNOME desktop "
+"with real-time preview and document export capabilities."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:13
 msgid "Features:"
 msgstr "Vlastnosti:"
 
-#: data/com.github.adrighem.marker.appdata.xml:13
+#: data/com.github.thenathattify.marker.appdata.xml:15
 msgid "View and edit markdown documents"
 msgstr "Prohlížení a úprava markdown dokumentů"
 
-#: data/com.github.adrighem.marker.appdata.xml:14
+#: data/com.github.thenathattify.marker.appdata.xml:16
 msgid "Convert markdown documents to HTML"
 msgstr "Převod markdown dokumentů do HTML"
 
-#: data/com.github.adrighem.marker.appdata.xml:15
+#: data/com.github.thenathattify.marker.appdata.xml:17
 msgid "Tex math rendering"
 msgstr "Vykreslování matematických vzorců"
 
-#: data/com.github.adrighem.marker.appdata.xml:16
+#: data/com.github.thenathattify.marker.appdata.xml:18
 msgid "Support for mermaid diagrams"
 msgstr "Podpora pro mermaid diagramy"
 
-#: data/com.github.adrighem.marker.appdata.xml:17
+#: data/com.github.thenathattify.marker.appdata.xml:19
 msgid "Support for charter plots"
 msgstr "Podpora charter diagramů"
 
-#: data/com.github.adrighem.marker.appdata.xml:18
+#: data/com.github.thenathattify.marker.appdata.xml:20
 msgid "Syntax highlighting for code blocks"
 msgstr "Zvýraznění syntaxe pro bloky kódu"
 
-#: data/com.github.adrighem.marker.appdata.xml:19
+#: data/com.github.thenathattify.marker.appdata.xml:21
 msgid "Integrated sketch editor"
 msgstr "Integrovaný editor náčrtů"
 
-#: data/com.github.adrighem.marker.appdata.xml:22
-msgid "PDF"
-msgstr "PDF"
+#: data/com.github.thenathattify.marker.appdata.xml:22
+msgid "Exports to PDF, RTF, ODT, DOCx and LaTeX"
+msgstr ""
 
-#: data/com.github.adrighem.marker.appdata.xml:23
-msgid "RTF"
-msgstr "RTF"
-
-#: data/com.github.adrighem.marker.appdata.xml:24
-msgid "ODT"
-msgstr "ODT"
-
-#: data/com.github.adrighem.marker.appdata.xml:25
-msgid "DOCx"
-msgstr "DOCx"
-
-#: data/com.github.adrighem.marker.appdata.xml:26
-msgid "LaTeX"
-msgstr "LaTeX"
-
-#: data/com.github.adrighem.marker.appdata.xml:29
+#: data/com.github.thenathattify.marker.appdata.xml:23
 msgid "Custom CSS themes"
 msgstr "Vlastní témata CSS"
 
-#: data/com.github.adrighem.marker.appdata.xml:30
+#: data/com.github.thenathattify.marker.appdata.xml:24
 msgid "Custom syntax themes"
 msgstr "Vlastní témata syntaxe"
 
-#: data/com.github.adrighem.marker.appdata.xml:31
+#: data/com.github.thenathattify.marker.appdata.xml:25
 msgid "Figure captioning and numbering"
 msgstr "Popis a číslování obrázku"
 
-#: data/com.github.adrighem.marker.appdata.xml:39
-msgid "The main view"
-msgstr "Hlavní pohled"
+#: data/com.github.thenathattify.marker.appdata.xml:34
+msgid "Nathan Obry"
+msgstr ""
 
-#: data/com.github.adrighem.marker.appdata.xml:43
-msgid "Some plotting"
-msgstr "ukázka diagramu"
-
-#: data/com.github.adrighem.marker.appdata.xml:47
-msgid "The sketch editor"
-msgstr "Editor náčrtů"
-
-#: data/com.github.adrighem.marker.gschema.xml:24
+#: data/com.github.thenathattify.marker.gschema.xml:24
 msgid "Syntax Theme"
 msgstr "Motiv syntaxe"
 
-#: data/com.github.adrighem.marker.gschema.xml:25
+#: data/com.github.thenathattify.marker.gschema.xml:25
 msgid "The syntax theme to use for the editor."
 msgstr "Motiv syntaxe, které má editor použít."
 
-#: data/com.github.adrighem.marker.gschema.xml:30
+#: data/com.github.thenathattify.marker.gschema.xml:30
 msgid "Enable Syntax Theme"
 msgstr "Povolit motiv syntaxe"
 
-#: data/com.github.adrighem.marker.gschema.xml:31
+#: data/com.github.thenathattify.marker.gschema.xml:31
 msgid "Whether to use a syntax theme in the editor."
 msgstr "Zda se má v editoru použít téma syntaxe."
 
-#: data/com.github.adrighem.marker.gschema.xml:36
+#: data/com.github.thenathattify.marker.gschema.xml:36
 msgid "Show Line Numbers"
 msgstr "Zobrazit čísla řádků"
 
-#: data/com.github.adrighem.marker.gschema.xml:37
+#: data/com.github.thenathattify.marker.gschema.xml:37
 msgid "Whether to show line numbers in the editor."
 msgstr "Zda se mají v editoru zobrazovat čísla řádků."
 
-#: data/com.github.adrighem.marker.gschema.xml:42
+#: data/com.github.thenathattify.marker.gschema.xml:42
 msgid "Show Right Margin"
 msgstr "Zobrazit pravý okraj"
 
-#: data/com.github.adrighem.marker.gschema.xml:43
+#: data/com.github.thenathattify.marker.gschema.xml:43
 msgid "Whether to show a margin on the right side of the editor."
 msgstr "Zda se má zobrazit okraj na pravé straně editoru."
 
-#: data/com.github.adrighem.marker.gschema.xml:48
+#: data/com.github.thenathattify.marker.gschema.xml:48
 msgid "The column at which the right margin should be shown"
 msgstr "Sloupec, u kterého má být zobrazen pravý okraj"
 
-#: data/com.github.adrighem.marker.gschema.xml:49
+#: data/com.github.thenathattify.marker.gschema.xml:49
 msgid ""
 "Sets the column where the right margin will appear when 'show-right-margin' "
 "is enabled"
@@ -159,434 +143,494 @@ msgstr ""
 "Nastaví sloupec, ve kterém se zobrazí pravý okraj, když je povoleno "
 "'zobrazit-pravý-okraj'"
 
-#: data/com.github.adrighem.marker.gschema.xml:54
+#: data/com.github.thenathattify.marker.gschema.xml:54
 msgid "Wrap Text"
 msgstr "Zalomit text"
 
-#: data/com.github.adrighem.marker.gschema.xml:55
+#: data/com.github.thenathattify.marker.gschema.xml:55
 msgid "Whether to wrap text in the editor."
 msgstr "Zda zalamovat text v editoru."
 
-#: data/com.github.adrighem.marker.gschema.xml:60
+#: data/com.github.thenathattify.marker.gschema.xml:60
 msgid "Show Spaces"
 msgstr "Zobrazit mezery"
 
-#: data/com.github.adrighem.marker.gschema.xml:61
+#: data/com.github.thenathattify.marker.gschema.xml:61
 msgid "Whether to show spaces and tabulation in the editor."
 msgstr "Zda se v editoru mají zobrazovat mezery a tabelace."
 
-#: data/com.github.adrighem.marker.gschema.xml:66
+#: data/com.github.thenathattify.marker.gschema.xml:66
 msgid "Highlight Current Line"
 msgstr "Zvýraznit aktuální řádek"
 
-#: data/com.github.adrighem.marker.gschema.xml:67
+#: data/com.github.thenathattify.marker.gschema.xml:67
 msgid "Whether to highlight the line with the cursor in the editor."
 msgstr "Zda se má v editoru zvýraznit řádek s kurzorem."
 
-#: data/com.github.adrighem.marker.gschema.xml:72
+#: data/com.github.thenathattify.marker.gschema.xml:72
 msgid "Use spaces instead of tabs"
 msgstr "Místo tabulátorů použít mezery"
 
-#: data/com.github.adrighem.marker.gschema.xml:73
+#: data/com.github.thenathattify.marker.gschema.xml:73
 msgid "Use spaces instead of tabs in the editor."
 msgstr "Místo tabulátorů použít mezery v editoru."
 
-#: data/com.github.adrighem.marker.gschema.xml:78
+#: data/com.github.thenathattify.marker.gschema.xml:78
 msgid "Width of tabulation in characters."
 msgstr "Šířka tabelování ve znacích."
 
-#: data/com.github.adrighem.marker.gschema.xml:79
+#: data/com.github.thenathattify.marker.gschema.xml:79
 msgid "Set the width of tabulation in characters in the editor."
 msgstr "Nastavení šířky tabelování ve znacích v editoru."
 
-#: data/com.github.adrighem.marker.gschema.xml:84
+#: data/com.github.thenathattify.marker.gschema.xml:84
 msgid "Auto-indent code"
 msgstr "Automatické odsazení kódu"
 
-#: data/com.github.adrighem.marker.gschema.xml:85
+#: data/com.github.thenathattify.marker.gschema.xml:85
 msgid "Auto-indent code in the editor."
 msgstr "Automatické odsazení kódu v editoru."
 
-#: data/com.github.adrighem.marker.gschema.xml:90
+#: data/com.github.thenathattify.marker.gschema.xml:90
 msgid "Spell Check"
 msgstr "Kontrola pravopisu"
 
-#: data/com.github.adrighem.marker.gschema.xml:91
+#: data/com.github.thenathattify.marker.gschema.xml:91
 msgid "Spell check using gtkspell."
 msgstr "Kontrola pravopisu pomocí gtkspell."
 
-#: data/com.github.adrighem.marker.gschema.xml:96
+#: data/com.github.thenathattify.marker.gschema.xml:96
 msgid "Language for spell check"
 msgstr "Jazyk pro kontrolu pravopisu"
 
-#: data/com.github.adrighem.marker.gschema.xml:97
+#: data/com.github.thenathattify.marker.gschema.xml:97
 msgid "Selected language for spell check."
 msgstr "Vybraný jazyk pro kontrolu pravopisu."
 
-#: data/com.github.adrighem.marker.gschema.xml:104
+#: data/com.github.thenathattify.marker.gschema.xml:102
+msgid "Trim trailing whitespace"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:103
+msgid "Whether to trim trailing whitespace on save."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:108
+msgid "Editor font size"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:109
+msgid "Base font size in points for the editor. Combined with the zoom level."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:116
 msgid "CSS Theme"
 msgstr "Téma CSS"
 
-#: data/com.github.adrighem.marker.gschema.xml:105
+#: data/com.github.thenathattify.marker.gschema.xml:117
 msgid "The css theme to use for the preview."
 msgstr "Motiv CSS, který se má použít pro náhled."
 
-#: data/com.github.adrighem.marker.gschema.xml:110
+#: data/com.github.thenathattify.marker.gschema.xml:122
 msgid "Enable CSS theme in Preview"
 msgstr "Povolit motiv CSS v náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:111
-msgid "Use a CSS theme in the live preview"
+#: data/com.github.thenathattify.marker.gschema.xml:123
+#, fuzzy
+msgid "Use a CSS theme in the live preview."
 msgstr "Použijte motiv CSS v živém náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:116
+#: data/com.github.thenathattify.marker.gschema.xml:128
 msgid "Enable math in Preview"
 msgstr "Povolit matematické vzorce v náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:117
+#: data/com.github.thenathattify.marker.gschema.xml:129
 msgid "Use js back-end to render math in the live preview."
 msgstr "Použijte js back-end k vykreslení matematiky v živém náhledu."
 
-#: data/com.github.adrighem.marker.gschema.xml:122
+#: data/com.github.thenathattify.marker.gschema.xml:134
 msgid "Math Back-end"
 msgstr "Matematický back-end"
 
-#: data/com.github.adrighem.marker.gschema.xml:123
+#: data/com.github.thenathattify.marker.gschema.xml:135
 msgid "Select the js math rendering back-end."
 msgstr "Vyberte back-end vykreslování matematiky js."
 
-#: data/com.github.adrighem.marker.gschema.xml:128
+#: data/com.github.thenathattify.marker.gschema.xml:140
 msgid "Enable highlight.js in Preview"
 msgstr "Povolit highlight.js v náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:129
+#: data/com.github.thenathattify.marker.gschema.xml:141
 msgid "Use highlight.js in the live preview."
 msgstr "Použijte highlight.js v živém náhledu."
 
-#: data/com.github.adrighem.marker.gschema.xml:134
+#: data/com.github.thenathattify.marker.gschema.xml:146
 msgid "Enable mermaid.js in Preview"
 msgstr "Povolit mermaid.js v náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:135
+#: data/com.github.thenathattify.marker.gschema.xml:147
 msgid "Use mermaid.js to show diagram in the live preview."
 msgstr "Použijte mermaid.js k zobrazení diagramu v živém náhledu."
 
-#: data/com.github.adrighem.marker.gschema.xml:140
+#: data/com.github.thenathattify.marker.gschema.xml:152
 msgid "Highlight.js CSS theme."
 msgstr "Highlight.js CSS motiv."
 
-#: data/com.github.adrighem.marker.gschema.xml:141
+#: data/com.github.thenathattify.marker.gschema.xml:153
 msgid "The css theme to use for the synthax highlight."
 msgstr "Téma css, které se má použít pro zvýraznění syntaxe."
 
-#: data/com.github.adrighem.marker.gschema.xml:145
+#: data/com.github.thenathattify.marker.gschema.xml:157
 msgid "Enable Charter extension in Preview"
 msgstr "Povolit rozšíření Charter v náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:146
+#: data/com.github.thenathattify.marker.gschema.xml:158
 msgid "Enable Charter extension in the live preview."
 msgstr "Povolte rozšíření Charter v živém náhledu."
 
-#: data/com.github.adrighem.marker.gschema.xml:150
+#: data/com.github.thenathattify.marker.gschema.xml:162
 msgid "Zoom level of the preview"
 msgstr "Úroveň přiblížení náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:151
+#: data/com.github.thenathattify.marker.gschema.xml:163
 msgid "Zoom level of the preview widget"
 msgstr "Úroveň přiblížení widgetu náhledu"
 
-#: data/com.github.adrighem.marker.gschema.xml:158
-#: src/resources/ui/marker-gear-popover.ui:168
-#: src/resources/ui/marker-gear-popover.ui:234
+#: data/com.github.thenathattify.marker.gschema.xml:167
+#, fuzzy
+msgid "Zoom level of the source editor"
+msgstr "Úroveň přiblížení náhledu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:168
+#, fuzzy
+msgid "Zoom level of the source view widget"
+msgstr "Úroveň přiblížení widgetu náhledu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:175
+#: src/resources/ui/marker-headerbar.ui:109
 msgid "View Mode"
 msgstr "Režim zobrazení"
 
-#: data/com.github.adrighem.marker.gschema.xml:159
+#: data/com.github.thenathattify.marker.gschema.xml:176
 msgid "Controls how to organize the editor and preview areas on the screen."
 msgstr "Řídí způsob uspořádání editoru a oblastí náhledu na obrazovce."
 
-#: data/com.github.adrighem.marker.gschema.xml:164
+#: data/com.github.thenathattify.marker.gschema.xml:181
 msgid "Enter dark-mode"
 msgstr "Tmavý režim"
 
-#: data/com.github.adrighem.marker.gschema.xml:165
+#: data/com.github.thenathattify.marker.gschema.xml:182
 msgid ""
 "When this is enabled, the dark variant of the current gtk theme will be used."
 msgstr ""
 "Pokud je toto povoleno, použije se tmavá varianta aktuálního motivu gtk."
 
-#: data/com.github.adrighem.marker.gschema.xml:170
+#: data/com.github.thenathattify.marker.gschema.xml:187
 msgid "Window width"
 msgstr "Šířka okna"
 
-#: data/com.github.adrighem.marker.gschema.xml:175
+#: data/com.github.thenathattify.marker.gschema.xml:192
 msgid "Window height"
 msgstr "Výška okna"
 
-#: data/com.github.adrighem.marker.gschema.xml:180
+#: data/com.github.thenathattify.marker.gschema.xml:197
 msgid "Window position (x, y)"
 msgstr "Pozice okna (x, y)"
 
-#: data/com.github.adrighem.marker.gschema.xml:185
+#: data/com.github.thenathattify.marker.gschema.xml:202
 msgid "Editor pane width (in Dual Pane mode)"
 msgstr "Šířka panelu editoru (v režimu dvou panelů)"
 
-#: data/com.github.adrighem.marker.gschema.xml:190
+#: data/com.github.thenathattify.marker.gschema.xml:207
 msgid "Whether the sidebar is shown"
 msgstr "Zda je zobrazen postranní panel"
 
-#: src/resources/ui/marker-appmenu.ui:6
-#: src/resources/ui/marker-gear-popover.ui:88
-msgid "New Window"
-msgstr "Nové okno"
-
-#: src/resources/ui/marker-appmenu.ui:12
-#: src/resources/ui/marker-prefs-window.ui:46
-#: src/resources/ui/marker-gear-popover.ui:191
+#: src/resources/ui/marker-prefs-window.ui:4
 msgid "Preferences"
 msgstr "Předvolby"
 
-#: src/resources/ui/marker-appmenu.ui:18
-#: src/resources/ui/marker-gear-popover.ui:199
-msgid "Keyboard Shortcuts"
-msgstr "Klávesové zkratky"
-
-#: src/resources/ui/marker-appmenu.ui:22
-#: src/resources/ui/marker-gear-popover.ui:207
-msgid "Help"
-msgstr "Nápověda"
-
-#: src/resources/ui/marker-appmenu.ui:26
-msgid "About"
-msgstr "O aplikaci"
-
-#: src/resources/ui/marker-appmenu.ui:30
-msgid "Quit"
-msgstr "Ukončit"
-
-#: src/resources/ui/marker-prefs-window.ui:31
-#: src/resources/ui/marker-gear-popover.ui:244
-msgid "Editor Only"
-msgstr "Pouze editor"
-
-#: src/resources/ui/marker-prefs-window.ui:34
-#: src/resources/ui/marker-gear-popover.ui:252
-msgid "Preview Only"
-msgstr "Pouze náhled"
-
-#: src/resources/ui/marker-prefs-window.ui:37
-#: src/resources/ui/marker-gear-popover.ui:260
-msgid "Dual Pane"
-msgstr "Okna vedle sebe"
-
-#: src/resources/ui/marker-prefs-window.ui:40
-#: src/resources/ui/marker-gear-popover.ui:268
-msgid "Dual Window"
-msgstr "Samostatná okna"
-
-#: src/resources/ui/marker-prefs-window.ui:71
-msgid "Show line numbers"
-msgstr "Zobrazit čísla řádků"
-
-#: src/resources/ui/marker-prefs-window.ui:86
-msgid "Wrap text"
-msgstr "Zalomit text"
-
-#: src/resources/ui/marker-prefs-window.ui:105
-msgid "Show right margin at column: "
-msgstr "Zobrazit pravý okraj ve sloupci: "
-
-#: src/resources/ui/marker-prefs-window.ui:145
-msgid "Check spelling for language: "
-msgstr "Kontrola pravopisu pro jazyk: "
-
-#: src/resources/ui/marker-prefs-window.ui:180
-msgid "Show spaces"
-msgstr "Zobrazit mezery"
-
-#: src/resources/ui/marker-prefs-window.ui:197
-msgid "<b>Highlighting</b>"
-msgstr "<b>Zvýraznění</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:209
-msgid "Highlight current line"
-msgstr "Zvýraznit aktuální řádek"
-
-#: src/resources/ui/marker-prefs-window.ui:229
-msgid "Highlight syntax with theme:"
-msgstr "Zvýraznit syntaxi pomocí tématu:"
-
-#: src/resources/ui/marker-prefs-window.ui:266
-msgid "<b>Tab Stops</b>"
-msgstr "<b>Zarážky tabulátoru</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:278
-msgid "Enable automatic indentation"
-msgstr "Povolit automatické odsazení"
-
-#: src/resources/ui/marker-prefs-window.ui:293
-msgid "Insert spaces instead of tabs"
-msgstr "Místo tabulátorů vložit mezery"
-
-#: src/resources/ui/marker-prefs-window.ui:315
-msgid "Tabulation width:"
-msgstr "Šířka tabulátoru:"
-
-#: src/resources/ui/marker-prefs-window.ui:355
+#: src/resources/ui/marker-prefs-window.ui:9
 msgid "Editor"
 msgstr "Editor"
 
-#: src/resources/ui/marker-prefs-window.ui:377
-msgid "Use css theme: "
-msgstr "Použít motiv css: "
+#: src/resources/ui/marker-prefs-window.ui:13
+msgid "Appearance"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:417
-msgid "Highlight code blocks with theme:"
-msgstr "Zvýraznit bloky kódu pomocí motivu:"
+#: src/resources/ui/marker-prefs-window.ui:16
+msgid "Show line numbers"
+msgstr "Zobrazit čísla řádků"
 
-#: src/resources/ui/marker-prefs-window.ui:452
-msgid "Enable Mermaid"
-msgstr "Povolit Mermaid"
+#: src/resources/ui/marker-prefs-window.ui:21
+msgid "Highlight current line"
+msgstr "Zvýraznit aktuální řádek"
 
-#: src/resources/ui/marker-prefs-window.ui:467
-msgid "Enable Charter"
-msgstr "Povolit Charter"
+#: src/resources/ui/marker-prefs-window.ui:26
+msgid "Wrap text"
+msgstr "Zalomit text"
 
-#: src/resources/ui/marker-prefs-window.ui:484
-msgid "<b>Math</b>"
-msgstr "<b>Vzorce</b>"
+#: src/resources/ui/marker-prefs-window.ui:31
+msgid "Show spaces"
+msgstr "Zobrazit mezery"
 
-#: src/resources/ui/marker-prefs-window.ui:500
-msgid "Render Math"
-msgstr "Vykreslovat vzorce"
+#: src/resources/ui/marker-prefs-window.ui:36
+#, fuzzy
+msgid "Show right margin"
+msgstr "Zobrazit pravý okraj"
 
-#: src/resources/ui/marker-prefs-window.ui:545
+#: src/resources/ui/marker-prefs-window.ui:41
+#, fuzzy
+msgid "Right margin column"
+msgstr "Zobrazit pravý okraj ve sloupci: "
+
+#: src/resources/ui/marker-prefs-window.ui:54
+#, fuzzy
+msgid "Syntax highlighting"
+msgstr "Zvýraznění syntaxe pro bloky kódu"
+
+#: src/resources/ui/marker-prefs-window.ui:59
+#, fuzzy
+msgid "Syntax theme"
+msgstr "Motiv syntaxe"
+
+#: src/resources/ui/marker-prefs-window.ui:64
+msgid "Font size"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:65
+msgid "Base font size in points (combined with zoom)"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:80
+msgid "Indentation"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:83
+#, fuzzy
+msgid "Automatic indentation"
+msgstr "Povolit automatické odsazení"
+
+#: src/resources/ui/marker-prefs-window.ui:88
+msgid "Insert spaces instead of tabs"
+msgstr "Místo tabulátorů vložit mezery"
+
+#: src/resources/ui/marker-prefs-window.ui:93
+#, fuzzy
+msgid "Tab width"
+msgstr "Šířka tabulátoru:"
+
+#: src/resources/ui/marker-prefs-window.ui:106
+msgid "Trim trailing whitespace on save"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:113
+msgid "Spelling"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:116
+#, fuzzy
+msgid "Check spelling"
+msgstr "Kontrola pravopisu pro jazyk: "
+
+#: src/resources/ui/marker-prefs-window.ui:121
+msgid "Language"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:130 src/marker-editor.c:652
 msgid "Preview"
 msgstr "Náhled"
 
-#: src/resources/ui/marker-prefs-window.ui:570
-msgid "Default view mode: "
-msgstr "Výchozí režim zobrazení: "
+#: src/resources/ui/marker-prefs-window.ui:134
+msgid "Styling"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:603
-msgid "Enable dark mode"
-msgstr "Povolit tmavý režim"
+#: src/resources/ui/marker-prefs-window.ui:137
+#, fuzzy
+msgid "Custom CSS stylesheet"
+msgstr "Vlastní témata CSS"
 
-#: src/resources/ui/marker-prefs-window.ui:625
+#: src/resources/ui/marker-prefs-window.ui:142
+#, fuzzy
+msgid "CSS stylesheet"
+msgstr "Téma CSS"
+
+#: src/resources/ui/marker-prefs-window.ui:147
+msgid "Code block syntax highlighting"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:152
+#, fuzzy
+msgid "Code highlighting theme"
+msgstr "Highlight.js CSS motiv."
+
+#: src/resources/ui/marker-prefs-window.ui:159
+msgid "Extensions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:162
+msgid "Render math expressions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:167
+#, fuzzy
+msgid "Math rendering backend"
+msgstr "Vyberte back-end vykreslování matematiky js."
+
+#: src/resources/ui/marker-prefs-window.ui:172
+#, fuzzy
+msgid "Mermaid diagrams"
+msgstr "Podpora pro mermaid diagramy"
+
+#: src/resources/ui/marker-prefs-window.ui:177
+msgid "Charter charts"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:186
 msgid "Window"
 msgstr "Okno"
 
-#: src/resources/ui/marker-shortcuts-window.ui:14
+#: src/resources/ui/marker-prefs-window.ui:190
+msgid "General"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:193
+#, fuzzy
+msgid "Default view mode"
+msgstr "Výchozí režim zobrazení: "
+
+#: src/resources/ui/marker-prefs-window.ui:198
+#, fuzzy
+msgid "Dark mode"
+msgstr "Povolit tmavý režim"
+
+#: src/resources/ui/marker-shortcuts-window.ui:13
 msgctxt "shortcut window"
 msgid "Documents"
 msgstr "Soubory"
 
-#: src/resources/ui/marker-shortcuts-window.ui:19
+#: src/resources/ui/marker-shortcuts-window.ui:17
 msgctxt "shortcut window"
 msgid "Create a new document"
 msgstr "Vytvořit nový soubor"
 
-#: src/resources/ui/marker-shortcuts-window.ui:26
+#: src/resources/ui/marker-shortcuts-window.ui:23
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Otevřít soubor"
 
-#: src/resources/ui/marker-shortcuts-window.ui:33
+#: src/resources/ui/marker-shortcuts-window.ui:29
+#: src/resources/ui/marker-shortcuts-window.ui:35
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:41
 msgctxt "shortcut window"
 msgid "Open a document in a new window"
 msgstr "Otevřít soubor v novém okně"
 
-#: src/resources/ui/marker-shortcuts-window.ui:40
+#: src/resources/ui/marker-shortcuts-window.ui:47
 msgctxt "shortcut window"
 msgid "Save the document"
 msgstr "Uložit soubor"
 
-#: src/resources/ui/marker-shortcuts-window.ui:47
+#: src/resources/ui/marker-shortcuts-window.ui:53
 msgctxt "shortcut window"
 msgid "Save the document with a new filename"
 msgstr "Uložit soubor jako"
 
-#: src/resources/ui/marker-shortcuts-window.ui:54
+#: src/resources/ui/marker-shortcuts-window.ui:59
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "Otevřít soubor"
+
+#: src/resources/ui/marker-shortcuts-window.ui:65
 msgctxt "shortcut window"
 msgid "Close the document"
 msgstr "Zavřít soubor"
 
-#: src/resources/ui/marker-shortcuts-window.ui:62
+#: src/resources/ui/marker-shortcuts-window.ui:72
 msgctxt "shortcut window"
 msgid "Editing"
 msgstr "Editace"
 
-#: src/resources/ui/marker-shortcuts-window.ui:67
+#: src/resources/ui/marker-shortcuts-window.ui:76
 msgctxt "shortcut window"
 msgid "Make selection bold"
 msgstr "Tučně"
 
-#: src/resources/ui/marker-shortcuts-window.ui:74
+#: src/resources/ui/marker-shortcuts-window.ui:82
 msgctxt "shortcut window"
 msgid "Make selection italic"
 msgstr "Kurzíva"
 
-#: src/resources/ui/marker-shortcuts-window.ui:81
+#: src/resources/ui/marker-shortcuts-window.ui:88
 msgctxt "shortcut window"
 msgid "Make selection monospace"
 msgstr "Monospace"
 
-#: src/resources/ui/marker-shortcuts-window.ui:88
+#: src/resources/ui/marker-shortcuts-window.ui:94
 msgctxt "shortcut window"
 msgid "Insert link"
 msgstr "Vložit odkaz"
 
-#: src/resources/ui/marker-shortcuts-window.ui:95
+#: src/resources/ui/marker-shortcuts-window.ui:100
 msgctxt "shortcut window"
 msgid "Draw a sketch"
 msgstr "Vytvořit náčrt"
 
-#: src/resources/ui/marker-shortcuts-window.ui:102
+#: src/resources/ui/marker-shortcuts-window.ui:106
 msgctxt "shortcut window"
 msgid "Search in the document"
 msgstr "Hledat v dokumentu"
 
-#: src/resources/ui/marker-shortcuts-window.ui:110
+#: src/resources/ui/marker-shortcuts-window.ui:112
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:119
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Nástroje"
 
-#: src/resources/ui/marker-shortcuts-window.ui:115
+#: src/resources/ui/marker-shortcuts-window.ui:123
 msgctxt "shortcut window"
 msgid "Print the document"
 msgstr "Tisk"
 
-#: src/resources/ui/marker-shortcuts-window.ui:123
+#: src/resources/ui/marker-shortcuts-window.ui:130
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Okno"
 
-#: src/resources/ui/marker-shortcuts-window.ui:128
+#: src/resources/ui/marker-shortcuts-window.ui:134
 msgctxt "shortcut window"
 msgid "Open a new window"
 msgstr "Otevřít nové okno"
 
-#: src/resources/ui/marker-shortcuts-window.ui:135
+#: src/resources/ui/marker-shortcuts-window.ui:140
 msgctxt "shortcut window"
 msgid "Close all windows"
 msgstr "Zavřít všechna okna"
 
-#: src/resources/ui/marker-shortcuts-window.ui:142
+#: src/resources/ui/marker-shortcuts-window.ui:146
 msgctxt "shortcut window"
 msgid "Toggle fullscreen mode"
 msgstr "Přepnout režim celé obrazovky"
 
-#: src/resources/ui/marker-shortcuts-window.ui:149
+#: src/resources/ui/marker-shortcuts-window.ui:152
 msgctxt "shortcut window"
 msgid "Switch to editor-only mode"
 msgstr "Přepnout do režimu editoru"
 
-#: src/resources/ui/marker-shortcuts-window.ui:156
+#: src/resources/ui/marker-shortcuts-window.ui:158
 msgctxt "shortcut window"
 msgid "Switch to preview-only mode"
 msgstr "Přepnout do režimu náhledu"
 
-#: src/resources/ui/marker-shortcuts-window.ui:163
+#: src/resources/ui/marker-shortcuts-window.ui:164
 msgctxt "shortcut window"
 msgid "Switch to dual-pane mode"
 msgstr "Přepnout do režimu oken vedle sebe"
@@ -596,147 +640,416 @@ msgctxt "shortcut window"
 msgid "Switch to dual-window mode"
 msgstr "Přepnout do režimu samostatných oken"
 
-#: src/resources/ui/marker-shortcuts-window.ui:177
+#: src/resources/ui/marker-shortcuts-window.ui:176
 msgctxt "shortcut window"
 msgid "Quit the application"
 msgstr "Ukončit aplikaci"
 
-#: src/resources/ui/marker-sketcher-window.ui:112
-msgid "Sketcher"
-msgstr "Náčrty"
+#: src/resources/ui/marker-sketcher-window.ui:21
+msgid "Add Text"
+msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:123
+#: src/resources/ui/marker-sketcher-window.ui:27
+msgid "Close"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:44
 msgid "Pen Tool"
 msgstr "Nástroj Pero"
 
-#: src/resources/ui/marker-sketcher-window.ui:140
+#: src/resources/ui/marker-sketcher-window.ui:51
 msgid "Eraser Tool"
 msgstr "Nástroj Guma"
 
-#: src/resources/ui/marker-sketcher-window.ui:157
+#: src/resources/ui/marker-sketcher-window.ui:58
 msgid "Text Insertion Tool"
 msgstr "Nástroj pro vkládání textu"
 
-#: src/resources/ui/marker-sketcher-window.ui:179
+#: src/resources/ui/marker-sketcher-window.ui:67
 msgid "Color Chooser"
 msgstr "Výběr barvy"
 
-#: src/resources/ui/marker-sketcher-window.ui:271
-msgid "Insert the sketch"
+#: src/resources/ui/marker-sketcher-window.ui:81
+msgid "Small"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:87
+msgid "Medium"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:95
+msgid "Large"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:111
+#, fuzzy
+msgid "Insert Sketch"
 msgstr "Vložit náčrt"
 
-#: src/resources/ui/marker-sketcher-window.ui:286
-msgid "Cancel the sketch"
-msgstr "Zrušit náčrt"
-
-#: src/resources/ui/marker-gear-popover.ui:22
-msgid "Zoom Out"
-msgstr "Oddálit"
-
-#: src/resources/ui/marker-gear-popover.ui:41
-msgid "Zoom Reset"
-msgstr "Obnovení přiblížení"
-
-#: src/resources/ui/marker-gear-popover.ui:54
-msgid "Zoom In"
-msgstr "Přiblížit"
-
-#: src/resources/ui/marker-gear-popover.ui:112
-msgid "Fullscreen"
-msgstr "Celá obrazovka"
-
-#: src/resources/ui/marker-gear-popover.ui:120
-msgid "Sidebar"
-msgstr "Postranní panel"
-
-#: src/resources/ui/marker-gear-popover.ui:136
-msgid "Save As…"
-msgstr "Uložit jako…"
-
-#: src/resources/ui/marker-gear-popover.ui:144
-msgid "Export…"
-msgstr "Exportovat…"
-
-#: src/resources/ui/marker-gear-popover.ui:152
-msgid "Print…"
-msgstr "Tisk…"
-
-#: src/resources/ui/marker-gear-popover.ui:215
-msgid "About Marker"
-msgstr "O aplikaci Marker"
-
-#: src/resources/ui/marker-headerbar.ui:20
-msgid "Open…"
-msgstr "Otevřít…"
-
-#: src/resources/ui/marker-headerbar.ui:30
-msgid "Save"
-msgstr "Uložit"
-
-#: src/marker.c:184
-msgid "A markdown editor for GNOME"
-msgstr "Markdown editor pro GNOME"
-
-#: src/marker.c:186
-msgid "Report bugs and ideas on github"
-msgstr "Nahlaste chyby a nápady na github"
-
-#: src/marker.c:191
-msgid "translator-credits"
-msgstr "Amerey.eu"
-
-#: src/marker-editor.c:248
-msgid "Untitled.md"
-msgstr "Nepojmenovaný.md"
-
-#: src/marker-exporter.c:106 src/marker-exporter.c:110
-msgid "Export"
-msgstr "Exportovat"
-
-#: src/marker-exporter.c:109
+#: src/resources/ui/marker-sketcher-window.ui:117
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/marker-window.c:112
-#, c-format
-msgid ""
-"<span weight='bold' size='larger'>Discard changes to the document '%s'?</"
-"span>\n"
-"\n"
-"The document has unsaved changes that will be lost if it is closed now."
-msgstr ""
-"<span weight='bold' size='larger'>Zrušit změny dokumentu '%s'?</span>\n"
-"\n"
-"Dokument obsahuje neuložené změny, které budou ztraceny, pokud jej nyní "
-"zavřete."
+#: src/resources/ui/marker-gear-popover.ui:8
+#, fuzzy
+msgid "_New Window"
+msgstr "Nové okno"
 
-#: src/marker-window.c:125
-msgid ""
-"<span weight='bold' size='larger'>Discard changes to the document?</span>\n"
-"\n"
-"The document has unsaved changes that will be lost if it is closed now."
+#: src/resources/ui/marker-gear-popover.ui:14
+#, fuzzy
+msgid "_Rename Document…"
+msgstr "Otevřít soubor"
+
+#: src/resources/ui/marker-gear-popover.ui:18
+msgid "_Reload from Disk"
+msgstr ""
+
+#: src/resources/ui/marker-gear-popover.ui:22
+#, fuzzy
+msgid "_Print…"
+msgstr "Tisk…"
+
+#: src/resources/ui/marker-gear-popover.ui:28
+#, fuzzy
+msgid "_Preferences"
+msgstr "Předvolby"
+
+#: src/resources/ui/marker-gear-popover.ui:32
+#, fuzzy
+msgid "_Keyboard Shortcuts"
+msgstr "Klávesové zkratky"
+
+#: src/resources/ui/marker-gear-popover.ui:36
+#, fuzzy
+msgid "_About Marker"
+msgstr "O aplikaci Marker"
+
+#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#, fuzzy
+msgid "Documents"
+msgstr "Soubory"
+
+#: src/resources/ui/marker-window-main-view.ui:50
+msgid "Outline"
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:9
+msgid "Save"
+msgstr "Uložit"
+
+#: src/resources/ui/marker-headerbar.ui:13
+msgid "Save As…"
+msgstr "Uložit jako…"
+
+#: src/resources/ui/marker-headerbar.ui:19
+msgid "Export…"
+msgstr "Exportovat…"
+
+#: src/resources/ui/marker-headerbar.ui:28
+msgid "Editor Only"
+msgstr "Pouze editor"
+
+#: src/resources/ui/marker-headerbar.ui:32
+msgid "Preview Only"
+msgstr "Pouze náhled"
+
+#: src/resources/ui/marker-headerbar.ui:36
+msgid "Dual Pane"
+msgstr "Okna vedle sebe"
+
+#: src/resources/ui/marker-headerbar.ui:40
+msgid "Dual Window"
+msgstr "Samostatná okna"
+
+#: src/resources/ui/marker-headerbar.ui:57
+#, fuzzy
+msgid "Toggle Sidebar"
+msgstr "Postranní panel"
+
+#: src/resources/ui/marker-headerbar.ui:63
+msgid "Open…"
+msgstr "Otevřít…"
+
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
+#: src/marker-window.c:1848
+#, fuzzy
+msgid "Open Document"
+msgstr "Otevřít soubor"
+
+#: src/resources/ui/marker-headerbar.ui:76
+#, fuzzy
+msgid "Save Document"
+msgstr "Uložit soubor"
+
+#: src/resources/ui/marker-headerbar.ui:83
+#, fuzzy
+msgid "Save Options"
+msgstr "Uložit jako"
+
+#: src/resources/ui/marker-headerbar.ui:92
+#, fuzzy
+msgid "New Document"
+msgstr "Soubory"
+
+#: src/resources/ui/marker-headerbar.ui:101
+msgid "Main Menu"
+msgstr "Hlavní nabídka"
+
+#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#, fuzzy
+msgid "Toggle Fullscreen"
+msgstr "Přepnout režim celé obrazovky"
+
+#: src/resources/ui/marker-headerbar.ui:132
+msgid "Zoom Out"
+msgstr "Oddálit"
+
+#: src/resources/ui/marker-headerbar.ui:142
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:149
+msgid "Zoom In"
+msgstr "Přiblížit"
+
+#: src/resources/ui/marker-headerbar.ui:155
+msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:15
+msgid "Bold"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:21
+msgid "Italic"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:27
+msgid "Underline"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:33
+msgid "Strikethrough"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:47
+#, fuzzy
+msgid "Insert Link"
+msgstr "Vložit odkaz"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:53
+#, fuzzy
+msgid "Insert Image"
+msgstr "Vložit odkaz"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:59
+msgid "Sketcher"
+msgstr "Náčrty"
+
+#: src/marker.c:187
+msgid "A markdown editor for GNOME"
+msgstr "Markdown editor pro GNOME"
+
+#: src/marker.c:194
+msgid "translator-credits"
+msgstr "Amerey.eu"
+
+#: src/marker-editor.c:395
+msgid "Toggle Replace"
+msgstr ""
+
+#: src/marker-editor.c:401
+msgid "Previous Match"
+msgstr ""
+
+#: src/marker-editor.c:403
+msgid "Next Match"
+msgstr ""
+
+#: src/marker-editor.c:413
+msgid "Replace with..."
+msgstr ""
+
+#: src/marker-editor.c:416
+msgid "Replace"
+msgstr ""
+
+#: src/marker-editor.c:417
+msgid "Replace All"
+msgstr ""
+
+#: src/marker-editor.c:838
+msgid "Untitled.md"
+msgstr "Nepojmenovaný.md"
+
+#: src/marker-exporter.c:311
+msgid "Export"
+msgstr "Exportovat"
+
+#: src/marker-window.c:133
+#, fuzzy, c-format
+msgid "Discard changes to the document '%s'?"
+msgstr "Hledat v dokumentu"
+
+#: src/marker-window.c:135 src/marker-window.c:140
+#, fuzzy
+msgid "The document has unsaved changes that will be lost if it is closed now."
 msgstr ""
 "<span weight='bold' size='larger'>Zrušit změny v dokumentu?</span>\n"
 "\n"
 "Dokument obsahuje neuložené změny, které budou ztraceny, pokud jej nyní "
 "zavřete."
 
-#: src/marker-window.c:1058 src/marker-window.c:1075
-msgid "Open"
-msgstr "Otevřít"
+#: src/marker-window.c:139
+#, fuzzy
+msgid "Discard changes to the document?"
+msgstr "Hledat v dokumentu"
 
-#: src/marker-window.c:1061 src/marker-window.c:1078
-msgid "_Open"
-msgstr "_Otevřít"
-
-#: src/marker-window.c:1061 src/marker-window.c:1078 src/marker-window.c:1096
+#: src/marker-window.c:144 src/marker-window.c:1080
 msgid "_Cancel"
 msgstr "_Zrušit"
 
-#: src/marker-window.c:1093
-msgid "Save As"
-msgstr "Uložit jako"
+#: src/marker-window.c:145
+msgid "_Discard"
+msgstr ""
 
-#: src/marker-window.c:1096
-msgid "_Save"
-msgstr "_Uložit"
+#: src/marker-window.c:181
+#, fuzzy
+msgid "Leave Fullscreen"
+msgstr "Celá obrazovka"
+
+#: src/marker-window.c:940
+msgid "Cannot Rename"
+msgstr ""
+
+#: src/marker-window.c:941
+msgid "_OK"
+msgstr ""
+
+#: src/marker-window.c:958
+msgid "File name cannot be empty."
+msgstr ""
+
+#: src/marker-window.c:964
+msgid "File name cannot contain '/'."
+msgstr ""
+
+#: src/marker-window.c:981
+msgid "A file with that name already exists."
+msgstr ""
+
+#: src/marker-window.c:988
+msgid "Failed to rename file."
+msgstr ""
+
+#: src/marker-window.c:1054
+msgid "The document must be saved before it can be renamed."
+msgstr ""
+
+#: src/marker-window.c:1077
+#, fuzzy
+msgid "Rename Document"
+msgstr "Otevřít soubor"
+
+#: src/marker-window.c:1081
+msgid "_Rename"
+msgstr ""
+
+#: src/marker-window.c:1528
+msgid "No headings found"
+msgstr ""
+
+#: src/marker-window.c:1896
+#, fuzzy
+msgid "Save Document As"
+msgstr "Uložit soubor"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "RTF"
+#~ msgstr "RTF"
+
+#~ msgid "ODT"
+#~ msgstr "ODT"
+
+#~ msgid "DOCx"
+#~ msgstr "DOCx"
+
+#~ msgid "LaTeX"
+#~ msgstr "LaTeX"
+
+#~ msgid "The main view"
+#~ msgstr "Hlavní pohled"
+
+#~ msgid "Some plotting"
+#~ msgstr "ukázka diagramu"
+
+#~ msgid "The sketch editor"
+#~ msgstr "Editor náčrtů"
+
+#~ msgid "Help"
+#~ msgstr "Nápověda"
+
+#~ msgid "About"
+#~ msgstr "O aplikaci"
+
+#~ msgid "Quit"
+#~ msgstr "Ukončit"
+
+#~ msgid "<b>Highlighting</b>"
+#~ msgstr "<b>Zvýraznění</b>"
+
+#~ msgid "Highlight syntax with theme:"
+#~ msgstr "Zvýraznit syntaxi pomocí tématu:"
+
+#~ msgid "<b>Tab Stops</b>"
+#~ msgstr "<b>Zarážky tabulátoru</b>"
+
+#~ msgid "Use css theme: "
+#~ msgstr "Použít motiv css: "
+
+#~ msgid "Highlight code blocks with theme:"
+#~ msgstr "Zvýraznit bloky kódu pomocí motivu:"
+
+#~ msgid "Enable Mermaid"
+#~ msgstr "Povolit Mermaid"
+
+#~ msgid "Enable Charter"
+#~ msgstr "Povolit Charter"
+
+#~ msgid "<b>Math</b>"
+#~ msgstr "<b>Vzorce</b>"
+
+#~ msgid "Render Math"
+#~ msgstr "Vykreslovat vzorce"
+
+#~ msgid "Cancel the sketch"
+#~ msgstr "Zrušit náčrt"
+
+#~ msgid "Zoom Reset"
+#~ msgstr "Obnovení přiblížení"
+
+#~ msgid "Report bugs and ideas on github"
+#~ msgstr "Nahlaste chyby a nápady na github"
+
+#, c-format
+#~ msgid ""
+#~ "<span weight='bold' size='larger'>Discard changes to the document '%s'?</"
+#~ "span>\n"
+#~ "\n"
+#~ "The document has unsaved changes that will be lost if it is closed now."
+#~ msgstr ""
+#~ "<span weight='bold' size='larger'>Zrušit změny dokumentu '%s'?</span>\n"
+#~ "\n"
+#~ "Dokument obsahuje neuložené změny, které budou ztraceny, pokud jej nyní "
+#~ "zavřete."
+
+#~ msgid "Open"
+#~ msgstr "Otevřít"
+
+#~ msgid "_Open"
+#~ msgstr "_Otevřít"
+
+#~ msgid "_Save"
+#~ msgstr "_Uložit"

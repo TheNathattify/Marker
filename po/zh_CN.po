@@ -8,263 +8,635 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-09 21:13+0800\n"
+"POT-Creation-Date: 2026-10-25 10:02+0100\n"
 "PO-Revision-Date: 2021-08-09 21:48+0800\n"
 "Last-Translator: liulitchi <xingzuo88@qq.com>\n"
 "Language-Team: Chinese <LL@li.org>\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Gtranslator 3.38.0\n"
-"Language: zh\n"
 
-#: src/resources/ui/marker-appmenu.ui:6
-#: src/resources/ui/marker-gear-popover.ui:88
-msgid "New Window"
-msgstr "新窗口"
+#: data/com.github.thenathattify.marker.desktop:2
+#: data/com.github.thenathattify.marker.appdata.xml:8
+#: src/resources/ui/marker-headerbar.ui:49
+#, fuzzy
+msgid "Marker"
+msgstr "关于 Marker"
 
-#: src/resources/ui/marker-appmenu.ui:12
-#: src/resources/ui/marker-prefs-window.ui:46
-#: src/resources/ui/marker-gear-popover.ui:183
+#: data/com.github.thenathattify.marker.desktop:10
+#, fuzzy
+msgid "Markdown Editor"
+msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
+
+#: data/com.github.thenathattify.marker.desktop:11
+#, fuzzy
+msgid "A simple markdown editor for GTK+"
+msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
+
+#: data/com.github.thenathattify.marker.desktop:25
+msgid "marker;markdown;editor;web;"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:9
+#, fuzzy
+msgid "Powerful markdown editor for the GNOME desktop"
+msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
+
+#: data/com.github.thenathattify.marker.appdata.xml:12
+msgid ""
+"Marker is a fast and powerful markdown editor designed for the GNOME desktop "
+"with real-time preview and document export capabilities."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:13
+msgid "Features:"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:15
+msgid "View and edit markdown documents"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:16
+msgid "Convert markdown documents to HTML"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:17
+msgid "Tex math rendering"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:18
+msgid "Support for mermaid diagrams"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:19
+msgid "Support for charter plots"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:20
+msgid "Syntax highlighting for code blocks"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:21
+#, fuzzy
+msgid "Integrated sketch editor"
+msgstr "插入草稿"
+
+#: data/com.github.thenathattify.marker.appdata.xml:22
+msgid "Exports to PDF, RTF, ODT, DOCx and LaTeX"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:23
+msgid "Custom CSS themes"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:24
+msgid "Custom syntax themes"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:25
+msgid "Figure captioning and numbering"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:34
+msgid "Nathan Obry"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:24
+msgid "Syntax Theme"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:25
+msgid "The syntax theme to use for the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:30
+#, fuzzy
+msgid "Enable Syntax Theme"
+msgstr "启用暗黑模式："
+
+#: data/com.github.thenathattify.marker.gschema.xml:31
+msgid "Whether to use a syntax theme in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:36
+#, fuzzy
+msgid "Show Line Numbers"
+msgstr "显示行号"
+
+#: data/com.github.thenathattify.marker.gschema.xml:37
+msgid "Whether to show line numbers in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:42
+#, fuzzy
+msgid "Show Right Margin"
+msgstr "显示当列右边距："
+
+#: data/com.github.thenathattify.marker.gschema.xml:43
+msgid "Whether to show a margin on the right side of the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:48
+msgid "The column at which the right margin should be shown"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:49
+msgid ""
+"Sets the column where the right margin will appear when 'show-right-margin' "
+"is enabled"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:54
+#, fuzzy
+msgid "Wrap Text"
+msgstr "换行"
+
+#: data/com.github.thenathattify.marker.gschema.xml:55
+msgid "Whether to wrap text in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:60
+#, fuzzy
+msgid "Show Spaces"
+msgstr "显示空间"
+
+#: data/com.github.thenathattify.marker.gschema.xml:61
+msgid "Whether to show spaces and tabulation in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:66
+#, fuzzy
+msgid "Highlight Current Line"
+msgstr "当前行高亮"
+
+#: data/com.github.thenathattify.marker.gschema.xml:67
+msgid "Whether to highlight the line with the cursor in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:72
+#, fuzzy
+msgid "Use spaces instead of tabs"
+msgstr "插入空格，而非制表符"
+
+#: data/com.github.thenathattify.marker.gschema.xml:73
+#, fuzzy
+msgid "Use spaces instead of tabs in the editor."
+msgstr "插入空格，而非制表符"
+
+#: data/com.github.thenathattify.marker.gschema.xml:78
+msgid "Width of tabulation in characters."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:79
+msgid "Set the width of tabulation in characters in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:84
+msgid "Auto-indent code"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:85
+msgid "Auto-indent code in the editor."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:90
+msgid "Spell Check"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:91
+msgid "Spell check using gtkspell."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:96
+msgid "Language for spell check"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:97
+msgid "Selected language for spell check."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:102
+msgid "Trim trailing whitespace"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:103
+msgid "Whether to trim trailing whitespace on save."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:108
+msgid "Editor font size"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:109
+msgid "Base font size in points for the editor. Combined with the zoom level."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:116
+msgid "CSS Theme"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:117
+msgid "The css theme to use for the preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:122
+msgid "Enable CSS theme in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:123
+msgid "Use a CSS theme in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:128
+#, fuzzy
+msgid "Enable math in Preview"
+msgstr "启用自动缩进"
+
+#: data/com.github.thenathattify.marker.gschema.xml:129
+msgid "Use js back-end to render math in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:134
+msgid "Math Back-end"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:135
+msgid "Select the js math rendering back-end."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:140
+msgid "Enable highlight.js in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:141
+msgid "Use highlight.js in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:146
+#, fuzzy
+msgid "Enable mermaid.js in Preview"
+msgstr "启用 Mermaid"
+
+#: data/com.github.thenathattify.marker.gschema.xml:147
+msgid "Use mermaid.js to show diagram in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:152
+#, fuzzy
+msgid "Highlight.js CSS theme."
+msgstr "突出显示主题的语法："
+
+#: data/com.github.thenathattify.marker.gschema.xml:153
+msgid "The css theme to use for the synthax highlight."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:157
+msgid "Enable Charter extension in Preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:158
+msgid "Enable Charter extension in the live preview."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:162
+msgid "Zoom level of the preview"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:163
+msgid "Zoom level of the preview widget"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:167
+msgid "Zoom level of the source editor"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:168
+msgid "Zoom level of the source view widget"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:175
+#: src/resources/ui/marker-headerbar.ui:109
+msgid "View Mode"
+msgstr "浏览模式"
+
+#: data/com.github.thenathattify.marker.gschema.xml:176
+msgid "Controls how to organize the editor and preview areas on the screen."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:181
+#, fuzzy
+msgid "Enter dark-mode"
+msgstr "启用暗黑模式："
+
+#: data/com.github.thenathattify.marker.gschema.xml:182
+msgid ""
+"When this is enabled, the dark variant of the current gtk theme will be used."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:187
+#, fuzzy
+msgid "Window width"
+msgstr "窗口"
+
+#: data/com.github.thenathattify.marker.gschema.xml:192
+#, fuzzy
+msgid "Window height"
+msgstr "窗口"
+
+#: data/com.github.thenathattify.marker.gschema.xml:197
+msgid "Window position (x, y)"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:202
+msgid "Editor pane width (in Dual Pane mode)"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:207
+msgid "Whether the sidebar is shown"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:4
 msgid "Preferences"
 msgstr "偏好设置"
 
-#: src/resources/ui/marker-appmenu.ui:18
-#: src/resources/ui/marker-gear-popover.ui:199
-msgid "Keyboard Shortcuts"
-msgstr "快捷键"
-
-#: src/resources/ui/marker-appmenu.ui:22
-#: src/resources/ui/marker-gear-popover.ui:207
-msgid "Help"
-msgstr "帮助"
-
-#: src/resources/ui/marker-appmenu.ui:26
-msgid "About"
-msgstr "关于"
-
-#: src/resources/ui/marker-appmenu.ui:30
-msgid "Quit"
-msgstr "退出"
-
-#: src/resources/ui/marker-prefs-window.ui:31
-#: src/resources/ui/marker-gear-popover.ui:244
-msgid "Editor Only"
-msgstr "仅限编辑"
-
-#: src/resources/ui/marker-prefs-window.ui:34
-#: src/resources/ui/marker-gear-popover.ui:252
-msgid "Preview Only"
-msgstr "仅限预览"
-
-#: src/resources/ui/marker-prefs-window.ui:37
-#: src/resources/ui/marker-gear-popover.ui:260
-msgid "Dual Pane"
-msgstr "双面板"
-
-#: src/resources/ui/marker-prefs-window.ui:40
-#: src/resources/ui/marker-gear-popover.ui:268
-msgid "Dual Window"
-msgstr "双窗口"
-
-#: src/resources/ui/marker-prefs-window.ui:71
-msgid "Show line numbers"
-msgstr "显示行号"
-
-#: src/resources/ui/marker-prefs-window.ui:86
-msgid "Wrap text"
-msgstr "换行"
-
-#: src/resources/ui/marker-prefs-window.ui:105
-msgid "Show right margin at column: "
-msgstr "显示当列右边距："
-
-#: src/resources/ui/marker-prefs-window.ui:145
-msgid "Check spelling for language: "
-msgstr "检查单词拼写："
-
-#: src/resources/ui/marker-prefs-window.ui:180
-msgid "Show spaces"
-msgstr "显示空间"
-
-#: src/resources/ui/marker-prefs-window.ui:197
-msgid "<b>Highlighting</b>"
-msgstr "<b>高亮</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:209
-msgid "Highlight current line"
-msgstr "当前行高亮"
-
-#: src/resources/ui/marker-prefs-window.ui:229
-msgid "Highlight syntax with theme:"
-msgstr "突出显示主题的语法："
-
-#: src/resources/ui/marker-prefs-window.ui:266
-msgid "<b>Tab Stops</b>"
-msgstr "<b>制表位</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:278
-msgid "Enable automatic indentation"
-msgstr "启用自动缩进"
-
-#: src/resources/ui/marker-prefs-window.ui:293
-msgid "Insert spaces instead of tabs"
-msgstr "插入空格，而非制表符"
-
-#: src/resources/ui/marker-prefs-window.ui:315
-msgid "Tabulation width:"
-msgstr "制表宽度："
-
-#: src/resources/ui/marker-prefs-window.ui:355
+#: src/resources/ui/marker-prefs-window.ui:9
 msgid "Editor"
 msgstr "编辑器"
 
-#: src/resources/ui/marker-prefs-window.ui:377
-msgid "Use css theme: "
-msgstr "使用 CSS 主题："
+#: src/resources/ui/marker-prefs-window.ui:13
+msgid "Appearance"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:417
-msgid "Highlight code blocks with theme:"
-msgstr "突出显示主题的代码块："
+#: src/resources/ui/marker-prefs-window.ui:16
+msgid "Show line numbers"
+msgstr "显示行号"
 
-#: src/resources/ui/marker-prefs-window.ui:452
-msgid "Enable Mermaid"
-msgstr "启用 Mermaid"
+#: src/resources/ui/marker-prefs-window.ui:21
+msgid "Highlight current line"
+msgstr "当前行高亮"
 
-#: src/resources/ui/marker-prefs-window.ui:467
-msgid "Enable Charter"
-msgstr "启用 Charter"
+#: src/resources/ui/marker-prefs-window.ui:26
+msgid "Wrap text"
+msgstr "换行"
 
-#: src/resources/ui/marker-prefs-window.ui:484
-msgid "<b>Math</b>"
-msgstr "<b>Math</b>"
+#: src/resources/ui/marker-prefs-window.ui:31
+msgid "Show spaces"
+msgstr "显示空间"
 
-#: src/resources/ui/marker-prefs-window.ui:500
-msgid "Render Math"
-msgstr "数学公式渲染"
+#: src/resources/ui/marker-prefs-window.ui:36
+#, fuzzy
+msgid "Show right margin"
+msgstr "显示当列右边距："
 
-#: src/resources/ui/marker-prefs-window.ui:545
+#: src/resources/ui/marker-prefs-window.ui:41
+#, fuzzy
+msgid "Right margin column"
+msgstr "显示当列右边距："
+
+#: src/resources/ui/marker-prefs-window.ui:54
+msgid "Syntax highlighting"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:59
+msgid "Syntax theme"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:64
+msgid "Font size"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:65
+msgid "Base font size in points (combined with zoom)"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:80
+msgid "Indentation"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:83
+#, fuzzy
+msgid "Automatic indentation"
+msgstr "启用自动缩进"
+
+#: src/resources/ui/marker-prefs-window.ui:88
+msgid "Insert spaces instead of tabs"
+msgstr "插入空格，而非制表符"
+
+#: src/resources/ui/marker-prefs-window.ui:93
+#, fuzzy
+msgid "Tab width"
+msgstr "制表宽度："
+
+#: src/resources/ui/marker-prefs-window.ui:106
+msgid "Trim trailing whitespace on save"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:113
+msgid "Spelling"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:116
+#, fuzzy
+msgid "Check spelling"
+msgstr "检查单词拼写："
+
+#: src/resources/ui/marker-prefs-window.ui:121
+msgid "Language"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:130 src/marker-editor.c:652
 msgid "Preview"
 msgstr "预览"
 
-#: src/resources/ui/marker-prefs-window.ui:570
-msgid "Default view mode: "
-msgstr "默认浏览模式："
+#: src/resources/ui/marker-prefs-window.ui:134
+msgid "Styling"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:603
-msgid "Enable dark mode"
-msgstr "启用暗黑模式："
+#: src/resources/ui/marker-prefs-window.ui:137
+msgid "Custom CSS stylesheet"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:625
+#: src/resources/ui/marker-prefs-window.ui:142
+msgid "CSS stylesheet"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:147
+msgid "Code block syntax highlighting"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:152
+msgid "Code highlighting theme"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:159
+msgid "Extensions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:162
+msgid "Render math expressions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:167
+msgid "Math rendering backend"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:172
+msgid "Mermaid diagrams"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:177
+msgid "Charter charts"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:186
 msgid "Window"
 msgstr "窗口"
 
-#: src/resources/ui/marker-shortcuts-window.ui:14
+#: src/resources/ui/marker-prefs-window.ui:190
+msgid "General"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:193
+#, fuzzy
+msgid "Default view mode"
+msgstr "默认浏览模式："
+
+#: src/resources/ui/marker-prefs-window.ui:198
+#, fuzzy
+msgid "Dark mode"
+msgstr "启用暗黑模式："
+
+#: src/resources/ui/marker-shortcuts-window.ui:13
 msgctxt "shortcut window"
 msgid "Documents"
 msgstr "文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:19
+#: src/resources/ui/marker-shortcuts-window.ui:17
 msgctxt "shortcut window"
 msgid "Create a new document"
 msgstr "创建新文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:26
+#: src/resources/ui/marker-shortcuts-window.ui:23
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "打开文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:33
+#: src/resources/ui/marker-shortcuts-window.ui:29
+#: src/resources/ui/marker-shortcuts-window.ui:35
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:41
 msgctxt "shortcut window"
 msgid "Open a document in a new window"
 msgstr "在新窗口打开某文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:40
+#: src/resources/ui/marker-shortcuts-window.ui:47
 msgctxt "shortcut window"
 msgid "Save the document"
 msgstr "保存文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:47
+#: src/resources/ui/marker-shortcuts-window.ui:53
 msgctxt "shortcut window"
 msgid "Save the document with a new filename"
 msgstr "保存文档为一新文件名"
 
-#: src/resources/ui/marker-shortcuts-window.ui:54
+#: src/resources/ui/marker-shortcuts-window.ui:59
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "打开文档"
+
+#: src/resources/ui/marker-shortcuts-window.ui:65
 msgctxt "shortcut window"
 msgid "Close the document"
 msgstr "关闭文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:62
+#: src/resources/ui/marker-shortcuts-window.ui:72
 msgctxt "shortcut window"
 msgid "Editing"
 msgstr "编辑"
 
-#: src/resources/ui/marker-shortcuts-window.ui:67
+#: src/resources/ui/marker-shortcuts-window.ui:76
 msgctxt "shortcut window"
 msgid "Make selection bold"
 msgstr "加粗所选文字"
 
-#: src/resources/ui/marker-shortcuts-window.ui:74
+#: src/resources/ui/marker-shortcuts-window.ui:82
 msgctxt "shortcut window"
 msgid "Make selection italic"
 msgstr "所选文字斜体化"
 
-#: src/resources/ui/marker-shortcuts-window.ui:81
+#: src/resources/ui/marker-shortcuts-window.ui:88
 msgctxt "shortcut window"
 msgid "Make selection monospace"
 msgstr "所选文字等宽"
 
-#: src/resources/ui/marker-shortcuts-window.ui:88
+#: src/resources/ui/marker-shortcuts-window.ui:94
 msgctxt "shortcut window"
 msgid "Insert link"
 msgstr "插入链接"
 
-#: src/resources/ui/marker-shortcuts-window.ui:102
+#: src/resources/ui/marker-shortcuts-window.ui:100
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "插入草稿"
+
+#: src/resources/ui/marker-shortcuts-window.ui:106
 msgctxt "shortcut window"
 msgid "Search in the document"
 msgstr "在文档中搜索"
 
-#: src/resources/ui/marker-shortcuts-window.ui:110
+#: src/resources/ui/marker-shortcuts-window.ui:112
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:119
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "工具"
 
-#: src/resources/ui/marker-shortcuts-window.ui:115
+#: src/resources/ui/marker-shortcuts-window.ui:123
 msgctxt "shortcut window"
 msgid "Print the document"
 msgstr "打印文档"
 
-#: src/resources/ui/marker-shortcuts-window.ui:123
+#: src/resources/ui/marker-shortcuts-window.ui:130
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "窗口"
 
-#: src/resources/ui/marker-shortcuts-window.ui:128
+#: src/resources/ui/marker-shortcuts-window.ui:134
 msgctxt "shortcut window"
 msgid "Open a new window"
 msgstr "打开新窗口"
 
-#: src/resources/ui/marker-shortcuts-window.ui:135
+#: src/resources/ui/marker-shortcuts-window.ui:140
 msgctxt "shortcut window"
 msgid "Close all windows"
 msgstr "关闭所有窗口"
 
-#: src/resources/ui/marker-shortcuts-window.ui:142
+#: src/resources/ui/marker-shortcuts-window.ui:146
 msgctxt "shortcut window"
 msgid "Toggle fullscreen mode"
 msgstr "切换为全屏模式"
 
-#: src/resources/ui/marker-shortcuts-window.ui:149
+#: src/resources/ui/marker-shortcuts-window.ui:152
 msgctxt "shortcut window"
 msgid "Switch to editor-only mode"
 msgstr "转为仅限编辑模式"
 
-#: src/resources/ui/marker-shortcuts-window.ui:156
+#: src/resources/ui/marker-shortcuts-window.ui:158
 msgctxt "shortcut window"
 msgid "Switch to preview-only mode"
 msgstr "转为仅限预览模式"
 
-#: src/resources/ui/marker-shortcuts-window.ui:163
+#: src/resources/ui/marker-shortcuts-window.ui:164
 msgctxt "shortcut window"
 msgid "Switch to dual-pane mode"
 msgstr "转为双面板模式"
@@ -274,100 +646,360 @@ msgctxt "shortcut window"
 msgid "Switch to dual-window mode"
 msgstr "转为双窗口模式"
 
-#: src/resources/ui/marker-shortcuts-window.ui:177
+#: src/resources/ui/marker-shortcuts-window.ui:176
 msgctxt "shortcut window"
 msgid "Quit the application"
 msgstr "关闭应用"
 
-#: src/resources/ui/marker-sketcher-window.ui:112
-msgid "Sketcher"
-msgstr "草稿"
+#: src/resources/ui/marker-sketcher-window.ui:21
+msgid "Add Text"
+msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:123
+#: src/resources/ui/marker-sketcher-window.ui:27
+msgid "Close"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:44
 msgid "Pen Tool"
 msgstr "面板工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:140
+#: src/resources/ui/marker-sketcher-window.ui:51
 msgid "Eraser Tool"
 msgstr "擦除工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:157
+#: src/resources/ui/marker-sketcher-window.ui:58
 msgid "Text Insertion Tool"
 msgstr "文本插入工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:179
+#: src/resources/ui/marker-sketcher-window.ui:67
 msgid "Color Chooser"
 msgstr "颜色选项"
 
-#: src/resources/ui/marker-sketcher-window.ui:271
-msgid "Insert the sketch"
+#: src/resources/ui/marker-sketcher-window.ui:81
+msgid "Small"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:87
+msgid "Medium"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:95
+msgid "Large"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:111
+#, fuzzy
+msgid "Insert Sketch"
 msgstr "插入草稿"
 
-#: src/resources/ui/marker-sketcher-window.ui:286
-msgid "Cancel the sketch"
-msgstr "取消草稿"
+#: src/resources/ui/marker-sketcher-window.ui:117
+msgid "Cancel"
+msgstr ""
+
+#: src/resources/ui/marker-gear-popover.ui:8
+#, fuzzy
+msgid "_New Window"
+msgstr "新窗口"
+
+#: src/resources/ui/marker-gear-popover.ui:14
+#, fuzzy
+msgid "_Rename Document…"
+msgstr "打开文档"
+
+#: src/resources/ui/marker-gear-popover.ui:18
+msgid "_Reload from Disk"
+msgstr ""
 
 #: src/resources/ui/marker-gear-popover.ui:22
-msgid "Zoom Out"
-msgstr "缩小"
-
-#: src/resources/ui/marker-gear-popover.ui:41
-msgid "Zoom Reset"
-msgstr "重置缩放"
-
-#: src/resources/ui/marker-gear-popover.ui:54
-msgid "Zoom In"
-msgstr "放大"
-
-#: src/resources/ui/marker-gear-popover.ui:112
-msgid "Fullscreen"
-msgstr "全屏"
-
-#: src/resources/ui/marker-gear-popover.ui:120
-msgid "Sidebar"
-msgstr "侧边栏"
-
-#: src/resources/ui/marker-gear-popover.ui:136
-msgid "Save As…"
-msgstr "保存为..."
-
-#: src/resources/ui/marker-gear-popover.ui:144
-msgid "Export…"
-msgstr "导出为..."
-
-#: src/resources/ui/marker-gear-popover.ui:152
-msgid "Print…"
+#, fuzzy
+msgid "_Print…"
 msgstr "打印..."
 
-#: src/resources/ui/marker-gear-popover.ui:168
-#: src/resources/ui/marker-gear-popover.ui:234
-msgid "View Mode"
-msgstr "浏览模式"
+#: src/resources/ui/marker-gear-popover.ui:28
+#, fuzzy
+msgid "_Preferences"
+msgstr "偏好设置"
 
-#: src/resources/ui/marker-gear-popover.ui:215
-msgid "About Marker"
+#: src/resources/ui/marker-gear-popover.ui:32
+#, fuzzy
+msgid "_Keyboard Shortcuts"
+msgstr "快捷键"
+
+#: src/resources/ui/marker-gear-popover.ui:36
+#, fuzzy
+msgid "_About Marker"
 msgstr "关于 Marker"
 
-#: src/resources/ui/marker-headerbar.ui:20
-msgid "Open…"
-msgstr "打开..."
+#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#, fuzzy
+msgid "Documents"
+msgstr "文档"
 
-#: src/resources/ui/marker-headerbar.ui:30
+#: src/resources/ui/marker-window-main-view.ui:50
+msgid "Outline"
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:9
 msgid "Save"
 msgstr "保存"
 
-#: src/marker.c:184
+#: src/resources/ui/marker-headerbar.ui:13
+msgid "Save As…"
+msgstr "保存为..."
+
+#: src/resources/ui/marker-headerbar.ui:19
+msgid "Export…"
+msgstr "导出为..."
+
+#: src/resources/ui/marker-headerbar.ui:28
+msgid "Editor Only"
+msgstr "仅限编辑"
+
+#: src/resources/ui/marker-headerbar.ui:32
+msgid "Preview Only"
+msgstr "仅限预览"
+
+#: src/resources/ui/marker-headerbar.ui:36
+msgid "Dual Pane"
+msgstr "双面板"
+
+#: src/resources/ui/marker-headerbar.ui:40
+msgid "Dual Window"
+msgstr "双窗口"
+
+#: src/resources/ui/marker-headerbar.ui:57
+#, fuzzy
+msgid "Toggle Sidebar"
+msgstr "侧边栏"
+
+#: src/resources/ui/marker-headerbar.ui:63
+msgid "Open…"
+msgstr "打开..."
+
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
+#: src/marker-window.c:1848
+#, fuzzy
+msgid "Open Document"
+msgstr "打开文档"
+
+#: src/resources/ui/marker-headerbar.ui:76
+#, fuzzy
+msgid "Save Document"
+msgstr "保存文档"
+
+#: src/resources/ui/marker-headerbar.ui:83
+msgid "Save Options"
+msgstr "保存选项"
+
+#: src/resources/ui/marker-headerbar.ui:92
+#, fuzzy
+msgid "New Document"
+msgstr "文档"
+
+#: src/resources/ui/marker-headerbar.ui:101
+msgid "Main Menu"
+msgstr "主菜单"
+
+#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#, fuzzy
+msgid "Toggle Fullscreen"
+msgstr "切换为全屏模式"
+
+#: src/resources/ui/marker-headerbar.ui:132
+msgid "Zoom Out"
+msgstr "缩小"
+
+#: src/resources/ui/marker-headerbar.ui:142
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:149
+msgid "Zoom In"
+msgstr "放大"
+
+#: src/resources/ui/marker-headerbar.ui:155
+msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:15
+msgid "Bold"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:21
+msgid "Italic"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:27
+msgid "Underline"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:33
+msgid "Strikethrough"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:47
+#, fuzzy
+msgid "Insert Link"
+msgstr "插入链接"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:53
+#, fuzzy
+msgid "Insert Image"
+msgstr "插入链接"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:59
+msgid "Sketcher"
+msgstr "草稿"
+
+#: src/marker.c:187
 msgid "A markdown editor for GNOME"
 msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
 
-#: src/marker.c:186
-msgid "Report bugs and ideas on github"
-msgstr "在 github 上指出错误，或提交建议"
-
-#: src/marker.c:191
+#: src/marker.c:194
 msgid "translator-credits"
 msgstr "翻译人员"
 
-#: src/marker-editor.c:248
+#: src/marker-editor.c:395
+msgid "Toggle Replace"
+msgstr ""
+
+#: src/marker-editor.c:401
+msgid "Previous Match"
+msgstr ""
+
+#: src/marker-editor.c:403
+msgid "Next Match"
+msgstr ""
+
+#: src/marker-editor.c:413
+msgid "Replace with..."
+msgstr ""
+
+#: src/marker-editor.c:416
+msgid "Replace"
+msgstr ""
+
+#: src/marker-editor.c:417
+msgid "Replace All"
+msgstr ""
+
+#: src/marker-editor.c:838
 msgid "Untitled.md"
 msgstr "Untitled.md"
+
+#: src/marker-exporter.c:311
+#, fuzzy
+msgid "Export"
+msgstr "导出为..."
+
+#: src/marker-window.c:133
+#, fuzzy, c-format
+msgid "Discard changes to the document '%s'?"
+msgstr "在文档中搜索"
+
+#: src/marker-window.c:135 src/marker-window.c:140
+msgid "The document has unsaved changes that will be lost if it is closed now."
+msgstr ""
+
+#: src/marker-window.c:139
+#, fuzzy
+msgid "Discard changes to the document?"
+msgstr "在文档中搜索"
+
+#: src/marker-window.c:144 src/marker-window.c:1080
+msgid "_Cancel"
+msgstr ""
+
+#: src/marker-window.c:145
+msgid "_Discard"
+msgstr ""
+
+#: src/marker-window.c:181
+#, fuzzy
+msgid "Leave Fullscreen"
+msgstr "全屏"
+
+#: src/marker-window.c:940
+msgid "Cannot Rename"
+msgstr ""
+
+#: src/marker-window.c:941
+msgid "_OK"
+msgstr ""
+
+#: src/marker-window.c:958
+msgid "File name cannot be empty."
+msgstr ""
+
+#: src/marker-window.c:964
+msgid "File name cannot contain '/'."
+msgstr ""
+
+#: src/marker-window.c:981
+msgid "A file with that name already exists."
+msgstr ""
+
+#: src/marker-window.c:988
+msgid "Failed to rename file."
+msgstr ""
+
+#: src/marker-window.c:1054
+msgid "The document must be saved before it can be renamed."
+msgstr ""
+
+#: src/marker-window.c:1077
+#, fuzzy
+msgid "Rename Document"
+msgstr "打开文档"
+
+#: src/marker-window.c:1081
+msgid "_Rename"
+msgstr ""
+
+#: src/marker-window.c:1528
+msgid "No headings found"
+msgstr ""
+
+#: src/marker-window.c:1896
+#, fuzzy
+msgid "Save Document As"
+msgstr "保存文档"
+
+#~ msgid "Help"
+#~ msgstr "帮助"
+
+#~ msgid "About"
+#~ msgstr "关于"
+
+#~ msgid "Quit"
+#~ msgstr "退出"
+
+#~ msgid "<b>Highlighting</b>"
+#~ msgstr "<b>高亮</b>"
+
+#~ msgid "<b>Tab Stops</b>"
+#~ msgstr "<b>制表位</b>"
+
+#~ msgid "Use css theme: "
+#~ msgstr "使用 CSS 主题："
+
+#~ msgid "Highlight code blocks with theme:"
+#~ msgstr "突出显示主题的代码块："
+
+#~ msgid "Enable Charter"
+#~ msgstr "启用 Charter"
+
+#~ msgid "<b>Math</b>"
+#~ msgstr "<b>Math</b>"
+
+#~ msgid "Render Math"
+#~ msgstr "数学公式渲染"
+
+#~ msgid "Cancel the sketch"
+#~ msgstr "取消草稿"
+
+#~ msgid "Zoom Reset"
+#~ msgstr "重置缩放"
+
+#~ msgid "Report bugs and ideas on github"
+#~ msgstr "在 github 上指出错误，或提交建议"

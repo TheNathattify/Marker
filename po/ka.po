@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-06 17:59+0300\n"
+"POT-Creation-Date: 2026-10-25 10:02+0100\n"
 "PO-Revision-Date: 2026-02-25 19:16+0100\n"
 "Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -17,140 +17,124 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 
-#: data/com.github.adrighem.marker.desktop:3
-#: data/com.github.adrighem.marker.appdata.xml:7
+#: data/com.github.thenathattify.marker.desktop:2
+#: data/com.github.thenathattify.marker.appdata.xml:8
+#: src/resources/ui/marker-headerbar.ui:49
 msgid "Marker"
 msgstr "Marker"
 
-#: data/com.github.adrighem.marker.desktop:11
+#: data/com.github.thenathattify.marker.desktop:10
 msgid "Markdown Editor"
 msgstr "Markdown-ის რედაქტორი"
 
-#: data/com.github.adrighem.marker.desktop:12
+#: data/com.github.thenathattify.marker.desktop:11
 msgid "A simple markdown editor for GTK+"
 msgstr "მარტივი Markdown-ის რედაქტორი GTK+-ისთვის"
 
-#: data/com.github.adrighem.marker.desktop:26
+#: data/com.github.thenathattify.marker.desktop:25
 msgid "marker;markdown;editor;web;"
 msgstr "marker;markdown;editor;web;რედაქტორი;ვები;"
 
-#: data/com.github.adrighem.marker.appdata.xml:8
-msgid "Powerful markdown editor for the GNOME desktop."
+#: data/com.github.thenathattify.marker.appdata.xml:9
+#, fuzzy
+msgid "Powerful markdown editor for the GNOME desktop"
 msgstr "მძლავრი Markdown-ის რედაქტორი GNOME-ისთვის."
 
-#: data/com.github.adrighem.marker.appdata.xml:11
+#: data/com.github.thenathattify.marker.appdata.xml:12
+msgid ""
+"Marker is a fast and powerful markdown editor designed for the GNOME desktop "
+"with real-time preview and document export capabilities."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.appdata.xml:13
 msgid "Features:"
 msgstr "თვისებები:"
 
-#: data/com.github.adrighem.marker.appdata.xml:13
+#: data/com.github.thenathattify.marker.appdata.xml:15
 msgid "View and edit markdown documents"
 msgstr "Markdown-ის დოკუმენტების დათვალიერება და ჩასწორება"
 
-#: data/com.github.adrighem.marker.appdata.xml:14
+#: data/com.github.thenathattify.marker.appdata.xml:16
 msgid "Convert markdown documents to HTML"
 msgstr "Markdown-ის დოკუმენტების გადაყვანა HTML-ში"
 
-#: data/com.github.adrighem.marker.appdata.xml:15
+#: data/com.github.thenathattify.marker.appdata.xml:17
 msgid "Tex math rendering"
 msgstr "Tex-ის მათემატიკის რენდერი"
 
-#: data/com.github.adrighem.marker.appdata.xml:16
+#: data/com.github.thenathattify.marker.appdata.xml:18
 msgid "Support for mermaid diagrams"
 msgstr "mermaid-ის დიაგრამების მხარდაჭერა"
 
-#: data/com.github.adrighem.marker.appdata.xml:17
+#: data/com.github.thenathattify.marker.appdata.xml:19
 msgid "Support for charter plots"
 msgstr "გრაფიკების მხარდაჭერა"
 
-#: data/com.github.adrighem.marker.appdata.xml:18
+#: data/com.github.thenathattify.marker.appdata.xml:20
 msgid "Syntax highlighting for code blocks"
 msgstr "სინტაქსის გამოკვეთა კოდის ბლოკებისთვის"
 
-#: data/com.github.adrighem.marker.appdata.xml:19
+#: data/com.github.thenathattify.marker.appdata.xml:21
 msgid "Integrated sketch editor"
 msgstr "ჩაშენებული ესკიზის რედაქტორი"
 
-#: data/com.github.adrighem.marker.appdata.xml:22
-msgid "PDF"
-msgstr "PDF"
+#: data/com.github.thenathattify.marker.appdata.xml:22
+msgid "Exports to PDF, RTF, ODT, DOCx and LaTeX"
+msgstr ""
 
-#: data/com.github.adrighem.marker.appdata.xml:23
-msgid "RTF"
-msgstr "RTF"
-
-#: data/com.github.adrighem.marker.appdata.xml:24
-msgid "ODT"
-msgstr "ODT"
-
-#: data/com.github.adrighem.marker.appdata.xml:25
-msgid "DOCx"
-msgstr "DOCx"
-
-#: data/com.github.adrighem.marker.appdata.xml:26
-msgid "LaTeX"
-msgstr "LaTeX"
-
-#: data/com.github.adrighem.marker.appdata.xml:29
+#: data/com.github.thenathattify.marker.appdata.xml:23
 msgid "Custom CSS themes"
 msgstr "მორგებული CSS თემები"
 
-#: data/com.github.adrighem.marker.appdata.xml:30
+#: data/com.github.thenathattify.marker.appdata.xml:24
 msgid "Custom syntax themes"
 msgstr "მორგებული სინტაქსის თემები"
 
-#: data/com.github.adrighem.marker.appdata.xml:31
+#: data/com.github.thenathattify.marker.appdata.xml:25
 msgid "Figure captioning and numbering"
 msgstr "ფიგურის წარმწერები და დანომვრა"
 
-#: data/com.github.adrighem.marker.appdata.xml:39
-msgid "The main view"
-msgstr "მთავარი ხედი"
+#: data/com.github.thenathattify.marker.appdata.xml:34
+msgid "Nathan Obry"
+msgstr ""
 
-#: data/com.github.adrighem.marker.appdata.xml:43
-msgid "Some plotting"
-msgstr "ცოტა გრაფიკები"
-
-#: data/com.github.adrighem.marker.appdata.xml:47
-msgid "The sketch editor"
-msgstr "ესკიზის რედაქტორი"
-
-#: data/com.github.adrighem.marker.gschema.xml:24
+#: data/com.github.thenathattify.marker.gschema.xml:24
 msgid "Syntax Theme"
 msgstr "სინტაქსის თემა"
 
-#: data/com.github.adrighem.marker.gschema.xml:25
+#: data/com.github.thenathattify.marker.gschema.xml:25
 msgid "The syntax theme to use for the editor."
 msgstr "სინტაქსის თემა რედაქტორისთვის."
 
-#: data/com.github.adrighem.marker.gschema.xml:30
+#: data/com.github.thenathattify.marker.gschema.xml:30
 msgid "Enable Syntax Theme"
 msgstr "სინტაქსის თემის ჩართვა"
 
-#: data/com.github.adrighem.marker.gschema.xml:31
+#: data/com.github.thenathattify.marker.gschema.xml:31
 msgid "Whether to use a syntax theme in the editor."
 msgstr "გამოიყენება, თუ არა სინტაქსის თემა რედაქტორში."
 
-#: data/com.github.adrighem.marker.gschema.xml:36
+#: data/com.github.thenathattify.marker.gschema.xml:36
 msgid "Show Line Numbers"
 msgstr "ხაზის ნომრების ჩვენება"
 
-#: data/com.github.adrighem.marker.gschema.xml:37
+#: data/com.github.thenathattify.marker.gschema.xml:37
 msgid "Whether to show line numbers in the editor."
 msgstr "ნაჩვენებია, თუ არა ხაზის ნომრები რედაქტორში."
 
-#: data/com.github.adrighem.marker.gschema.xml:42
+#: data/com.github.thenathattify.marker.gschema.xml:42
 msgid "Show Right Margin"
 msgstr "მარჯვენა ზღვრის ჩვენება"
 
-#: data/com.github.adrighem.marker.gschema.xml:43
+#: data/com.github.thenathattify.marker.gschema.xml:43
 msgid "Whether to show a margin on the right side of the editor."
 msgstr "გამოჩნდება, თუ არა მინდორი რედაქტორი მარჯვენა მხარეს."
 
-#: data/com.github.adrighem.marker.gschema.xml:48
+#: data/com.github.thenathattify.marker.gschema.xml:48
 msgid "The column at which the right margin should be shown"
 msgstr "სვეტი, რომელთანაც მარჯვენა მინდორი იქნება ნაჩვენები"
 
-#: data/com.github.adrighem.marker.gschema.xml:49
+#: data/com.github.thenathattify.marker.gschema.xml:49
 msgid ""
 "Sets the column where the right margin will appear when 'show-right-margin' "
 "is enabled"
@@ -158,436 +142,496 @@ msgstr ""
 "დააყენებს სვეტს, სადაც მარჯვენა მინდორი გამოჩნდება, როცა 'show-right-margin' "
 "ჩართულია"
 
-#: data/com.github.adrighem.marker.gschema.xml:54
+#: data/com.github.thenathattify.marker.gschema.xml:54
 msgid "Wrap Text"
 msgstr "ტექსტის გადატანა"
 
-#: data/com.github.adrighem.marker.gschema.xml:55
+#: data/com.github.thenathattify.marker.gschema.xml:55
 msgid "Whether to wrap text in the editor."
 msgstr "მოხდება, თუ არა ტექსტის გადატანა რედაქტორში."
 
-#: data/com.github.adrighem.marker.gschema.xml:60
+#: data/com.github.thenathattify.marker.gschema.xml:60
 msgid "Show Spaces"
 msgstr "ჰარეების ჩვენება"
 
-#: data/com.github.adrighem.marker.gschema.xml:61
+#: data/com.github.thenathattify.marker.gschema.xml:61
 msgid "Whether to show spaces and tabulation in the editor."
 msgstr "მოხდება, თუ არა რედაქტორში ჰარეების და ტაბულაციების ჩვენება."
 
-#: data/com.github.adrighem.marker.gschema.xml:66
+#: data/com.github.thenathattify.marker.gschema.xml:66
 msgid "Highlight Current Line"
 msgstr "მიმდინარე ხაზის გამოკვეთა"
 
-#: data/com.github.adrighem.marker.gschema.xml:67
+#: data/com.github.thenathattify.marker.gschema.xml:67
 msgid "Whether to highlight the line with the cursor in the editor."
 msgstr "მოხდება, თუ არა რედაქტორში კურსორის შემცველი ხაზის გამოკვეთა."
 
-#: data/com.github.adrighem.marker.gschema.xml:72
+#: data/com.github.thenathattify.marker.gschema.xml:72
 msgid "Use spaces instead of tabs"
 msgstr "ჰარეების გამოყენება ტაბულაციის მაგიერ"
 
-#: data/com.github.adrighem.marker.gschema.xml:73
+#: data/com.github.thenathattify.marker.gschema.xml:73
 msgid "Use spaces instead of tabs in the editor."
 msgstr "რედაქტორში ჰარეების გამოყენება ტაბულაციის მაგიერ."
 
-#: data/com.github.adrighem.marker.gschema.xml:78
+#: data/com.github.thenathattify.marker.gschema.xml:78
 msgid "Width of tabulation in characters."
 msgstr "ტაბულაციის სიგანე სიმბოლოებში."
 
-#: data/com.github.adrighem.marker.gschema.xml:79
+#: data/com.github.thenathattify.marker.gschema.xml:79
 msgid "Set the width of tabulation in characters in the editor."
 msgstr "რედაქტორში ტაბულაციის ზომის დაყენება (სიმბოლოებში)."
 
-#: data/com.github.adrighem.marker.gschema.xml:84
+#: data/com.github.thenathattify.marker.gschema.xml:84
 msgid "Auto-indent code"
 msgstr "კოდის ავტოსწორება"
 
-#: data/com.github.adrighem.marker.gschema.xml:85
+#: data/com.github.thenathattify.marker.gschema.xml:85
 msgid "Auto-indent code in the editor."
 msgstr "რედაქტორში კოდის ავტოსწორება."
 
-#: data/com.github.adrighem.marker.gschema.xml:90
+#: data/com.github.thenathattify.marker.gschema.xml:90
 msgid "Spell Check"
 msgstr "მართლწერის შემოწმება"
 
-#: data/com.github.adrighem.marker.gschema.xml:91
+#: data/com.github.thenathattify.marker.gschema.xml:91
 msgid "Spell check using gtkspell."
 msgstr "მართლწერის შემოწმება gtkspell-ით."
 
-#: data/com.github.adrighem.marker.gschema.xml:96
+#: data/com.github.thenathattify.marker.gschema.xml:96
 msgid "Language for spell check"
 msgstr "მართლწერის შესამოწმებელი ენა"
 
-#: data/com.github.adrighem.marker.gschema.xml:97
+#: data/com.github.thenathattify.marker.gschema.xml:97
 msgid "Selected language for spell check."
 msgstr "არჩეული ეკა მართლწერის შესამოწმებლად."
 
-#: data/com.github.adrighem.marker.gschema.xml:104
+#: data/com.github.thenathattify.marker.gschema.xml:102
+msgid "Trim trailing whitespace"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:103
+msgid "Whether to trim trailing whitespace on save."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:108
+msgid "Editor font size"
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:109
+msgid "Base font size in points for the editor. Combined with the zoom level."
+msgstr ""
+
+#: data/com.github.thenathattify.marker.gschema.xml:116
 msgid "CSS Theme"
 msgstr "CSS თემა"
 
-#: data/com.github.adrighem.marker.gschema.xml:105
+#: data/com.github.thenathattify.marker.gschema.xml:117
 msgid "The css theme to use for the preview."
 msgstr "CSS თემა მინიატურისთვის."
 
-#: data/com.github.adrighem.marker.gschema.xml:110
+#: data/com.github.thenathattify.marker.gschema.xml:122
 msgid "Enable CSS theme in Preview"
 msgstr "CSS თემის ჩართვა მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:111
-msgid "Use a CSS theme in the live preview"
+#: data/com.github.thenathattify.marker.gschema.xml:123
+#, fuzzy
+msgid "Use a CSS theme in the live preview."
 msgstr "CSS თემის გამოყენება ცოცხალ მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:116
+#: data/com.github.thenathattify.marker.gschema.xml:128
 msgid "Enable math in Preview"
 msgstr "მათემატიკის ჩართვა მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:117
+#: data/com.github.thenathattify.marker.gschema.xml:129
 msgid "Use js back-end to render math in the live preview."
 msgstr "js უკანაბოლოს გამოყენება ცოცხალ მინიატურაში მათემატიკის რენდერისთვის."
 
-#: data/com.github.adrighem.marker.gschema.xml:122
+#: data/com.github.thenathattify.marker.gschema.xml:134
 msgid "Math Back-end"
 msgstr "მათემატიკის უკანაბოლო"
 
-#: data/com.github.adrighem.marker.gschema.xml:123
+#: data/com.github.thenathattify.marker.gschema.xml:135
 msgid "Select the js math rendering back-end."
 msgstr "js-ის მათემატიკის რენდერის უკანაბოლოს გამოყენება."
 
-#: data/com.github.adrighem.marker.gschema.xml:128
+#: data/com.github.thenathattify.marker.gschema.xml:140
 msgid "Enable highlight.js in Preview"
 msgstr "highlight.js-ის ჩართვა მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:129
+#: data/com.github.thenathattify.marker.gschema.xml:141
 msgid "Use highlight.js in the live preview."
 msgstr "highlight.js-ის გამოყენება ცოცხალ მინიატურაში."
 
-#: data/com.github.adrighem.marker.gschema.xml:134
+#: data/com.github.thenathattify.marker.gschema.xml:146
 msgid "Enable mermaid.js in Preview"
 msgstr "mermaid.js-ის ჩართვა მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:135
+#: data/com.github.thenathattify.marker.gschema.xml:147
 msgid "Use mermaid.js to show diagram in the live preview."
 msgstr "mermaid.js-ის გამოყენება ცოცხალ მინიატურაში დიაგრამების საჩვენებლად."
 
-#: data/com.github.adrighem.marker.gschema.xml:140
+#: data/com.github.thenathattify.marker.gschema.xml:152
 msgid "Highlight.js CSS theme."
 msgstr "Highlight.js CSS თემა."
 
-#: data/com.github.adrighem.marker.gschema.xml:141
+#: data/com.github.thenathattify.marker.gschema.xml:153
 msgid "The css theme to use for the synthax highlight."
 msgstr "CSS თემა სინტაქსის გამოსაკვეთად."
 
-#: data/com.github.adrighem.marker.gschema.xml:145
+#: data/com.github.thenathattify.marker.gschema.xml:157
 msgid "Enable Charter extension in Preview"
 msgstr "გრაფიკის გაფართოების ჩართვა მინიატურაში"
 
-#: data/com.github.adrighem.marker.gschema.xml:146
+#: data/com.github.thenathattify.marker.gschema.xml:158
 msgid "Enable Charter extension in the live preview."
 msgstr "გრაფიკის გაფართოების ჩართვა ცოცხალ მინიატურაში."
 
-#: data/com.github.adrighem.marker.gschema.xml:150
+#: data/com.github.thenathattify.marker.gschema.xml:162
 msgid "Zoom level of the preview"
 msgstr "გადიდების დონე მინიატურისთვის"
 
-#: data/com.github.adrighem.marker.gschema.xml:151
+#: data/com.github.thenathattify.marker.gschema.xml:163
 msgid "Zoom level of the preview widget"
 msgstr "მინიატურის ვიჯეტის გადიდების დონე"
 
-#: data/com.github.adrighem.marker.gschema.xml:158
-#: src/resources/ui/marker-gear-popover.ui:168
-#: src/resources/ui/marker-gear-popover.ui:234
+#: data/com.github.thenathattify.marker.gschema.xml:167
+#, fuzzy
+msgid "Zoom level of the source editor"
+msgstr "გადიდების დონე მინიატურისთვის"
+
+#: data/com.github.thenathattify.marker.gschema.xml:168
+#, fuzzy
+msgid "Zoom level of the source view widget"
+msgstr "მინიატურის ვიჯეტის გადიდების დონე"
+
+#: data/com.github.thenathattify.marker.gschema.xml:175
+#: src/resources/ui/marker-headerbar.ui:109
 msgid "View Mode"
 msgstr "ხედვის რეჟიმი"
 
-#: data/com.github.adrighem.marker.gschema.xml:159
+#: data/com.github.thenathattify.marker.gschema.xml:176
 msgid "Controls how to organize the editor and preview areas on the screen."
 msgstr ""
 "აკონტროლებს, როგორ მოხდება რედაქტორისა და მინიატურის არეების ორგანიზაცია "
 "ეკრანზე."
 
-#: data/com.github.adrighem.marker.gschema.xml:164
+#: data/com.github.thenathattify.marker.gschema.xml:181
 msgid "Enter dark-mode"
 msgstr "მუქ რეჟიმზე გადასვლა"
 
-#: data/com.github.adrighem.marker.gschema.xml:165
+#: data/com.github.thenathattify.marker.gschema.xml:182
 msgid ""
 "When this is enabled, the dark variant of the current gtk theme will be used."
 msgstr ""
 "როცა ეს ჩართულია, გამოყენებული იქნება gtk-ის მიმდინარე თემის მუქი ვარიანტი."
 
-#: data/com.github.adrighem.marker.gschema.xml:170
+#: data/com.github.thenathattify.marker.gschema.xml:187
 msgid "Window width"
 msgstr "ფანჯრის სიგანე"
 
-#: data/com.github.adrighem.marker.gschema.xml:175
+#: data/com.github.thenathattify.marker.gschema.xml:192
 msgid "Window height"
 msgstr "ფანჯრის სიმაღლე"
 
-#: data/com.github.adrighem.marker.gschema.xml:180
+#: data/com.github.thenathattify.marker.gschema.xml:197
 msgid "Window position (x, y)"
 msgstr "ფანჯრის მდებარეობა (x, y)"
 
-#: data/com.github.adrighem.marker.gschema.xml:185
+#: data/com.github.thenathattify.marker.gschema.xml:202
 msgid "Editor pane width (in Dual Pane mode)"
 msgstr "რედაქტორის პანელის სიგანე (ორმაგი პანელის რეჟიმში)"
 
-#: data/com.github.adrighem.marker.gschema.xml:190
+#: data/com.github.thenathattify.marker.gschema.xml:207
 msgid "Whether the sidebar is shown"
 msgstr "ნაჩვენებია, თუ არა გვერდითი პანელი"
 
-#: src/resources/ui/marker-appmenu.ui:6
-#: src/resources/ui/marker-gear-popover.ui:88
-msgid "New Window"
-msgstr "ახალი ფანჯარა"
-
-#: src/resources/ui/marker-appmenu.ui:12
-#: src/resources/ui/marker-prefs-window.ui:46
-#: src/resources/ui/marker-gear-popover.ui:191
+#: src/resources/ui/marker-prefs-window.ui:4
 msgid "Preferences"
 msgstr "მორგება"
 
-#: src/resources/ui/marker-appmenu.ui:18
-#: src/resources/ui/marker-gear-popover.ui:199
-msgid "Keyboard Shortcuts"
-msgstr "კლავიატურის მალსახმობები"
-
-#: src/resources/ui/marker-appmenu.ui:22
-#: src/resources/ui/marker-gear-popover.ui:207
-msgid "Help"
-msgstr "დახმარება"
-
-#: src/resources/ui/marker-appmenu.ui:26
-msgid "About"
-msgstr "შესახებ"
-
-#: src/resources/ui/marker-appmenu.ui:30
-msgid "Quit"
-msgstr "გასვლა"
-
-#: src/resources/ui/marker-prefs-window.ui:31
-#: src/resources/ui/marker-gear-popover.ui:244
-msgid "Editor Only"
-msgstr "მხოლოდ, რედაქტორი"
-
-#: src/resources/ui/marker-prefs-window.ui:34
-#: src/resources/ui/marker-gear-popover.ui:252
-msgid "Preview Only"
-msgstr "მხოლოდ მინიატურა"
-
-#: src/resources/ui/marker-prefs-window.ui:37
-#: src/resources/ui/marker-gear-popover.ui:260
-msgid "Dual Pane"
-msgstr "ორმაგი პანელი"
-
-#: src/resources/ui/marker-prefs-window.ui:40
-#: src/resources/ui/marker-gear-popover.ui:268
-msgid "Dual Window"
-msgstr "ორმაგი ფანჯარა"
-
-#: src/resources/ui/marker-prefs-window.ui:71
-msgid "Show line numbers"
-msgstr "ხაზის ნომრების ჩვენება"
-
-#: src/resources/ui/marker-prefs-window.ui:86
-msgid "Wrap text"
-msgstr "ტექსტის გადატანა"
-
-#: src/resources/ui/marker-prefs-window.ui:105
-msgid "Show right margin at column: "
-msgstr "მარჯვენა ზღვრის ჩვენება სვეტთან: "
-
-#: src/resources/ui/marker-prefs-window.ui:145
-msgid "Check spelling for language: "
-msgstr "მართლწერის შემოწმება ენისთვის: "
-
-#: src/resources/ui/marker-prefs-window.ui:180
-msgid "Show spaces"
-msgstr "სივრცეების ჩვენება"
-
-#: src/resources/ui/marker-prefs-window.ui:197
-msgid "<b>Highlighting</b>"
-msgstr "<b>გამოკვეთა</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:209
-msgid "Highlight current line"
-msgstr "მიმდინარე ხაზის გამოკვეთა"
-
-#: src/resources/ui/marker-prefs-window.ui:229
-msgid "Highlight syntax with theme:"
-msgstr "სინტაქსის გამოკვეთა თემით:"
-
-#: src/resources/ui/marker-prefs-window.ui:266
-msgid "<b>Tab Stops</b>"
-msgstr "<b>ტაბულაციის გაჩერებები</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:278
-msgid "Enable automatic indentation"
-msgstr "ავტომატური სწორების ჩართვა"
-
-#: src/resources/ui/marker-prefs-window.ui:293
-msgid "Insert spaces instead of tabs"
-msgstr "ტაბულაციის მაგიერ გამოტოვებების ჩასმა"
-
-#: src/resources/ui/marker-prefs-window.ui:315
-msgid "Tabulation width:"
-msgstr "ტაბულაციის სიგანე:"
-
-#: src/resources/ui/marker-prefs-window.ui:355
+#: src/resources/ui/marker-prefs-window.ui:9
 msgid "Editor"
 msgstr "რედაქტორი"
 
-#: src/resources/ui/marker-prefs-window.ui:377
-msgid "Use css theme: "
-msgstr "CSS თემის გამოყენება: "
+#: src/resources/ui/marker-prefs-window.ui:13
+msgid "Appearance"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:417
-msgid "Highlight code blocks with theme:"
-msgstr "კოდის ბლოკების გამოკვეთა თემით:"
+#: src/resources/ui/marker-prefs-window.ui:16
+msgid "Show line numbers"
+msgstr "ხაზის ნომრების ჩვენება"
 
-#: src/resources/ui/marker-prefs-window.ui:452
-msgid "Enable Mermaid"
-msgstr "Mermaid-ის ჩართვა"
+#: src/resources/ui/marker-prefs-window.ui:21
+msgid "Highlight current line"
+msgstr "მიმდინარე ხაზის გამოკვეთა"
 
-#: src/resources/ui/marker-prefs-window.ui:467
-msgid "Enable Charter"
-msgstr "გრაფიკის გაფართოების ჩართვა"
+#: src/resources/ui/marker-prefs-window.ui:26
+msgid "Wrap text"
+msgstr "ტექსტის გადატანა"
 
-#: src/resources/ui/marker-prefs-window.ui:484
-msgid "<b>Math</b>"
-msgstr "<b>მათემატიკა</b>"
+#: src/resources/ui/marker-prefs-window.ui:31
+msgid "Show spaces"
+msgstr "სივრცეების ჩვენება"
 
-#: src/resources/ui/marker-prefs-window.ui:500
-msgid "Render Math"
-msgstr "მათემატიკის რენდერი"
+#: src/resources/ui/marker-prefs-window.ui:36
+#, fuzzy
+msgid "Show right margin"
+msgstr "მარჯვენა ზღვრის ჩვენება"
 
-#: src/resources/ui/marker-prefs-window.ui:545
+#: src/resources/ui/marker-prefs-window.ui:41
+#, fuzzy
+msgid "Right margin column"
+msgstr "მარჯვენა ზღვრის ჩვენება სვეტთან: "
+
+#: src/resources/ui/marker-prefs-window.ui:54
+#, fuzzy
+msgid "Syntax highlighting"
+msgstr "სინტაქსის გამოკვეთა კოდის ბლოკებისთვის"
+
+#: src/resources/ui/marker-prefs-window.ui:59
+#, fuzzy
+msgid "Syntax theme"
+msgstr "სინტაქსის თემა"
+
+#: src/resources/ui/marker-prefs-window.ui:64
+msgid "Font size"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:65
+msgid "Base font size in points (combined with zoom)"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:80
+msgid "Indentation"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:83
+#, fuzzy
+msgid "Automatic indentation"
+msgstr "ავტომატური სწორების ჩართვა"
+
+#: src/resources/ui/marker-prefs-window.ui:88
+msgid "Insert spaces instead of tabs"
+msgstr "ტაბულაციის მაგიერ გამოტოვებების ჩასმა"
+
+#: src/resources/ui/marker-prefs-window.ui:93
+#, fuzzy
+msgid "Tab width"
+msgstr "ტაბულაციის სიგანე:"
+
+#: src/resources/ui/marker-prefs-window.ui:106
+msgid "Trim trailing whitespace on save"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:113
+msgid "Spelling"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:116
+#, fuzzy
+msgid "Check spelling"
+msgstr "მართლწერის შემოწმება ენისთვის: "
+
+#: src/resources/ui/marker-prefs-window.ui:121
+msgid "Language"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:130 src/marker-editor.c:652
 msgid "Preview"
 msgstr "მინიატურა"
 
-#: src/resources/ui/marker-prefs-window.ui:570
-msgid "Default view mode: "
-msgstr "თვალიერების ნაგულისხმები რეჟიმი: "
+#: src/resources/ui/marker-prefs-window.ui:134
+msgid "Styling"
+msgstr ""
 
-#: src/resources/ui/marker-prefs-window.ui:603
-msgid "Enable dark mode"
-msgstr "მუქი რეჟიმის ჩართვა"
+#: src/resources/ui/marker-prefs-window.ui:137
+#, fuzzy
+msgid "Custom CSS stylesheet"
+msgstr "მორგებული CSS თემები"
 
-#: src/resources/ui/marker-prefs-window.ui:625
+#: src/resources/ui/marker-prefs-window.ui:142
+#, fuzzy
+msgid "CSS stylesheet"
+msgstr "CSS თემა"
+
+#: src/resources/ui/marker-prefs-window.ui:147
+msgid "Code block syntax highlighting"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:152
+#, fuzzy
+msgid "Code highlighting theme"
+msgstr "Highlight.js CSS თემა."
+
+#: src/resources/ui/marker-prefs-window.ui:159
+msgid "Extensions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:162
+msgid "Render math expressions"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:167
+#, fuzzy
+msgid "Math rendering backend"
+msgstr "js-ის მათემატიკის რენდერის უკანაბოლოს გამოყენება."
+
+#: src/resources/ui/marker-prefs-window.ui:172
+#, fuzzy
+msgid "Mermaid diagrams"
+msgstr "mermaid-ის დიაგრამების მხარდაჭერა"
+
+#: src/resources/ui/marker-prefs-window.ui:177
+msgid "Charter charts"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:186
 msgid "Window"
 msgstr "ფანჯარა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:14
+#: src/resources/ui/marker-prefs-window.ui:190
+msgid "General"
+msgstr ""
+
+#: src/resources/ui/marker-prefs-window.ui:193
+#, fuzzy
+msgid "Default view mode"
+msgstr "თვალიერების ნაგულისხმები რეჟიმი: "
+
+#: src/resources/ui/marker-prefs-window.ui:198
+#, fuzzy
+msgid "Dark mode"
+msgstr "მუქი რეჟიმის ჩართვა"
+
+#: src/resources/ui/marker-shortcuts-window.ui:13
 msgctxt "shortcut window"
 msgid "Documents"
 msgstr "დოკუმენტები"
 
-#: src/resources/ui/marker-shortcuts-window.ui:19
+#: src/resources/ui/marker-shortcuts-window.ui:17
 msgctxt "shortcut window"
 msgid "Create a new document"
 msgstr "ახალი დოკუმენტის შექმნა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:26
+#: src/resources/ui/marker-shortcuts-window.ui:23
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "დოკუმენტის გახსნა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:33
+#: src/resources/ui/marker-shortcuts-window.ui:29
+#: src/resources/ui/marker-shortcuts-window.ui:35
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:41
 msgctxt "shortcut window"
 msgid "Open a document in a new window"
 msgstr "დოკუმენტის ახალ ფანჯარაში გახსნა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:40
+#: src/resources/ui/marker-shortcuts-window.ui:47
 msgctxt "shortcut window"
 msgid "Save the document"
 msgstr "დოკუმენტის შენახვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:47
+#: src/resources/ui/marker-shortcuts-window.ui:53
 msgctxt "shortcut window"
 msgid "Save the document with a new filename"
 msgstr "დოკუმენტის შენახვა ახალი სახელით"
 
-#: src/resources/ui/marker-shortcuts-window.ui:54
+#: src/resources/ui/marker-shortcuts-window.ui:59
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "დოკუმენტის გახსნა"
+
+#: src/resources/ui/marker-shortcuts-window.ui:65
 msgctxt "shortcut window"
 msgid "Close the document"
 msgstr "დოკუმენტის დახურვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:62
+#: src/resources/ui/marker-shortcuts-window.ui:72
 msgctxt "shortcut window"
 msgid "Editing"
 msgstr "ჩასწორება"
 
-#: src/resources/ui/marker-shortcuts-window.ui:67
+#: src/resources/ui/marker-shortcuts-window.ui:76
 msgctxt "shortcut window"
 msgid "Make selection bold"
 msgstr "მონიშნულის გასქელება"
 
-#: src/resources/ui/marker-shortcuts-window.ui:74
+#: src/resources/ui/marker-shortcuts-window.ui:82
 msgctxt "shortcut window"
 msgid "Make selection italic"
 msgstr "მონიშნულის კურსივში გადაყვანა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:81
+#: src/resources/ui/marker-shortcuts-window.ui:88
 msgctxt "shortcut window"
 msgid "Make selection monospace"
 msgstr "მონიშნულის ერთსიგანიანში გადაყვანა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:88
+#: src/resources/ui/marker-shortcuts-window.ui:94
 msgctxt "shortcut window"
 msgid "Insert link"
 msgstr "ბმულის ჩასმა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:95
+#: src/resources/ui/marker-shortcuts-window.ui:100
 msgctxt "shortcut window"
 msgid "Draw a sketch"
 msgstr "ესკიზის დახატვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:102
+#: src/resources/ui/marker-shortcuts-window.ui:106
 msgctxt "shortcut window"
 msgid "Search in the document"
 msgstr "დოკუმენტში ძებნა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:110
+#: src/resources/ui/marker-shortcuts-window.ui:112
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/resources/ui/marker-shortcuts-window.ui:119
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "ხელსაწყოები"
 
-#: src/resources/ui/marker-shortcuts-window.ui:115
+#: src/resources/ui/marker-shortcuts-window.ui:123
 msgctxt "shortcut window"
 msgid "Print the document"
 msgstr "დოკუმენტის დაბეჭდვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:123
+#: src/resources/ui/marker-shortcuts-window.ui:130
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "ფანჯარა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:128
+#: src/resources/ui/marker-shortcuts-window.ui:134
 msgctxt "shortcut window"
 msgid "Open a new window"
 msgstr "ახალი ფანჯრის გახსნა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:135
+#: src/resources/ui/marker-shortcuts-window.ui:140
 msgctxt "shortcut window"
 msgid "Close all windows"
 msgstr "ყველა ფანჯრის დახურვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:142
+#: src/resources/ui/marker-shortcuts-window.ui:146
 msgctxt "shortcut window"
 msgid "Toggle fullscreen mode"
 msgstr "სრული ეკრანის რეჟიმზე გადასვლის გადართვა"
 
-#: src/resources/ui/marker-shortcuts-window.ui:149
+#: src/resources/ui/marker-shortcuts-window.ui:152
 msgctxt "shortcut window"
 msgid "Switch to editor-only mode"
 msgstr "გადართვა მხოლოდ-რედაქტორის რეჟიმში"
 
-#: src/resources/ui/marker-shortcuts-window.ui:156
+#: src/resources/ui/marker-shortcuts-window.ui:158
 msgctxt "shortcut window"
 msgid "Switch to preview-only mode"
 msgstr "გადართვა მხოლოდ-მინიატურის რეჟიმში"
 
-#: src/resources/ui/marker-shortcuts-window.ui:163
+#: src/resources/ui/marker-shortcuts-window.ui:164
 msgctxt "shortcut window"
 msgid "Switch to dual-pane mode"
 msgstr "გადართვა ორმაგი პანელის რეჟიმში"
@@ -597,148 +641,417 @@ msgctxt "shortcut window"
 msgid "Switch to dual-window mode"
 msgstr "გადართვა ორმაგი ფანჯრის რეჟიმში"
 
-#: src/resources/ui/marker-shortcuts-window.ui:177
+#: src/resources/ui/marker-shortcuts-window.ui:176
 msgctxt "shortcut window"
 msgid "Quit the application"
 msgstr "აპლიკაციიდან გასვლა"
 
-#: src/resources/ui/marker-sketcher-window.ui:112
-msgid "Sketcher"
-msgstr "ესკიზის ხელსაწყო"
+#: src/resources/ui/marker-sketcher-window.ui:21
+msgid "Add Text"
+msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:123
+#: src/resources/ui/marker-sketcher-window.ui:27
+msgid "Close"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:44
 msgid "Pen Tool"
 msgstr "კალამი ხელსაწყო"
 
-#: src/resources/ui/marker-sketcher-window.ui:140
+#: src/resources/ui/marker-sketcher-window.ui:51
 msgid "Eraser Tool"
 msgstr "საშლელი ხელსაწყო"
 
-#: src/resources/ui/marker-sketcher-window.ui:157
+#: src/resources/ui/marker-sketcher-window.ui:58
 msgid "Text Insertion Tool"
 msgstr "ტექსტის ჩასმის ხელსაწყო"
 
-#: src/resources/ui/marker-sketcher-window.ui:179
+#: src/resources/ui/marker-sketcher-window.ui:67
 msgid "Color Chooser"
 msgstr "ფერის ამრჩევი"
 
-#: src/resources/ui/marker-sketcher-window.ui:271
-msgid "Insert the sketch"
+#: src/resources/ui/marker-sketcher-window.ui:81
+msgid "Small"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:87
+msgid "Medium"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:95
+msgid "Large"
+msgstr ""
+
+#: src/resources/ui/marker-sketcher-window.ui:111
+#, fuzzy
+msgid "Insert Sketch"
 msgstr "ესკიზის ჩასმა"
 
-#: src/resources/ui/marker-sketcher-window.ui:286
-msgid "Cancel the sketch"
-msgstr "ესკიზის გაუქმება"
-
-#: src/resources/ui/marker-gear-popover.ui:22
-msgid "Zoom Out"
-msgstr "დაპატარავება"
-
-#: src/resources/ui/marker-gear-popover.ui:41
-msgid "Zoom Reset"
-msgstr "გადიდების ჩამოყრა"
-
-#: src/resources/ui/marker-gear-popover.ui:54
-msgid "Zoom In"
-msgstr "გადიდება"
-
-#: src/resources/ui/marker-gear-popover.ui:112
-msgid "Fullscreen"
-msgstr "სრულ ეკრანზე"
-
-#: src/resources/ui/marker-gear-popover.ui:120
-msgid "Sidebar"
-msgstr "გვერდითი პანელი"
-
-#: src/resources/ui/marker-gear-popover.ui:136
-msgid "Save As…"
-msgstr "შენახვა, როგორც…"
-
-#: src/resources/ui/marker-gear-popover.ui:144
-msgid "Export…"
-msgstr "გატანა…"
-
-#: src/resources/ui/marker-gear-popover.ui:152
-msgid "Print…"
-msgstr "ბეჭდვა…"
-
-#: src/resources/ui/marker-gear-popover.ui:215
-msgid "About Marker"
-msgstr "Marker-ის გარეშე"
-
-#: src/resources/ui/marker-headerbar.ui:20
-msgid "Open…"
-msgstr "გახსნა…"
-
-#: src/resources/ui/marker-headerbar.ui:30
-msgid "Save"
-msgstr "შენახვა"
-
-#: src/marker.c:184
-msgid "A markdown editor for GNOME"
-msgstr "Markdown-ის რედაქტორი GNOME-ისთვის"
-
-#: src/marker.c:186
-msgid "Report bugs and ideas on github"
-msgstr "შეცდომების ან იდეების მიწერა github-ზე"
-
-#: src/marker.c:191
-msgid "translator-credits"
-msgstr "ეკატერინე პაპავა"
-
-#: src/marker-editor.c:248
-msgid "Untitled.md"
-msgstr "Untitled.md"
-
-#: src/marker-exporter.c:106 src/marker-exporter.c:110
-msgid "Export"
-msgstr "გატანა"
-
-#: src/marker-exporter.c:109
+#: src/resources/ui/marker-sketcher-window.ui:117
 msgid "Cancel"
 msgstr "გაუქმება"
 
-#: src/marker-window.c:112
-#, c-format
-msgid ""
-"<span weight='bold' size='larger'>Discard changes to the document '%s'?</"
-"span>\n"
-"\n"
-"The document has unsaved changes that will be lost if it is closed now."
-msgstr ""
-"<span weight='bold' size='larger'>გაუქმდეს ცვლილებები დოკუმენტში '%s'?</"
-"span>\n"
-"\n"
-"დოკუმენტს აქვს შეუნახავი ცვლილებები, რომლებიც დაიკარგება, თუ მას ახლა "
-"დახურავთ."
+#: src/resources/ui/marker-gear-popover.ui:8
+#, fuzzy
+msgid "_New Window"
+msgstr "ახალი ფანჯარა"
 
-#: src/marker-window.c:125
-msgid ""
-"<span weight='bold' size='larger'>Discard changes to the document?</span>\n"
-"\n"
-"The document has unsaved changes that will be lost if it is closed now."
+#: src/resources/ui/marker-gear-popover.ui:14
+#, fuzzy
+msgid "_Rename Document…"
+msgstr "დოკუმენტის გახსნა"
+
+#: src/resources/ui/marker-gear-popover.ui:18
+msgid "_Reload from Disk"
+msgstr ""
+
+#: src/resources/ui/marker-gear-popover.ui:22
+#, fuzzy
+msgid "_Print…"
+msgstr "ბეჭდვა…"
+
+#: src/resources/ui/marker-gear-popover.ui:28
+#, fuzzy
+msgid "_Preferences"
+msgstr "მორგება"
+
+#: src/resources/ui/marker-gear-popover.ui:32
+#, fuzzy
+msgid "_Keyboard Shortcuts"
+msgstr "კლავიატურის მალსახმობები"
+
+#: src/resources/ui/marker-gear-popover.ui:36
+#, fuzzy
+msgid "_About Marker"
+msgstr "Marker-ის გარეშე"
+
+#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#, fuzzy
+msgid "Documents"
+msgstr "დოკუმენტები"
+
+#: src/resources/ui/marker-window-main-view.ui:50
+msgid "Outline"
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:9
+msgid "Save"
+msgstr "შენახვა"
+
+#: src/resources/ui/marker-headerbar.ui:13
+msgid "Save As…"
+msgstr "შენახვა, როგორც…"
+
+#: src/resources/ui/marker-headerbar.ui:19
+msgid "Export…"
+msgstr "გატანა…"
+
+#: src/resources/ui/marker-headerbar.ui:28
+msgid "Editor Only"
+msgstr "მხოლოდ, რედაქტორი"
+
+#: src/resources/ui/marker-headerbar.ui:32
+msgid "Preview Only"
+msgstr "მხოლოდ მინიატურა"
+
+#: src/resources/ui/marker-headerbar.ui:36
+msgid "Dual Pane"
+msgstr "ორმაგი პანელი"
+
+#: src/resources/ui/marker-headerbar.ui:40
+msgid "Dual Window"
+msgstr "ორმაგი ფანჯარა"
+
+#: src/resources/ui/marker-headerbar.ui:57
+#, fuzzy
+msgid "Toggle Sidebar"
+msgstr "გვერდითი პანელი"
+
+#: src/resources/ui/marker-headerbar.ui:63
+msgid "Open…"
+msgstr "გახსნა…"
+
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
+#: src/marker-window.c:1848
+#, fuzzy
+msgid "Open Document"
+msgstr "დოკუმენტის გახსნა"
+
+#: src/resources/ui/marker-headerbar.ui:76
+#, fuzzy
+msgid "Save Document"
+msgstr "დოკუმენტის შენახვა"
+
+#: src/resources/ui/marker-headerbar.ui:83
+#, fuzzy
+msgid "Save Options"
+msgstr "შენახვა, როგორც"
+
+#: src/resources/ui/marker-headerbar.ui:92
+#, fuzzy
+msgid "New Document"
+msgstr "დოკუმენტები"
+
+#: src/resources/ui/marker-headerbar.ui:101
+msgid "Main Menu"
+msgstr "главное меню"
+
+#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#, fuzzy
+msgid "Toggle Fullscreen"
+msgstr "სრული ეკრანის რეჟიმზე გადასვლის გადართვა"
+
+#: src/resources/ui/marker-headerbar.ui:132
+msgid "Zoom Out"
+msgstr "დაპატარავება"
+
+#: src/resources/ui/marker-headerbar.ui:142
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr ""
+
+#: src/resources/ui/marker-headerbar.ui:149
+msgid "Zoom In"
+msgstr "გადიდება"
+
+#: src/resources/ui/marker-headerbar.ui:155
+msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:15
+msgid "Bold"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:21
+msgid "Italic"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:27
+msgid "Underline"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:33
+msgid "Strikethrough"
+msgstr ""
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:47
+#, fuzzy
+msgid "Insert Link"
+msgstr "ბმულის ჩასმა"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:53
+#, fuzzy
+msgid "Insert Image"
+msgstr "ბმულის ჩასმა"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:59
+msgid "Sketcher"
+msgstr "ესკიზის ხელსაწყო"
+
+#: src/marker.c:187
+msgid "A markdown editor for GNOME"
+msgstr "Markdown-ის რედაქტორი GNOME-ისთვის"
+
+#: src/marker.c:194
+msgid "translator-credits"
+msgstr "ეკატერინე პაპავა"
+
+#: src/marker-editor.c:395
+msgid "Toggle Replace"
+msgstr ""
+
+#: src/marker-editor.c:401
+msgid "Previous Match"
+msgstr ""
+
+#: src/marker-editor.c:403
+msgid "Next Match"
+msgstr ""
+
+#: src/marker-editor.c:413
+msgid "Replace with..."
+msgstr ""
+
+#: src/marker-editor.c:416
+msgid "Replace"
+msgstr ""
+
+#: src/marker-editor.c:417
+msgid "Replace All"
+msgstr ""
+
+#: src/marker-editor.c:838
+msgid "Untitled.md"
+msgstr "Untitled.md"
+
+#: src/marker-exporter.c:311
+msgid "Export"
+msgstr "გატანა"
+
+#: src/marker-window.c:133
+#, fuzzy, c-format
+msgid "Discard changes to the document '%s'?"
+msgstr "დოკუმენტში ძებნა"
+
+#: src/marker-window.c:135 src/marker-window.c:140
+#, fuzzy
+msgid "The document has unsaved changes that will be lost if it is closed now."
 msgstr ""
 "<span weight='bold' size='larger'>გაუქმდეს ცვლილებები დოკუმენტში?</span>\n"
 "\n"
 "დოკუმენტს აქვს შეუნახავი ცვლილებები, რომლებიც დაიკარგება, თუ მას ახლა "
 "დახურავთ."
 
-#: src/marker-window.c:1058 src/marker-window.c:1075
-msgid "Open"
-msgstr "გახსნა"
+#: src/marker-window.c:139
+#, fuzzy
+msgid "Discard changes to the document?"
+msgstr "დოკუმენტში ძებნა"
 
-#: src/marker-window.c:1061 src/marker-window.c:1078
-msgid "_Open"
-msgstr "_გახსნა"
-
-#: src/marker-window.c:1061 src/marker-window.c:1078 src/marker-window.c:1096
+#: src/marker-window.c:144 src/marker-window.c:1080
 msgid "_Cancel"
 msgstr "გაუ_ქმება"
 
-#: src/marker-window.c:1093
-msgid "Save As"
-msgstr "შენახვა, როგორც"
+#: src/marker-window.c:145
+msgid "_Discard"
+msgstr ""
 
-#: src/marker-window.c:1096
-msgid "_Save"
-msgstr "_შენახვა"
+#: src/marker-window.c:181
+#, fuzzy
+msgid "Leave Fullscreen"
+msgstr "სრულ ეკრანზე"
+
+#: src/marker-window.c:940
+msgid "Cannot Rename"
+msgstr ""
+
+#: src/marker-window.c:941
+msgid "_OK"
+msgstr ""
+
+#: src/marker-window.c:958
+msgid "File name cannot be empty."
+msgstr ""
+
+#: src/marker-window.c:964
+msgid "File name cannot contain '/'."
+msgstr ""
+
+#: src/marker-window.c:981
+msgid "A file with that name already exists."
+msgstr ""
+
+#: src/marker-window.c:988
+msgid "Failed to rename file."
+msgstr ""
+
+#: src/marker-window.c:1054
+msgid "The document must be saved before it can be renamed."
+msgstr ""
+
+#: src/marker-window.c:1077
+#, fuzzy
+msgid "Rename Document"
+msgstr "დოკუმენტის გახსნა"
+
+#: src/marker-window.c:1081
+msgid "_Rename"
+msgstr ""
+
+#: src/marker-window.c:1528
+msgid "No headings found"
+msgstr ""
+
+#: src/marker-window.c:1896
+#, fuzzy
+msgid "Save Document As"
+msgstr "დოკუმენტის შენახვა"
+
+#~ msgid "PDF"
+#~ msgstr "PDF"
+
+#~ msgid "RTF"
+#~ msgstr "RTF"
+
+#~ msgid "ODT"
+#~ msgstr "ODT"
+
+#~ msgid "DOCx"
+#~ msgstr "DOCx"
+
+#~ msgid "LaTeX"
+#~ msgstr "LaTeX"
+
+#~ msgid "The main view"
+#~ msgstr "მთავარი ხედი"
+
+#~ msgid "Some plotting"
+#~ msgstr "ცოტა გრაფიკები"
+
+#~ msgid "The sketch editor"
+#~ msgstr "ესკიზის რედაქტორი"
+
+#~ msgid "Help"
+#~ msgstr "დახმარება"
+
+#~ msgid "About"
+#~ msgstr "შესახებ"
+
+#~ msgid "Quit"
+#~ msgstr "გასვლა"
+
+#~ msgid "<b>Highlighting</b>"
+#~ msgstr "<b>გამოკვეთა</b>"
+
+#~ msgid "Highlight syntax with theme:"
+#~ msgstr "სინტაქსის გამოკვეთა თემით:"
+
+#~ msgid "<b>Tab Stops</b>"
+#~ msgstr "<b>ტაბულაციის გაჩერებები</b>"
+
+#~ msgid "Use css theme: "
+#~ msgstr "CSS თემის გამოყენება: "
+
+#~ msgid "Highlight code blocks with theme:"
+#~ msgstr "კოდის ბლოკების გამოკვეთა თემით:"
+
+#~ msgid "Enable Mermaid"
+#~ msgstr "Mermaid-ის ჩართვა"
+
+#~ msgid "Enable Charter"
+#~ msgstr "გრაფიკის გაფართოების ჩართვა"
+
+#~ msgid "<b>Math</b>"
+#~ msgstr "<b>მათემატიკა</b>"
+
+#~ msgid "Render Math"
+#~ msgstr "მათემატიკის რენდერი"
+
+#~ msgid "Cancel the sketch"
+#~ msgstr "ესკიზის გაუქმება"
+
+#~ msgid "Zoom Reset"
+#~ msgstr "გადიდების ჩამოყრა"
+
+#~ msgid "Report bugs and ideas on github"
+#~ msgstr "შეცდომების ან იდეების მიწერა github-ზე"
+
+#, c-format
+#~ msgid ""
+#~ "<span weight='bold' size='larger'>Discard changes to the document '%s'?</"
+#~ "span>\n"
+#~ "\n"
+#~ "The document has unsaved changes that will be lost if it is closed now."
+#~ msgstr ""
+#~ "<span weight='bold' size='larger'>გაუქმდეს ცვლილებები დოკუმენტში '%s'?</"
+#~ "span>\n"
+#~ "\n"
+#~ "დოკუმენტს აქვს შეუნახავი ცვლილებები, რომლებიც დაიკარგება, თუ მას ახლა "
+#~ "დახურავთ."
+
+#~ msgid "Open"
+#~ msgstr "გახსნა"
+
+#~ msgid "_Open"
+#~ msgstr "_გახსნა"
+
+#~ msgid "_Save"
+#~ msgstr "_შენახვა"

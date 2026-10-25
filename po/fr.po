@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 17:13+0100\n"
+"POT-Creation-Date: 2026-10-25 10:02+0100\n"
 "PO-Revision-Date: 2026-10-25 07:00+0200\n"
 "Last-Translator: Romain F. T.>\n"
 "Language-Team: français\n"
@@ -19,253 +19,636 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3\n"
 
-#: src/resources/ui/marker-appmenu.ui:6
-#: src/resources/ui/marker-gear-popover.ui:88
-msgid "New Window"
-msgstr "Nouvelle fenêtre"
+#: data/com.github.thenathattify.marker.desktop:2
+#: data/com.github.thenathattify.marker.appdata.xml:8
+#: src/resources/ui/marker-headerbar.ui:49
+#, fuzzy
+msgid "Marker"
+msgstr "À propos de Marker"
 
-#: src/resources/ui/marker-appmenu.ui:12
-#: src/resources/ui/marker-prefs-window.ui:46
-#: src/resources/ui/marker-gear-popover.ui:183
+#: data/com.github.thenathattify.marker.desktop:10
+#, fuzzy
+msgid "Markdown Editor"
+msgstr "Un éditeur de markdown pour GNOME"
+
+#: data/com.github.thenathattify.marker.desktop:11
+#, fuzzy
+msgid "A simple markdown editor for GTK+"
+msgstr "Un éditeur de markdown pour GNOME"
+
+#: data/com.github.thenathattify.marker.desktop:25
+msgid "marker;markdown;editor;web;"
+msgstr "marker;markdown;éditeur;web;"
+
+#: data/com.github.thenathattify.marker.appdata.xml:9
+#, fuzzy
+msgid "Powerful markdown editor for the GNOME desktop"
+msgstr "Un éditeur de markdown pour GNOME"
+
+#: data/com.github.thenathattify.marker.appdata.xml:12
+msgid ""
+"Marker is a fast and powerful markdown editor designed for the GNOME desktop "
+"with real-time preview and document export capabilities."
+msgstr ""
+"Marker est un éditeur markdown rapide et puissant conçu pour le bureau GNOME "
+"avec aperçu en temps réel et capacités d'export de documents."
+
+#: data/com.github.thenathattify.marker.appdata.xml:13
+msgid "Features:"
+msgstr "Fonctionnalités :"
+
+#: data/com.github.thenathattify.marker.appdata.xml:15
+msgid "View and edit markdown documents"
+msgstr "Voir et éditer des documents markdown"
+
+#: data/com.github.thenathattify.marker.appdata.xml:16
+msgid "Convert markdown documents to HTML"
+msgstr "Convertir des documents markdown en HTML"
+
+#: data/com.github.thenathattify.marker.appdata.xml:17
+#, fuzzy
+msgid "Tex math rendering"
+msgstr "Moteur de rendu mathématique"
+
+#: data/com.github.thenathattify.marker.appdata.xml:18
+#, fuzzy
+msgid "Support for mermaid diagrams"
+msgstr "Diagrammes Mermaid"
+
+#: data/com.github.thenathattify.marker.appdata.xml:19
+msgid "Support for charter plots"
+msgstr "Prise en charge des graphiques"
+
+#: data/com.github.thenathattify.marker.appdata.xml:20
+#, fuzzy
+msgid "Syntax highlighting for code blocks"
+msgstr "Coloration syntaxique"
+
+#: data/com.github.thenathattify.marker.appdata.xml:21
+#, fuzzy
+msgid "Integrated sketch editor"
+msgstr "Insérer l’esquisse"
+
+#: data/com.github.thenathattify.marker.appdata.xml:22
+msgid "Exports to PDF, RTF, ODT, DOCx and LaTeX"
+msgstr "Export vers PDF, RTF, ODT, DOCx et LaTeX"
+
+#: data/com.github.thenathattify.marker.appdata.xml:23
+#, fuzzy
+msgid "Custom CSS themes"
+msgstr "Feuille de style CSS personnalisée"
+
+#: data/com.github.thenathattify.marker.appdata.xml:24
+#, fuzzy
+msgid "Custom syntax themes"
+msgstr "Thème de syntaxe"
+
+#: data/com.github.thenathattify.marker.appdata.xml:25
+msgid "Figure captioning and numbering"
+msgstr "Légendes et numérotation des figures"
+
+#: data/com.github.thenathattify.marker.appdata.xml:34
+msgid "Nathan Obry"
+msgstr "Nathan Obry"
+
+#: data/com.github.thenathattify.marker.gschema.xml:24
+#, fuzzy
+msgid "Syntax Theme"
+msgstr "Thème de syntaxe"
+
+#: data/com.github.thenathattify.marker.gschema.xml:25
+msgid "The syntax theme to use for the editor."
+msgstr "Le thème de coloration syntaxique à utiliser pour l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:30
+#, fuzzy
+msgid "Enable Syntax Theme"
+msgstr "Thème de syntaxe"
+
+#: data/com.github.thenathattify.marker.gschema.xml:31
+msgid "Whether to use a syntax theme in the editor."
+msgstr "Utiliser un thème de coloration syntaxique dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:36
+#, fuzzy
+msgid "Show Line Numbers"
+msgstr "Montrer les numéros de ligne"
+
+#: data/com.github.thenathattify.marker.gschema.xml:37
+msgid "Whether to show line numbers in the editor."
+msgstr "Afficher les numéros de ligne dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:42
+#, fuzzy
+msgid "Show Right Margin"
+msgstr "Afficher la marge droite"
+
+#: data/com.github.thenathattify.marker.gschema.xml:43
+msgid "Whether to show a margin on the right side of the editor."
+msgstr "Afficher une marge à droite dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:48
+msgid "The column at which the right margin should be shown"
+msgstr "La colonne à laquelle la marge droite doit apparaître"
+
+#: data/com.github.thenathattify.marker.gschema.xml:49
+msgid ""
+"Sets the column where the right margin will appear when 'show-right-margin' "
+"is enabled"
+msgstr ""
+"Définit la colonne où la marge droite apparaîtra quand 'show-right-margin' "
+"est activé"
+
+#: data/com.github.thenathattify.marker.gschema.xml:54
+#, fuzzy
+msgid "Wrap Text"
+msgstr "Retour à la ligne"
+
+#: data/com.github.thenathattify.marker.gschema.xml:55
+msgid "Whether to wrap text in the editor."
+msgstr "Activer le retour à la ligne automatique dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:60
+#, fuzzy
+msgid "Show Spaces"
+msgstr "Afficher les espaces"
+
+#: data/com.github.thenathattify.marker.gschema.xml:61
+msgid "Whether to show spaces and tabulation in the editor."
+msgstr "Afficher les espaces et tabulations dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:66
+#, fuzzy
+msgid "Highlight Current Line"
+msgstr "Surligner la ligne actuelle"
+
+#: data/com.github.thenathattify.marker.gschema.xml:67
+msgid "Whether to highlight the line with the cursor in the editor."
+msgstr "Surligner la ligne contenant le curseur dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:72
+#, fuzzy
+msgid "Use spaces instead of tabs"
+msgstr "Insérer des espaces au lieu des tabulations"
+
+#: data/com.github.thenathattify.marker.gschema.xml:73
+#, fuzzy
+msgid "Use spaces instead of tabs in the editor."
+msgstr "Insérer des espaces au lieu des tabulations"
+
+#: data/com.github.thenathattify.marker.gschema.xml:78
+msgid "Width of tabulation in characters."
+msgstr "Largeur des tabulations en caractères."
+
+#: data/com.github.thenathattify.marker.gschema.xml:79
+msgid "Set the width of tabulation in characters in the editor."
+msgstr "Définit la largeur des tabulations en caractères dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:84
+msgid "Auto-indent code"
+msgstr "Indentation automatique du code"
+
+#: data/com.github.thenathattify.marker.gschema.xml:85
+msgid "Auto-indent code in the editor."
+msgstr "Indente automatiquement le code dans l'éditeur."
+
+#: data/com.github.thenathattify.marker.gschema.xml:90
+msgid "Spell Check"
+msgstr "Vérification orthographique"
+
+#: data/com.github.thenathattify.marker.gschema.xml:91
+msgid "Spell check using gtkspell."
+msgstr "Vérification orthographique avec gtkspell."
+
+#: data/com.github.thenathattify.marker.gschema.xml:96
+msgid "Language for spell check"
+msgstr "Langue de la vérification orthographique"
+
+#: data/com.github.thenathattify.marker.gschema.xml:97
+msgid "Selected language for spell check."
+msgstr "Langue sélectionnée pour la vérification orthographique."
+
+#: data/com.github.thenathattify.marker.gschema.xml:102
+#, fuzzy
+msgid "Trim trailing whitespace"
+msgstr "Supprimer les espaces en fin de ligne à l'enregistrement"
+
+#: data/com.github.thenathattify.marker.gschema.xml:103
+#, fuzzy
+msgid "Whether to trim trailing whitespace on save."
+msgstr "Supprimer les espaces en fin de ligne à l'enregistrement"
+
+#: data/com.github.thenathattify.marker.gschema.xml:108
+#, fuzzy
+msgid "Editor font size"
+msgstr "Taille de police"
+
+#: data/com.github.thenathattify.marker.gschema.xml:109
+#, fuzzy
+msgid "Base font size in points for the editor. Combined with the zoom level."
+msgstr "Taille de police de base en points (combinée avec le zoom)"
+
+#: data/com.github.thenathattify.marker.gschema.xml:116
+#, fuzzy
+msgid "CSS Theme"
+msgstr "Feuille de style CSS"
+
+#: data/com.github.thenathattify.marker.gschema.xml:117
+msgid "The css theme to use for the preview."
+msgstr "Le thème CSS à utiliser pour l'aperçu."
+
+#: data/com.github.thenathattify.marker.gschema.xml:122
+msgid "Enable CSS theme in Preview"
+msgstr "Activer le thème CSS dans l'aperçu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:123
+msgid "Use a CSS theme in the live preview."
+msgstr "Utilise un thème CSS dans l'aperçu en direct."
+
+#: data/com.github.thenathattify.marker.gschema.xml:128
+#, fuzzy
+msgid "Enable math in Preview"
+msgstr "Activer l’indentation automatique"
+
+#: data/com.github.thenathattify.marker.gschema.xml:129
+msgid "Use js back-end to render math in the live preview."
+msgstr "Utilise un moteur JS pour afficher les maths dans l'aperçu en direct."
+
+#: data/com.github.thenathattify.marker.gschema.xml:134
+#, fuzzy
+msgid "Math Back-end"
+msgstr "Moteur de rendu mathématique"
+
+#: data/com.github.thenathattify.marker.gschema.xml:135
+#, fuzzy
+msgid "Select the js math rendering back-end."
+msgstr "Moteur de rendu mathématique"
+
+#: data/com.github.thenathattify.marker.gschema.xml:140
+#, fuzzy
+msgid "Enable highlight.js in Preview"
+msgstr "Thème de coloration du code"
+
+#: data/com.github.thenathattify.marker.gschema.xml:141
+#, fuzzy
+msgid "Use highlight.js in the live preview."
+msgstr "Thème de coloration du code"
+
+#: data/com.github.thenathattify.marker.gschema.xml:146
+#, fuzzy
+msgid "Enable mermaid.js in Preview"
+msgstr "Activer Mermaid"
+
+#: data/com.github.thenathattify.marker.gschema.xml:147
+msgid "Use mermaid.js to show diagram in the live preview."
+msgstr "Utilise mermaid.js pour afficher les diagrammes dans l'aperçu en direct."
+
+#: data/com.github.thenathattify.marker.gschema.xml:152
+#, fuzzy
+msgid "Highlight.js CSS theme."
+msgstr "Mettre en valeur la syntaxe avec le thème :"
+
+#: data/com.github.thenathattify.marker.gschema.xml:153
+msgid "The css theme to use for the synthax highlight."
+msgstr "Le thème CSS à utiliser pour la coloration syntaxique."
+
+#: data/com.github.thenathattify.marker.gschema.xml:157
+msgid "Enable Charter extension in Preview"
+msgstr "Activer l'extension Charter dans l'aperçu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:158
+msgid "Enable Charter extension in the live preview."
+msgstr "Active l'extension Charter dans l'aperçu en direct."
+
+#: data/com.github.thenathattify.marker.gschema.xml:162
+msgid "Zoom level of the preview"
+msgstr "Niveau de zoom de l'aperçu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:163
+msgid "Zoom level of the preview widget"
+msgstr "Niveau de zoom du widget d'aperçu"
+
+#: data/com.github.thenathattify.marker.gschema.xml:167
+msgid "Zoom level of the source editor"
+msgstr "Niveau de zoom de l'éditeur source"
+
+#: data/com.github.thenathattify.marker.gschema.xml:168
+msgid "Zoom level of the source view widget"
+msgstr "Niveau de zoom du widget de vue source"
+
+#: data/com.github.thenathattify.marker.gschema.xml:175
+#: src/resources/ui/marker-headerbar.ui:109
+msgid "View Mode"
+msgstr "Mode d’affichage"
+
+#: data/com.github.thenathattify.marker.gschema.xml:176
+msgid "Controls how to organize the editor and preview areas on the screen."
+msgstr "Contrôle l'organisation des zones éditeur et aperçu à l'écran."
+
+#: data/com.github.thenathattify.marker.gschema.xml:181
+#, fuzzy
+msgid "Enter dark-mode"
+msgstr "Activer le mode sombre"
+
+#: data/com.github.thenathattify.marker.gschema.xml:182
+msgid ""
+"When this is enabled, the dark variant of the current gtk theme will be used."
+msgstr ""
+"Quand ceci est activé, la variante sombre du thème GTK actuel sera utilisée."
+
+#: data/com.github.thenathattify.marker.gschema.xml:187
+#, fuzzy
+msgid "Window width"
+msgstr "Fenêtre"
+
+#: data/com.github.thenathattify.marker.gschema.xml:192
+#, fuzzy
+msgid "Window height"
+msgstr "Fenêtre"
+
+#: data/com.github.thenathattify.marker.gschema.xml:197
+msgid "Window position (x, y)"
+msgstr "Position de la fenêtre (x, y)"
+
+#: data/com.github.thenathattify.marker.gschema.xml:202
+msgid "Editor pane width (in Dual Pane mode)"
+msgstr "Largeur du panneau éditeur (en mode double panneau)"
+
+#: data/com.github.thenathattify.marker.gschema.xml:207
+msgid "Whether the sidebar is shown"
+msgstr "Indique si la barre latérale est affichée"
+
+#: src/resources/ui/marker-prefs-window.ui:4
 msgid "Preferences"
 msgstr "Préférences"
 
-#: src/resources/ui/marker-appmenu.ui:18
-#: src/resources/ui/marker-gear-popover.ui:199
-msgid "Keyboard Shortcuts"
-msgstr "Raccourcis clavier"
-
-#: src/resources/ui/marker-appmenu.ui:22
-#: src/resources/ui/marker-gear-popover.ui:207
-msgid "Help"
-msgstr "Aide"
-
-#: src/resources/ui/marker-appmenu.ui:26
-msgid "About"
-msgstr "À propos"
-
-#: src/resources/ui/marker-appmenu.ui:30
-msgid "Quit"
-msgstr "Quitter"
-
-#: src/resources/ui/marker-prefs-window.ui:31
-#: src/resources/ui/marker-gear-popover.ui:244
-msgid "Editor Only"
-msgstr "Éditeur seulement"
-
-#: src/resources/ui/marker-prefs-window.ui:34
-#: src/resources/ui/marker-gear-popover.ui:252
-msgid "Preview Only"
-msgstr "Aperçu seulement"
-
-#: src/resources/ui/marker-prefs-window.ui:37
-#: src/resources/ui/marker-gear-popover.ui:260
-msgid "Dual Pane"
-msgstr "Deux Panneaux"
-
-#: src/resources/ui/marker-prefs-window.ui:40
-#: src/resources/ui/marker-gear-popover.ui:268
-msgid "Dual Window"
-msgstr "Deux Fenêtres"
-
-#: src/resources/ui/marker-prefs-window.ui:71
-msgid "Show line numbers"
-msgstr "Montrer les numéros de ligne"
-
-#: src/resources/ui/marker-prefs-window.ui:86
-msgid "Wrap text"
-msgstr "Retour à la ligne"
-
-#: src/resources/ui/marker-prefs-window.ui:105
-msgid "Show right margin at column: "
-msgstr "Montrer une marge dextre à la colonne nº "
-
-#: src/resources/ui/marker-prefs-window.ui:145
-msgid "Check spelling for language: "
-msgstr "Vérification orthographique pour la langue : "
-
-#: src/resources/ui/marker-prefs-window.ui:180
-msgid "Show spaces"
-msgstr "Afficher les espaces"
-
-#: src/resources/ui/marker-prefs-window.ui:197
-msgid "<b>Highlighting</b>"
-msgstr "<b>Coloration</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:209
-msgid "Highlight current line"
-msgstr "Surligner la ligne actuelle"
-
-#: src/resources/ui/marker-prefs-window.ui:229
-msgid "Highlight syntax with theme:"
-msgstr "Mettre en valeur la syntaxe avec le thème :"
-
-#: src/resources/ui/marker-prefs-window.ui:266
-msgid "<b>Tab Stops</b>"
-msgstr "<b>Tabulations</b>"
-
-#: src/resources/ui/marker-prefs-window.ui:278
-msgid "Enable automatic indentation"
-msgstr "Activer l’indentation automatique"
-
-#: src/resources/ui/marker-prefs-window.ui:293
-msgid "Insert spaces instead of tabs"
-msgstr "Insérer des espaces au lieu des tabulations"
-
-#: src/resources/ui/marker-prefs-window.ui:315
-msgid "Tabulation width:"
-msgstr "Largeur des tabulations :"
-
-#: src/resources/ui/marker-prefs-window.ui:355
+#: src/resources/ui/marker-prefs-window.ui:9
 msgid "Editor"
 msgstr "Éditeur"
 
-#: src/resources/ui/marker-prefs-window.ui:377
-msgid "Use css theme: "
-msgstr "Utiliser un thème CSS : "
+#: src/resources/ui/marker-prefs-window.ui:13
+msgid "Appearance"
+msgstr "Apparence"
 
-#: src/resources/ui/marker-prefs-window.ui:417
-msgid "Highlight code blocks with theme:"
-msgstr "Coloration des blocs de code :"
+#: src/resources/ui/marker-prefs-window.ui:16
+msgid "Show line numbers"
+msgstr "Montrer les numéros de ligne"
 
-#: src/resources/ui/marker-prefs-window.ui:452
-msgid "Enable Mermaid"
-msgstr "Activer Mermaid"
+#: src/resources/ui/marker-prefs-window.ui:21
+msgid "Highlight current line"
+msgstr "Surligner la ligne actuelle"
 
-#: src/resources/ui/marker-prefs-window.ui:467
-msgid "Enable Charter"
-msgstr "Activer Charter"
+#: src/resources/ui/marker-prefs-window.ui:26
+msgid "Wrap text"
+msgstr "Retour à la ligne"
 
-#: src/resources/ui/marker-prefs-window.ui:484
-msgid "<b>Math</b>"
-msgstr "<b>Formules mathématiques</b>"
+#: src/resources/ui/marker-prefs-window.ui:31
+msgid "Show spaces"
+msgstr "Afficher les espaces"
 
-#: src/resources/ui/marker-prefs-window.ui:500
-msgid "Render Math"
-msgstr "Rendu des formules"
+#: src/resources/ui/marker-prefs-window.ui:36
+msgid "Show right margin"
+msgstr "Afficher la marge droite"
 
-#: src/resources/ui/marker-prefs-window.ui:545
+#: src/resources/ui/marker-prefs-window.ui:41
+msgid "Right margin column"
+msgstr "Colonne de la marge droite"
+
+#: src/resources/ui/marker-prefs-window.ui:54
+msgid "Syntax highlighting"
+msgstr "Coloration syntaxique"
+
+#: src/resources/ui/marker-prefs-window.ui:59
+msgid "Syntax theme"
+msgstr "Thème de syntaxe"
+
+#: src/resources/ui/marker-prefs-window.ui:64
+msgid "Font size"
+msgstr "Taille de police"
+
+#: src/resources/ui/marker-prefs-window.ui:65
+msgid "Base font size in points (combined with zoom)"
+msgstr "Taille de police de base en points (combinée avec le zoom)"
+
+#: src/resources/ui/marker-prefs-window.ui:80
+msgid "Indentation"
+msgstr "Indentation"
+
+#: src/resources/ui/marker-prefs-window.ui:83
+msgid "Automatic indentation"
+msgstr "Indentation automatique"
+
+#: src/resources/ui/marker-prefs-window.ui:88
+msgid "Insert spaces instead of tabs"
+msgstr "Insérer des espaces au lieu des tabulations"
+
+#: src/resources/ui/marker-prefs-window.ui:93
+msgid "Tab width"
+msgstr "Largeur des tabulations"
+
+#: src/resources/ui/marker-prefs-window.ui:106
+msgid "Trim trailing whitespace on save"
+msgstr "Supprimer les espaces en fin de ligne à l'enregistrement"
+
+#: src/resources/ui/marker-prefs-window.ui:113
+msgid "Spelling"
+msgstr "Orthographe"
+
+#: src/resources/ui/marker-prefs-window.ui:116
+msgid "Check spelling"
+msgstr "Vérifier l'orthographe"
+
+#: src/resources/ui/marker-prefs-window.ui:121
+msgid "Language"
+msgstr "Langue"
+
+#: src/resources/ui/marker-prefs-window.ui:130 src/marker-editor.c:652
 msgid "Preview"
 msgstr "Aperçu"
 
-#: src/resources/ui/marker-prefs-window.ui:570
-msgid "Default view mode: "
-msgstr "Mode d’affichage par défaut : "
+#: src/resources/ui/marker-prefs-window.ui:134
+msgid "Styling"
+msgstr "Mise en forme"
 
-#: src/resources/ui/marker-prefs-window.ui:603
-msgid "Enable dark mode"
-msgstr "Activer le mode sombre"
+#: src/resources/ui/marker-prefs-window.ui:137
+msgid "Custom CSS stylesheet"
+msgstr "Feuille de style CSS personnalisée"
 
-#: src/resources/ui/marker-prefs-window.ui:625
+#: src/resources/ui/marker-prefs-window.ui:142
+msgid "CSS stylesheet"
+msgstr "Feuille de style CSS"
+
+#: src/resources/ui/marker-prefs-window.ui:147
+msgid "Code block syntax highlighting"
+msgstr "Coloration syntaxique des blocs de code"
+
+#: src/resources/ui/marker-prefs-window.ui:152
+msgid "Code highlighting theme"
+msgstr "Thème de coloration du code"
+
+#: src/resources/ui/marker-prefs-window.ui:159
+msgid "Extensions"
+msgstr "Extensions"
+
+#: src/resources/ui/marker-prefs-window.ui:162
+msgid "Render math expressions"
+msgstr "Rendu des expressions mathématiques"
+
+#: src/resources/ui/marker-prefs-window.ui:167
+msgid "Math rendering backend"
+msgstr "Moteur de rendu mathématique"
+
+#: src/resources/ui/marker-prefs-window.ui:172
+msgid "Mermaid diagrams"
+msgstr "Diagrammes Mermaid"
+
+#: src/resources/ui/marker-prefs-window.ui:177
+msgid "Charter charts"
+msgstr "Graphiques Charter"
+
+#: src/resources/ui/marker-prefs-window.ui:186
 msgid "Window"
 msgstr "Fenêtre"
 
-#: src/resources/ui/marker-shortcuts-window.ui:14
+#: src/resources/ui/marker-prefs-window.ui:190
+msgid "General"
+msgstr "Général"
+
+#: src/resources/ui/marker-prefs-window.ui:193
+msgid "Default view mode"
+msgstr "Mode d'affichage par défaut"
+
+#: src/resources/ui/marker-prefs-window.ui:198
+msgid "Dark mode"
+msgstr "Mode sombre"
+
+#: src/resources/ui/marker-shortcuts-window.ui:13
 msgctxt "shortcut window"
 msgid "Documents"
 msgstr "Documents"
 
-#: src/resources/ui/marker-shortcuts-window.ui:19
+#: src/resources/ui/marker-shortcuts-window.ui:17
 msgctxt "shortcut window"
 msgid "Create a new document"
 msgstr "Créer un nouveau document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:26
+#: src/resources/ui/marker-shortcuts-window.ui:23
 msgctxt "shortcut window"
 msgid "Open a document"
 msgstr "Ouvrir un document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:33
+#: src/resources/ui/marker-shortcuts-window.ui:29
+#: src/resources/ui/marker-shortcuts-window.ui:35
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr "Recharger le document depuis le disque"
+
+#: src/resources/ui/marker-shortcuts-window.ui:41
 msgctxt "shortcut window"
 msgid "Open a document in a new window"
 msgstr "Ouvrir un document dans une nouvelle fenêtre"
 
-#: src/resources/ui/marker-shortcuts-window.ui:40
+#: src/resources/ui/marker-shortcuts-window.ui:47
 msgctxt "shortcut window"
 msgid "Save the document"
 msgstr "Enregistrer le document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:47
+#: src/resources/ui/marker-shortcuts-window.ui:53
 msgctxt "shortcut window"
 msgid "Save the document with a new filename"
 msgstr "Enregistrer le document sous un nouveau nom"
 
-#: src/resources/ui/marker-shortcuts-window.ui:54
+#: src/resources/ui/marker-shortcuts-window.ui:59
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "Renommer le document"
+
+#: src/resources/ui/marker-shortcuts-window.ui:65
 msgctxt "shortcut window"
 msgid "Close the document"
 msgstr "Fermer le document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:62
+#: src/resources/ui/marker-shortcuts-window.ui:72
 msgctxt "shortcut window"
 msgid "Editing"
 msgstr "Édition"
 
-#: src/resources/ui/marker-shortcuts-window.ui:67
+#: src/resources/ui/marker-shortcuts-window.ui:76
 msgctxt "shortcut window"
 msgid "Make selection bold"
 msgstr "Appliquer du gras à la sélection"
 
-#: src/resources/ui/marker-shortcuts-window.ui:74
+#: src/resources/ui/marker-shortcuts-window.ui:82
 msgctxt "shortcut window"
 msgid "Make selection italic"
 msgstr "Appliquer de l’italique à la sélection"
 
-#: src/resources/ui/marker-shortcuts-window.ui:81
+#: src/resources/ui/marker-shortcuts-window.ui:88
 msgctxt "shortcut window"
 msgid "Make selection monospace"
 msgstr "Appliquer une chasse fixe à la sélection"
 
-#: src/resources/ui/marker-shortcuts-window.ui:88
+#: src/resources/ui/marker-shortcuts-window.ui:94
 msgctxt "shortcut window"
 msgid "Insert link"
 msgstr "Insérer un lien"
 
-#: src/resources/ui/marker-shortcuts-window.ui:102
+#: src/resources/ui/marker-shortcuts-window.ui:100
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "Dessiner une esquisse"
+
+#: src/resources/ui/marker-shortcuts-window.ui:106
 msgctxt "shortcut window"
 msgid "Search in the document"
 msgstr "Rechercher dans le document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:110
+#: src/resources/ui/marker-shortcuts-window.ui:112
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr "Rechercher et remplacer"
+
+#: src/resources/ui/marker-shortcuts-window.ui:119
 msgctxt "shortcut window"
 msgid "Tools"
 msgstr "Outils"
 
-#: src/resources/ui/marker-shortcuts-window.ui:115
+#: src/resources/ui/marker-shortcuts-window.ui:123
 msgctxt "shortcut window"
 msgid "Print the document"
 msgstr "Imprimer le document"
 
-#: src/resources/ui/marker-shortcuts-window.ui:123
+#: src/resources/ui/marker-shortcuts-window.ui:130
 msgctxt "shortcut window"
 msgid "Window"
 msgstr "Fenêtre"
 
-#: src/resources/ui/marker-shortcuts-window.ui:128
+#: src/resources/ui/marker-shortcuts-window.ui:134
 msgctxt "shortcut window"
 msgid "Open a new window"
 msgstr "Ouvrir une nouvelle fenêtre"
 
-#: src/resources/ui/marker-shortcuts-window.ui:135
+#: src/resources/ui/marker-shortcuts-window.ui:140
 msgctxt "shortcut window"
 msgid "Close all windows"
 msgstr "Fermer toutes les fenêtres"
 
-#: src/resources/ui/marker-shortcuts-window.ui:142
+#: src/resources/ui/marker-shortcuts-window.ui:146
 msgctxt "shortcut window"
 msgid "Toggle fullscreen mode"
 msgstr "(Dés)activer le mode plein écran"
 
-#: src/resources/ui/marker-shortcuts-window.ui:149
+#: src/resources/ui/marker-shortcuts-window.ui:152
 msgctxt "shortcut window"
 msgid "Switch to editor-only mode"
 msgstr "Passer au mode “éditeur seulement”"
 
-#: src/resources/ui/marker-shortcuts-window.ui:156
+#: src/resources/ui/marker-shortcuts-window.ui:158
 msgctxt "shortcut window"
 msgid "Switch to preview-only mode"
 msgstr "Passer au mode “aperçu seulement”"
 
-#: src/resources/ui/marker-shortcuts-window.ui:163
+#: src/resources/ui/marker-shortcuts-window.ui:164
 msgctxt "shortcut window"
 msgid "Switch to dual-pane mode"
 msgstr "Passer au mode “deux panneaux”"
@@ -275,460 +658,389 @@ msgctxt "shortcut window"
 msgid "Switch to dual-window mode"
 msgstr "Passer au mode “deux fenêtres”"
 
-#: src/resources/ui/marker-shortcuts-window.ui:177
+#: src/resources/ui/marker-shortcuts-window.ui:176
 msgctxt "shortcut window"
 msgid "Quit the application"
 msgstr "Quitter l’application"
 
-#: src/resources/ui/marker-sketcher-window.ui:112
-msgid "Sketcher"
-msgstr "Esquisse"
+#: src/resources/ui/marker-sketcher-window.ui:21
+msgid "Add Text"
+msgstr "Ajouter du texte"
 
-#: src/resources/ui/marker-sketcher-window.ui:123
+#: src/resources/ui/marker-sketcher-window.ui:27
+msgid "Close"
+msgstr "Fermer"
+
+#: src/resources/ui/marker-sketcher-window.ui:44
 msgid "Pen Tool"
 msgstr "Crayon"
 
-#: src/resources/ui/marker-sketcher-window.ui:140
+#: src/resources/ui/marker-sketcher-window.ui:51
 msgid "Eraser Tool"
 msgstr "Gomme"
 
-#: src/resources/ui/marker-sketcher-window.ui:157
+#: src/resources/ui/marker-sketcher-window.ui:58
 msgid "Text Insertion Tool"
 msgstr "Insertion de texte"
 
-#: src/resources/ui/marker-sketcher-window.ui:179
+#: src/resources/ui/marker-sketcher-window.ui:67
 msgid "Color Chooser"
 msgstr "Choisir une couleur"
 
-#: src/resources/ui/marker-sketcher-window.ui:271
-msgid "Insert the sketch"
-msgstr "Insérer l’esquisse"
+#: src/resources/ui/marker-sketcher-window.ui:81
+msgid "Small"
+msgstr "Petit"
 
-#: src/resources/ui/marker-sketcher-window.ui:286
-msgid "Cancel the sketch"
-msgstr "Annuler l’esquisse"
+#: src/resources/ui/marker-sketcher-window.ui:87
+msgid "Medium"
+msgstr "Moyen"
+
+#: src/resources/ui/marker-sketcher-window.ui:95
+msgid "Large"
+msgstr "Grand"
+
+#: src/resources/ui/marker-sketcher-window.ui:111
+msgid "Insert Sketch"
+msgstr "Insérer l'esquisse"
+
+#: src/resources/ui/marker-sketcher-window.ui:117
+msgid "Cancel"
+msgstr "Annuler"
+
+# ─── Nouvelles traductions (2026) ───
+#: src/resources/ui/marker-gear-popover.ui:8
+msgid "_New Window"
+msgstr "_Nouvelle fenêtre"
+
+#: src/resources/ui/marker-gear-popover.ui:14
+msgid "_Rename Document…"
+msgstr "_Renommer le document…"
+
+#: src/resources/ui/marker-gear-popover.ui:18
+msgid "_Reload from Disk"
+msgstr "_Recharger depuis le disque"
 
 #: src/resources/ui/marker-gear-popover.ui:22
-msgid "Zoom Out"
-msgstr "Dézoomer"
+msgid "_Print…"
+msgstr "_Imprimer…"
 
-#: src/resources/ui/marker-gear-popover.ui:41
-msgid "Zoom Reset"
-msgstr "Réinitialiser le zoom"
+#: src/resources/ui/marker-gear-popover.ui:28
+msgid "_Preferences"
+msgstr "_Préférences"
 
-#: src/resources/ui/marker-gear-popover.ui:54
-msgid "Zoom In"
-msgstr "Zoomer"
+#: src/resources/ui/marker-gear-popover.ui:32
+msgid "_Keyboard Shortcuts"
+msgstr "_Raccourcis clavier"
 
-#: src/resources/ui/marker-gear-popover.ui:112
-msgid "Fullscreen"
-msgstr "Plein écran"
+#: src/resources/ui/marker-gear-popover.ui:36
+msgid "_About Marker"
+msgstr "_À propos de Marker"
 
-#: src/resources/ui/marker-gear-popover.ui:120
-msgid "Sidebar"
-msgstr "Barre latérale"
+#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#, fuzzy
+msgid "Documents"
+msgstr "Documents"
 
-#: src/resources/ui/marker-gear-popover.ui:136
-msgid "Save As…"
-msgstr "Enregistrer sous…"
+#: src/resources/ui/marker-window-main-view.ui:50
+msgid "Outline"
+msgstr "Plan"
 
-#: src/resources/ui/marker-gear-popover.ui:144
-msgid "Export…"
-msgstr "Exporter…"
-
-#: src/resources/ui/marker-gear-popover.ui:152
-msgid "Print…"
-msgstr "Imprimer…"
-
-#: src/resources/ui/marker-gear-popover.ui:168
-#: src/resources/ui/marker-gear-popover.ui:234
-msgid "View Mode"
-msgstr "Mode d’affichage"
-
-#: src/resources/ui/marker-gear-popover.ui:215
-msgid "About Marker"
-msgstr "À propos de Marker"
-
-#: src/resources/ui/marker-headerbar.ui:20
-msgid "Open…"
-msgstr "Ouvrir…"
-
-#: src/resources/ui/marker-headerbar.ui:30
+#: src/resources/ui/marker-headerbar.ui:9
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/marker.c:184
+#: src/resources/ui/marker-headerbar.ui:13
+msgid "Save As…"
+msgstr "Enregistrer sous…"
+
+#: src/resources/ui/marker-headerbar.ui:19
+msgid "Export…"
+msgstr "Exporter…"
+
+#: src/resources/ui/marker-headerbar.ui:28
+msgid "Editor Only"
+msgstr "Éditeur seulement"
+
+#: src/resources/ui/marker-headerbar.ui:32
+msgid "Preview Only"
+msgstr "Aperçu seulement"
+
+#: src/resources/ui/marker-headerbar.ui:36
+msgid "Dual Pane"
+msgstr "Deux Panneaux"
+
+#: src/resources/ui/marker-headerbar.ui:40
+msgid "Dual Window"
+msgstr "Deux Fenêtres"
+
+#: src/resources/ui/marker-headerbar.ui:57
+msgid "Toggle Sidebar"
+msgstr "Afficher/masquer la barre latérale"
+
+#: src/resources/ui/marker-headerbar.ui:63
+msgid "Open…"
+msgstr "Ouvrir…"
+
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
+#: src/marker-window.c:1848
+msgid "Open Document"
+msgstr "Ouvrir un document"
+
+#: src/resources/ui/marker-headerbar.ui:76
+msgid "Save Document"
+msgstr "Enregistrer le document"
+
+#: src/resources/ui/marker-headerbar.ui:83
+msgid "Save Options"
+msgstr "Options d'enregistrement"
+
+#: src/resources/ui/marker-headerbar.ui:92
+msgid "New Document"
+msgstr "Nouveau document"
+
+#: src/resources/ui/marker-headerbar.ui:101
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#, fuzzy
+msgid "Toggle Fullscreen"
+msgstr "(Dés)activer le mode plein écran"
+
+#: src/resources/ui/marker-headerbar.ui:132
+msgid "Zoom Out"
+msgstr "Dézoomer"
+
+#: src/resources/ui/marker-headerbar.ui:142
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr "Niveau de zoom (%) — Saisissez une valeur et appuyez sur Entrée."
+
+#: src/resources/ui/marker-headerbar.ui:149
+msgid "Zoom In"
+msgstr "Zoomer"
+
+#: src/resources/ui/marker-headerbar.ui:155
+msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
+msgstr "Ajuster à la largeur (clic) — Auto au redimensionnement (maintenir)"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:15
+msgid "Bold"
+msgstr "Gras"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:21
+msgid "Italic"
+msgstr "Italique"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:27
+msgid "Underline"
+msgstr "Souligné"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:33
+msgid "Strikethrough"
+msgstr "Barré"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:47
+msgid "Insert Link"
+msgstr "Insérer un lien"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:53
+msgid "Insert Image"
+msgstr "Insérer une image"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui:59
+msgid "Sketcher"
+msgstr "Esquisse"
+
+#: src/marker.c:187
 msgid "A markdown editor for GNOME"
 msgstr "Un éditeur de markdown pour GNOME"
 
-#: src/marker.c:186
-msgid "Report bugs and ideas on github"
-msgstr "Rapporter des bugs et des idées sur GitHub"
-
-#: src/marker.c:191
+#: src/marker.c:194
 msgid "translator-credits"
 msgstr ""
 "Romain F. T.\n"
 "Ildegarde59"
 
-#: src/marker-editor.c:248
-msgid "Untitled.md"
-msgstr "Sans titre.md"
-
-# ─── Nouvelles traductions (2026) ───
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_New Window"
-msgstr "_Nouvelle fenêtre"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Fullscreen"
-msgstr "_Plein écran"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Sidebar"
-msgstr "Barre _latérale"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Save As…"
-msgstr "_Enregistrer sous…"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Rename Document…"
-msgstr "_Renommer le document…"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Reload from Disk"
-msgstr "_Recharger depuis le disque"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Export…"
-msgstr "_Exporter…"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Print…"
-msgstr "_Imprimer…"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Preferences"
-msgstr "_Préférences"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Keyboard Shortcuts"
-msgstr "_Raccourcis clavier"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_Help"
-msgstr "_Aide"
-
-#: src/resources/ui/marker-gear-popover.ui
-msgid "_About Marker"
-msgstr "_À propos de Marker"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Open Document"
-msgstr "Ouvrir un document"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Save Document"
-msgstr "Enregistrer le document"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "New Document"
-msgstr "Nouveau document"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Main Menu"
-msgstr "Menu principal"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Leave Fullscreen"
-msgstr "Quitter le plein écran"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
-msgstr "Ajuster à la largeur (clic) — Auto au redimensionnement (maintenir)"
-
-#: src/resources/ui/marker-headerbar.ui
-msgid "Zoom level (%). Type a value and press Enter."
-msgstr "Niveau de zoom (%) — Saisissez une valeur et appuyez sur Entrée."
-
-#: src/resources/ui/marker-window-main-view.ui
-msgid "Outline"
-msgstr "Plan"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Appearance"
-msgstr "Apparence"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Automatic indentation"
-msgstr "Indentation automatique"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Base font size in points (combined with zoom)"
-msgstr "Taille de police de base en points (combinée avec le zoom)"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Charter charts"
-msgstr "Graphiques Charter"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Check spelling"
-msgstr "Vérifier l'orthographe"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Code block syntax highlighting"
-msgstr "Coloration syntaxique des blocs de code"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Code highlighting theme"
-msgstr "Thème de coloration du code"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "CSS stylesheet"
-msgstr "Feuille de style CSS"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Custom CSS stylesheet"
-msgstr "Feuille de style CSS personnalisée"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Dark mode"
-msgstr "Mode sombre"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Default view mode"
-msgstr "Mode d'affichage par défaut"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Font size"
-msgstr "Taille de police"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "General"
-msgstr "Général"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Indentation"
-msgstr "Indentation"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Language"
-msgstr "Langue"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Math rendering backend"
-msgstr "Moteur de rendu mathématique"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Mermaid diagrams"
-msgstr "Diagrammes Mermaid"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Render math expressions"
-msgstr "Rendu des expressions mathématiques"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Right margin column"
-msgstr "Colonne de la marge droite"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Show right margin"
-msgstr "Afficher la marge droite"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Spelling"
-msgstr "Orthographe"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Styling"
-msgstr "Mise en forme"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Syntax highlighting"
-msgstr "Coloration syntaxique"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Syntax theme"
-msgstr "Thème de syntaxe"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Tab width"
-msgstr "Largeur des tabulations"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Trim trailing whitespace on save"
-msgstr "Supprimer les espaces en fin de ligne à l'enregistrement"
-
-#: src/resources/ui/marker-prefs-window.ui
-msgid "Extensions"
-msgstr "Extensions"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Add Text"
-msgstr "Ajouter du texte"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Close"
-msgstr "Fermer"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Small"
-msgstr "Petit"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Medium"
-msgstr "Moyen"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Large"
-msgstr "Grand"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Insert Sketch"
-msgstr "Insérer l'esquisse"
-
-#: src/resources/ui/marker-sketcher-window.ui
-msgid "Cancel"
-msgstr "Annuler"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Bold"
-msgstr "Gras"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Italic"
-msgstr "Italique"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Underline"
-msgstr "Souligné"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Strikethrough"
-msgstr "Barré"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Insert Link"
-msgstr "Insérer un lien"
-
-#: src/resources/ui/marker-wysiwyg-toolbar.ui
-msgid "Insert Image"
-msgstr "Insérer une image"
-
-#: src/resources/ui/marker-shortcuts-window.ui
-msgctxt "shortcut window"
-msgid "Draw a sketch"
-msgstr "Dessiner une esquisse"
-
-#: src/resources/ui/marker-shortcuts-window.ui
-msgctxt "shortcut window"
-msgid "Find and replace"
-msgstr "Rechercher et remplacer"
-
-#: src/resources/ui/marker-shortcuts-window.ui
-msgctxt "shortcut window"
-msgid "Reload document from disk"
-msgstr "Recharger le document depuis le disque"
-
-#: src/resources/ui/marker-shortcuts-window.ui
-msgctxt "shortcut window"
-msgid "Rename document"
-msgstr "Renommer le document"
-
-#: src/marker-window.c
-msgid "Discard changes to the document?"
-msgstr "Ignorer les modifications du document ?"
-
-#: src/marker-window.c
-msgid "Discard changes to the document '%s'?"
-msgstr "Ignorer les modifications du document « %s » ?"
-
-#: src/marker-window.c
-msgid "The document has unsaved changes that will be lost if it is closed now."
-msgstr "Le document a des modifications non enregistrées qui seront perdues s'il est fermé maintenant."
-
-#: src/marker-window.c
-msgid "_Cancel"
-msgstr "_Annuler"
-
-#: src/marker-window.c
-msgid "_Discard"
-msgstr "_Ignorer"
-
-#: src/marker-window.c
-msgid "Cannot Rename"
-msgstr "Renommage impossible"
-
-#: src/marker-window.c
-msgid "_OK"
-msgstr "_OK"
-
-#: src/marker-window.c
-msgid "Rename Document"
-msgstr "Renommer le document"
-
-#: src/marker-window.c
-msgid "_Rename"
-msgstr "_Renommer"
-
-#: src/marker-window.c
-msgid "File name cannot be empty."
-msgstr "Le nom du fichier ne peut pas être vide."
-
-#: src/marker-window.c
-msgid "File name cannot contain '/'."
-msgstr "Le nom du fichier ne peut pas contenir « / »."
-
-#: src/marker-window.c
-msgid "A file with that name already exists."
-msgstr "Un fichier avec ce nom existe déjà."
-
-#: src/marker-window.c
-msgid "Failed to rename file."
-msgstr "Échec du renommage du fichier."
-
-#: src/marker-window.c
-msgid "The document must be saved before it can be renamed."
-msgstr "Le document doit être enregistré avant de pouvoir être renommé."
-
-#: src/marker-window.c
-msgid "Save Document As"
-msgstr "Enregistrer le document sous"
-
-#: src/marker-window.c
-msgid "No headings found"
-msgstr "Aucun titre trouvé"
-
-#: src/marker-editor.c
+#: src/marker-editor.c:395
 msgid "Toggle Replace"
 msgstr "(Dés)activer le remplacement"
 
-#: src/marker-editor.c
+#: src/marker-editor.c:401
 msgid "Previous Match"
 msgstr "Correspondance précédente"
 
-#: src/marker-editor.c
+#: src/marker-editor.c:403
 msgid "Next Match"
 msgstr "Correspondance suivante"
 
-#: src/marker-editor.c
+#: src/marker-editor.c:413
 msgid "Replace with..."
 msgstr "Remplacer par…"
 
-#: src/marker-editor.c
+#: src/marker-editor.c:416
 msgid "Replace"
 msgstr "Remplacer"
 
-#: src/marker-editor.c
+#: src/marker-editor.c:417
 msgid "Replace All"
 msgstr "Tout remplacer"
 
-#: src/marker-exporter.c
+#: src/marker-editor.c:838
+msgid "Untitled.md"
+msgstr "Sans titre.md"
+
+#: src/marker-exporter.c:311
 msgid "Export"
 msgstr "Exporter"
 
-#: src/resources/ui/marker-headerbar.ui
-msgid "Toggle Sidebar"
-msgstr "Afficher/masquer la barre latérale"
+#: src/marker-window.c:133
+#, c-format
+msgid "Discard changes to the document '%s'?"
+msgstr "Ignorer les modifications du document « %s » ?"
+
+#: src/marker-window.c:135 src/marker-window.c:140
+msgid "The document has unsaved changes that will be lost if it is closed now."
+msgstr ""
+"Le document a des modifications non enregistrées qui seront perdues s'il est "
+"fermé maintenant."
+
+#: src/marker-window.c:139
+msgid "Discard changes to the document?"
+msgstr "Ignorer les modifications du document ?"
+
+#: src/marker-window.c:144 src/marker-window.c:1080
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#: src/marker-window.c:145
+msgid "_Discard"
+msgstr "_Ignorer"
+
+#: src/marker-window.c:181
+msgid "Leave Fullscreen"
+msgstr "Quitter le plein écran"
+
+#: src/marker-window.c:940
+msgid "Cannot Rename"
+msgstr "Renommage impossible"
+
+#: src/marker-window.c:941
+msgid "_OK"
+msgstr "_OK"
+
+#: src/marker-window.c:958
+msgid "File name cannot be empty."
+msgstr "Le nom du fichier ne peut pas être vide."
+
+#: src/marker-window.c:964
+msgid "File name cannot contain '/'."
+msgstr "Le nom du fichier ne peut pas contenir « / »."
+
+#: src/marker-window.c:981
+msgid "A file with that name already exists."
+msgstr "Un fichier avec ce nom existe déjà."
+
+#: src/marker-window.c:988
+msgid "Failed to rename file."
+msgstr "Échec du renommage du fichier."
+
+#: src/marker-window.c:1054
+msgid "The document must be saved before it can be renamed."
+msgstr "Le document doit être enregistré avant de pouvoir être renommé."
+
+#: src/marker-window.c:1077
+msgid "Rename Document"
+msgstr "Renommer le document"
+
+#: src/marker-window.c:1081
+msgid "_Rename"
+msgstr "_Renommer"
+
+#: src/marker-window.c:1528
+msgid "No headings found"
+msgstr "Aucun titre trouvé"
+
+#: src/marker-window.c:1896
+msgid "Save Document As"
+msgstr "Enregistrer le document sous"
+
+#~ msgid "New Window"
+#~ msgstr "Nouvelle fenêtre"
+
+#~ msgid "Keyboard Shortcuts"
+#~ msgstr "Raccourcis clavier"
+
+#~ msgid "Help"
+#~ msgstr "Aide"
+
+#~ msgid "About"
+#~ msgstr "À propos"
+
+#~ msgid "Quit"
+#~ msgstr "Quitter"
+
+#~ msgid "Show right margin at column: "
+#~ msgstr "Montrer une marge dextre à la colonne nº "
+
+#~ msgid "Check spelling for language: "
+#~ msgstr "Vérification orthographique pour la langue : "
+
+#~ msgid "<b>Highlighting</b>"
+#~ msgstr "<b>Coloration</b>"
+
+#~ msgid "<b>Tab Stops</b>"
+#~ msgstr "<b>Tabulations</b>"
+
+#~ msgid "Tabulation width:"
+#~ msgstr "Largeur des tabulations :"
+
+#~ msgid "Use css theme: "
+#~ msgstr "Utiliser un thème CSS : "
+
+#~ msgid "Highlight code blocks with theme:"
+#~ msgstr "Coloration des blocs de code :"
+
+#~ msgid "Enable Charter"
+#~ msgstr "Activer Charter"
+
+#~ msgid "<b>Math</b>"
+#~ msgstr "<b>Formules mathématiques</b>"
+
+#~ msgid "Render Math"
+#~ msgstr "Rendu des formules"
+
+#~ msgid "Default view mode: "
+#~ msgstr "Mode d’affichage par défaut : "
+
+#~ msgid "Cancel the sketch"
+#~ msgstr "Annuler l’esquisse"
+
+#~ msgid "Zoom Reset"
+#~ msgstr "Réinitialiser le zoom"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Plein écran"
+
+#~ msgid "Sidebar"
+#~ msgstr "Barre latérale"
+
+#~ msgid "Print…"
+#~ msgstr "Imprimer…"
+
+#~ msgid "Report bugs and ideas on github"
+#~ msgstr "Rapporter des bugs et des idées sur GitHub"
+
+#~ msgid "_Fullscreen"
+#~ msgstr "_Plein écran"
+
+#~ msgid "_Sidebar"
+#~ msgstr "Barre _latérale"
+
+#~ msgid "_Save As…"
+#~ msgstr "_Enregistrer sous…"
+
+#~ msgid "_Export…"
+#~ msgstr "_Exporter…"
+
+#~ msgid "_Help"
+#~ msgstr "_Aide"
