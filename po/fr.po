@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: marker 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-15 17:13+0100\n"
-"PO-Revision-Date: 2020-04-04 16:19+0200\n"
+"PO-Revision-Date: 2026-10-25 07:00+0200\n"
 "Last-Translator: Romain F. T.>\n"
 "Language-Team: français\n"
 "Language: fr\n"
@@ -374,3 +374,357 @@ msgstr ""
 #: src/marker-editor.c:248
 msgid "Untitled.md"
 msgstr "Sans titre.md"
+
+# ─── Nouvelles traductions (2026) ───
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_New Window"
+msgstr "_Nouvelle fenêtre"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Fullscreen"
+msgstr "_Plein écran"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Sidebar"
+msgstr "Barre _latérale"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Save As…"
+msgstr "_Enregistrer sous…"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Rename Document…"
+msgstr "_Renommer le document…"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Reload from Disk"
+msgstr "_Recharger depuis le disque"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Export…"
+msgstr "_Exporter…"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Print…"
+msgstr "_Imprimer…"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Preferences"
+msgstr "_Préférences"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Keyboard Shortcuts"
+msgstr "_Raccourcis clavier"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_Help"
+msgstr "_Aide"
+
+#: src/resources/ui/marker-gear-popover.ui
+msgid "_About Marker"
+msgstr "_À propos de Marker"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Open Document"
+msgstr "Ouvrir un document"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Save Document"
+msgstr "Enregistrer le document"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "New Document"
+msgstr "Nouveau document"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Leave Fullscreen"
+msgstr "Quitter le plein écran"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Fit to Page Width"
+msgstr "Ajuster à la largeur"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Zoom level (%). Type a value and press Enter."
+msgstr "Niveau de zoom (%) — Saisissez une valeur et appuyez sur Entrée."
+
+#: src/resources/ui/marker-window-main-view.ui
+msgid "Outline"
+msgstr "Plan"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Appearance"
+msgstr "Apparence"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Automatic indentation"
+msgstr "Indentation automatique"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Base font size in points (combined with zoom)"
+msgstr "Taille de police de base en points (combinée avec le zoom)"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Charter charts"
+msgstr "Graphiques Charter"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Check spelling"
+msgstr "Vérifier l'orthographe"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Code block syntax highlighting"
+msgstr "Coloration syntaxique des blocs de code"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Code highlighting theme"
+msgstr "Thème de coloration du code"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "CSS stylesheet"
+msgstr "Feuille de style CSS"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Custom CSS stylesheet"
+msgstr "Feuille de style CSS personnalisée"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Dark mode"
+msgstr "Mode sombre"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Default view mode"
+msgstr "Mode d'affichage par défaut"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Font size"
+msgstr "Taille de police"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "General"
+msgstr "Général"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Indentation"
+msgstr "Indentation"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Language"
+msgstr "Langue"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Math rendering backend"
+msgstr "Moteur de rendu mathématique"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Mermaid diagrams"
+msgstr "Diagrammes Mermaid"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Render math expressions"
+msgstr "Rendu des expressions mathématiques"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Right margin column"
+msgstr "Colonne de la marge droite"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Show right margin"
+msgstr "Afficher la marge droite"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Spelling"
+msgstr "Orthographe"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Styling"
+msgstr "Mise en forme"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Syntax highlighting"
+msgstr "Coloration syntaxique"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Syntax theme"
+msgstr "Thème de syntaxe"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Tab width"
+msgstr "Largeur des tabulations"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Trim trailing whitespace on save"
+msgstr "Supprimer les espaces en fin de ligne à l'enregistrement"
+
+#: src/resources/ui/marker-prefs-window.ui
+msgid "Extensions"
+msgstr "Extensions"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Add Text"
+msgstr "Ajouter du texte"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Close"
+msgstr "Fermer"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Small"
+msgstr "Petit"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Medium"
+msgstr "Moyen"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Large"
+msgstr "Grand"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Insert Sketch"
+msgstr "Insérer l'esquisse"
+
+#: src/resources/ui/marker-sketcher-window.ui
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Bold"
+msgstr "Gras"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Italic"
+msgstr "Italique"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Underline"
+msgstr "Souligné"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Strikethrough"
+msgstr "Barré"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Insert Link"
+msgstr "Insérer un lien"
+
+#: src/resources/ui/marker-wysiwyg-toolbar.ui
+msgid "Insert Image"
+msgstr "Insérer une image"
+
+#: src/resources/ui/marker-shortcuts-window.ui
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "Dessiner une esquisse"
+
+#: src/resources/ui/marker-shortcuts-window.ui
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr "Rechercher et remplacer"
+
+#: src/resources/ui/marker-shortcuts-window.ui
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr "Recharger le document depuis le disque"
+
+#: src/resources/ui/marker-shortcuts-window.ui
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "Renommer le document"
+
+#: src/marker-window.c
+msgid "Discard changes to the document?"
+msgstr "Ignorer les modifications du document ?"
+
+#: src/marker-window.c
+msgid "Discard changes to the document '%s'?"
+msgstr "Ignorer les modifications du document « %s » ?"
+
+#: src/marker-window.c
+msgid "The document has unsaved changes that will be lost if it is closed now."
+msgstr "Le document a des modifications non enregistrées qui seront perdues s'il est fermé maintenant."
+
+#: src/marker-window.c
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#: src/marker-window.c
+msgid "_Discard"
+msgstr "_Ignorer"
+
+#: src/marker-window.c
+msgid "Cannot Rename"
+msgstr "Renommage impossible"
+
+#: src/marker-window.c
+msgid "_OK"
+msgstr "_OK"
+
+#: src/marker-window.c
+msgid "Rename Document"
+msgstr "Renommer le document"
+
+#: src/marker-window.c
+msgid "_Rename"
+msgstr "_Renommer"
+
+#: src/marker-window.c
+msgid "File name cannot be empty."
+msgstr "Le nom du fichier ne peut pas être vide."
+
+#: src/marker-window.c
+msgid "File name cannot contain '/'."
+msgstr "Le nom du fichier ne peut pas contenir « / »."
+
+#: src/marker-window.c
+msgid "A file with that name already exists."
+msgstr "Un fichier avec ce nom existe déjà."
+
+#: src/marker-window.c
+msgid "Failed to rename file."
+msgstr "Échec du renommage du fichier."
+
+#: src/marker-window.c
+msgid "The document must be saved before it can be renamed."
+msgstr "Le document doit être enregistré avant de pouvoir être renommé."
+
+#: src/marker-window.c
+msgid "Save Document As"
+msgstr "Enregistrer le document sous"
+
+#: src/marker-window.c
+msgid "No headings found"
+msgstr "Aucun titre trouvé"
+
+#: src/marker-editor.c
+msgid "Toggle Replace"
+msgstr "(Dés)activer le remplacement"
+
+#: src/marker-editor.c
+msgid "Previous Match"
+msgstr "Correspondance précédente"
+
+#: src/marker-editor.c
+msgid "Next Match"
+msgstr "Correspondance suivante"
+
+#: src/marker-editor.c
+msgid "Replace with..."
+msgstr "Remplacer par…"
+
+#: src/marker-editor.c
+msgid "Replace"
+msgstr "Remplacer"
+
+#: src/marker-editor.c
+msgid "Replace All"
+msgstr "Tout remplacer"
+
+#: src/marker-exporter.c
+msgid "Export"
+msgstr "Exporter"

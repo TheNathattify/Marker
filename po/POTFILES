@@ -1,12 +1,13 @@
-data/com.github.adrighem.marker.desktop
-data/com.github.adrighem.marker.appdata.xml
-data/com.github.adrighem.marker.gschema.xml
+data/com.github.thenathattify.marker.desktop
+data/com.github.thenathattify.marker.appdata.xml
+data/com.github.thenathattify.marker.gschema.xml
 src/resources/ui/marker-prefs-window.ui
 src/resources/ui/marker-shortcuts-window.ui
 src/resources/ui/marker-sketcher-window.ui
 src/resources/ui/marker-gear-popover.ui
 src/resources/ui/marker-window-main-view.ui
 src/resources/ui/marker-headerbar.ui
+src/resources/ui/marker-wysiwyg-toolbar.ui
 src/marker.c
 src/marker-editor.c
 src/marker-exporter.c
