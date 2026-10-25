@@ -579,6 +579,69 @@ tasklists_postprocess (gchar *html)
 }
 
 /*
+ * Échappe le contenu des blocs mermaid (<div class="mermaid">…</div>) :
+ * scidown y embarque le texte brut du bloc de code, et un diagramme
+ * contenant '<', '&' ou '>' serait dévoré par le parseur HTML avant
+ * d'arriver à mermaid (qui lit innerHTML puis entityDecode : avec le
+ * contenu échappé, le texte fait l'aller-retour exact). Prend possession
+ * de html. Fait au niveau de l'app (post-traitement du HTML rendu) pour
+ * garder le sous-module scidown aligné sur l'amont.
+ */
+static gchar*
+mermaid_escape_postprocess (gchar *html)
+{
+  static const char open_tag[] = "<div class=\"mermaid\">";
+  GString *str;
+  gsize search_from = 0;
+
+  if (!html)
+    return html;
+
+  if (!strstr (html, open_tag))
+    return html;
+
+  str = g_string_new (html);
+  g_free (html);
+
+  for (;;)
+  {
+    const char *open = strstr (str->str + search_from, open_tag);
+    const char *close;
+    GString *escaped;
+    gsize open_pos, close_pos, i;
+
+    if (!open)
+      break;
+
+    open_pos = (gsize) (open - str->str) + strlen (open_tag);
+    close = strstr (str->str + open_pos, "</div>");
+    if (!close)
+      break;
+    close_pos = (gsize) (close - str->str);
+
+    /* Un seul passage : on n'insère que des entités (&amp;, &lt;, &gt;),
+     * jamais de '&' brut, donc pas de double échappement. */
+    escaped = g_string_new ("");
+    for (i = open_pos; i < close_pos; i++)
+    {
+      switch (str->str[i])
+      {
+        case '&': g_string_append (escaped, "&amp;"); break;
+        case '<': g_string_append (escaped, "&lt;"); break;
+        case '>': g_string_append (escaped, "&gt;"); break;
+        default: g_string_append_c (escaped, str->str[i]); break;
+      }
+    }
+    g_string_erase (str, open_pos, close_pos - open_pos);
+    g_string_insert (str, open_pos, escaped->str);
+    search_from = open_pos + escaped->len;
+    g_string_free (escaped, TRUE);
+  }
+
+  return g_string_free (str, FALSE);
+}
+
+/*
  * Script injected in the live preview only (cursor_position >= 0):
  * checkbox clicks are reported to the application through a custom
  * marker://task-toggle/<index> URI intercepted by MarkerPreview.
@@ -702,7 +765,7 @@ marker_markdown_to_html(const char*         markdown,
                           cursor_position);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = tasklists_postprocess(g_strdup(buf_cstr));
+  html = tasklists_postprocess(mermaid_escape_postprocess(g_strdup(buf_cstr)));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);
@@ -764,7 +827,7 @@ marker_markdown_to_html_with_css_inline(const char*         markdown,
                           cursor_position);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = tasklists_postprocess(g_strdup(buf_cstr));
+  html = tasklists_postprocess(mermaid_escape_postprocess(g_strdup(buf_cstr)));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);

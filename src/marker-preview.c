@@ -344,6 +344,29 @@ scroll_cb (GtkEventControllerScroll *controller,
   return TRUE;
 }
 
+/* Scroll jusqu'au span cursor_pos (position du curseur éditeur), puis
+ * maintient l'ancre centrée pendant ~3 s : mermaid, KaTeX et les images
+ * rendent en asynchrone après le chargement et décalent le contenu situé
+ * au-dessus de l'ancre, ce qui faussait le scroll initial (jusqu'à quelques
+ * centaines de px). On abandonne si l'utilisateur a scrollé entre-temps
+ * (scrollY != la valeur laissée par notre dernier scroll). */
+static const char SCROLL_TO_CURSOR_SCRIPT[] =
+  "(function(){"
+  "var a=document.getElementById('cursor_pos');"
+  "if(!a)return;"
+  "function go(){a.scrollIntoView({behavior:'instant',block:'center'});}"
+  "go();"
+  "var expected=window.scrollY;"
+  "var t=setInterval(function(){"
+  "if(Math.abs(window.scrollY-expected)>2){clearInterval(t);return;}"
+  "if(Math.abs(a.getBoundingClientRect().top-window.innerHeight/2)>2){"
+  "go();"
+  "expected=window.scrollY;"
+  "}"
+  "},150);"
+  "setTimeout(function(){clearInterval(t);},3000);"
+  "})()";
+
 static void
 load_changed_cb (WebKitWebView   *preview,
                  WebKitLoadEvent  event)
@@ -368,7 +391,7 @@ load_changed_cb (WebKitWebView   *preview,
         marker_preview_zoom_fit (MARKER_PREVIEW (preview));
       }
       webkit_web_view_evaluate_javascript (preview,
-                                           "document.getElementById('cursor_pos')?.scrollIntoView({behavior: 'instant', block: 'center'});",
+                                           SCROLL_TO_CURSOR_SCRIPT,
                                            -1,
                                            NULL,
                                            NULL,

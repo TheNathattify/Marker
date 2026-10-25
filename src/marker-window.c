@@ -651,6 +651,11 @@ on_outline_row_activated (GtkListBox    *box,
     gtk_text_buffer_place_cursor (buffer, &iter);
     gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (source_view), &iter, 0.05, TRUE, 0.0, 0.1);
     gtk_widget_grab_focus (GTK_WIDGET (source_view));
+
+    /* Re-rendre l'aperçu avec le curseur sur le titre cliqué : au chargement,
+     * la preview scrolle jusqu'au span cursor_pos (voir load_changed_cb dans
+     * marker-preview.c) → la section correspondante est amenée au centre. */
+    marker_editor_refresh_preview (editor);
   }
 }
 

@@ -47,6 +47,15 @@
   </provides>
 
   <releases>
+    <release version="2026.10.5" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>Fix: clicking a heading in the outline now scrolls the preview to the corresponding section. The cursor position passed to the renderer is a byte offset (was a character offset, which made the preview scroll short of the target in documents with accents or emoji), and the preview keeps the section centered while mermaid/KaTeX finish rendering asynchronously.</li>
+          <li>Fix: mermaid diagrams containing '&lt;', '&amp;' or '&gt;' are no longer mangled by the HTML parser before reaching mermaid (block content is escaped in the rendered HTML; mermaid decodes entities, so the text round-trips exactly).</li>
+          <li>Fix: the editor font size and editor zoom now apply on non-English locales. The zoom CSS was formatted with a locale-dependent decimal separator (e.g. "11,0pt" in French), which GTK rejected, silently disabling both features.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.4" date="2026-10-25">
       <description translate="no">
         <ul>

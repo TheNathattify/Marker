@@ -209,9 +209,18 @@ int
 marker_source_view_get_cursor_position (MarkerSourceView *source_view)
 {
   GtkTextBuffer *buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (source_view));
-  GtkTextIter pos;
+  GtkTextIter start, pos;
+  gtk_text_buffer_get_start_iter (buffer, &start);
   gtk_text_buffer_get_selection_bounds (buffer, &pos, NULL);
-  return gtk_text_iter_get_offset (&pos);
+  /* scidown compare la position du curseur à des index d'OCTETS dans le
+   * markdown UTF-8 (parse_block, src/scidown/src/document.c) : il faut donc
+   * l'offset en octets. GTK4 a supprimé gtk_text_iter_get_byte_offset() ;
+   * on le calcule via la longueur UTF-8 du préfixe. Avec l'offset en
+   * caractères (gtk_text_iter_get_offset), l'ancre cursor_pos atterrissait
+   * trop tôt dans tout document contenant des caractères multi-octets
+   * (accents, emoji) et la preview scrollait en amont de la section visée. */
+  g_autofree gchar *prefix = gtk_text_buffer_get_text (buffer, &start, &pos, FALSE);
+  return (int) strlen (prefix);
 }
 
 void
@@ -275,9 +284,15 @@ marker_source_view_set_zoom_level (MarkerSourceView *source_view,
   /* Combine the user-configurable base font size (pt) with the zoom percentage. */
   guint base_pt = marker_prefs_get_editor_font_size ();
   double font_pt = base_pt * percent / 100.0;
+  /* g_ascii_formatd produit toujours '.' comme séparateur décimal, à la
+   * différence de g_strdup_printf("%.1f") qui suit LC_NUMERIC : en locale
+   * fr_FR, "11,0pt" est un CSS invalide (le parseur GTK rejette toute la
+   * déclaration → ni la taille de police ni le zoom éditeur ne s'appliquent). */
+  gchar font_str[32];
+  g_ascii_formatd (font_str, sizeof (font_str), "%.1f", font_pt);
   g_autofree gchar *css = g_strdup_printf (
-    "textview.marker-source-view, textview.marker-source-view text { font-size: %.1fpt; }",
-    font_pt);
+    "textview.marker-source-view, textview.marker-source-view text { font-size: %spt; }",
+    font_str);
   gtk_css_provider_load_from_string (provider, css);
 
   g_object_set_data (G_OBJECT (source_view), "zoom-percent", GINT_TO_POINTER (percent));
