@@ -70,6 +70,8 @@ struct _MarkerWindow
   GListStore           *outline_store;
   guint                 outline_timeout_id;
 
+  int                   last_alloc_width;
+
   guint32               last_click_;
 };
 
@@ -287,14 +289,61 @@ action_zoom_in (GSimpleAction *action,
 
 static void
 action_zoom_fit (GSimpleAction *action,
-                 GVariant      *parameter,
+                 GVariant      *value,
                  gpointer       user_data)
 {
   MarkerWindow *window = user_data;
-  MarkerEditor *editor = marker_window_get_active_editor (window);
-  if (editor == NULL)
+  gboolean state = g_variant_get_boolean (value);
+
+  g_simple_action_set_state (action, value);
+
+  /* Applique le zoom-fit immédiatement quand on active le toggle. */
+  if (state)
+  {
+    MarkerEditor *editor = marker_window_get_active_editor (window);
+    if (editor != NULL)
+      marker_preview_zoom_fit (marker_editor_get_preview (editor));
+  }
+}
+
+/* Applique le zoom-fit sur l'éditeur actif si le toggle est actif.
+ * Utilisé au redimensionnement de la fenêtre et au changement d'éditeur. */
+static void
+apply_zoom_fit_if_active (MarkerWindow *window)
+{
+  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfit");
+  if (action == NULL)
     return;
-  marker_preview_zoom_fit (marker_editor_get_preview (editor));
+
+  GVariant *state = g_action_get_state (action);
+  if (state == NULL)
+    return;
+
+  if (g_variant_get_boolean (state))
+  {
+    MarkerEditor *editor = marker_window_get_active_editor (window);
+    if (editor != NULL)
+      marker_preview_zoom_fit (marker_editor_get_preview (editor));
+  }
+
+  g_variant_unref (state);
+}
+
+static void
+on_content_size_allocate (GtkWidget *widget,
+                          int        width,
+                          int        height G_GNUC_UNUSED,
+                          gpointer   user_data)
+{
+  MarkerWindow *window = MARKER_WINDOW (user_data);
+
+  /* Ne réapplique que si la largeur a vraiment changé (évite les appels
+   * répétés quand seule la hauteur change). */
+  if (width > 0 && width != window->last_alloc_width)
+  {
+    window->last_alloc_width = width;
+    apply_zoom_fit_if_active (window);
+  }
 }
 
 static void
@@ -957,6 +1006,9 @@ tree_selection_changed_cb (GtkTreeSelection *selection,
       zoom_entry_update (window, editor);
       marker_window_update_outline (window);
     }
+
+    /* Réapplique le zoom-fit auto si le toggle est actif. */
+    apply_zoom_fit_if_active (window);
   }
 }
 
@@ -1087,8 +1139,8 @@ marker_window_init (MarkerWindow *window)
     gtk_application_set_accels_for_action (app, "win.zoomout", zoomout_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
-    action = G_ACTION (g_simple_action_new ("zoomfit", NULL));
-    g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_zoom_fit), window);
+    action = G_ACTION (g_simple_action_new_stateful ("zoomfit", NULL, g_variant_new_boolean (FALSE)));
+    g_signal_connect (G_SIMPLE_ACTION (action), "change-state", G_CALLBACK (action_zoom_fit), window);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
     action = G_ACTION (g_simple_action_new ("editoronlymode", NULL));
@@ -1185,7 +1237,12 @@ marker_window_init (MarkerWindow *window)
   /** Content VBox **/
   GtkBox *vbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_VERTICAL, 0));
   window->vbox = vbox;
+  window->last_alloc_width = 0;
   adw_application_window_set_content (ADW_APPLICATION_WINDOW (window), GTK_WIDGET (vbox));
+
+  /* Détecte le redimensionnement pour le zoom-fit auto (toggle). */
+  g_signal_connect (vbox, "size-allocate",
+                    G_CALLBACK (on_content_size_allocate), window);
 
   /** HeaderBar **/
   gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-gear-popover.ui", NULL);

@@ -116,10 +116,10 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="zoom_fit_btn">
+          <object class="GtkToggleButton" id="zoom_fit_btn">
             <property name="icon-name">zoom-fit-best-symbolic</property>
             <property name="action-name">win.zoomfit</property>
-            <property name="tooltip-text" translatable="yes">Fit to Page Width</property>
+            <property name="tooltip-text" translatable="yes">Fit to Page Width (auto on resize)</property>
           </object>
         </child>
       </object>
