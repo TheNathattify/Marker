@@ -31,7 +31,7 @@ Marker combines a distraction-free writing environment with a powerful live prev
 #### Dependencies
 - `meson` (>= 0.62.0)
 - `ninja`
-- `gtk4` (>= 4.10.0)
+- `gtk4` (>= 4.16.0)
 - `libadwaita-1` (>= 1.4.0)
 - `gtksourceview-5` (>= 5.6.0)
 - `webkitgtk-6.0` (>= 2.40.0)
@@ -59,6 +59,14 @@ Or run directly:
 ```bash
 flatpak-builder --run build-flatpak com.github.thenathattify.marker.json marker
 ```
+
+---
+
+## About this fork
+
+This is a personal hard fork of [adrighem/Marker](https://github.com/adrighem/Marker) maintained by **Nathan Obry** ([@thenathattify](https://github.com/thenathattify)).
+
+It adds interactive task lists, a reworked zoom UX, GTK4 regression fixes, and is rebranded under the app-ID `com.github.thenathattify.marker`.
 
 ---
 
