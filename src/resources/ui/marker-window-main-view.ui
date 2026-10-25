@@ -35,6 +35,7 @@
                 <property name="child">
                   <object class="GtkScrolledWindow" id="sidebar_scrolled_window">
                     <property name="hscrollbar-policy">never</property>
+                    <property name="propagate-natural-width">false</property>
                     <property name="child">
                       <object class="GtkTreeView" id="documents_tree_view">
                         <property name="enable-grid-lines">horizontal</property>
@@ -53,6 +54,7 @@
                 <property name="child">
                   <object class="GtkScrolledWindow" id="outline_scrolled_window">
                     <property name="hscrollbar-policy">never</property>
+                    <property name="propagate-natural-width">false</property>
                     <property name="child">
                       <object class="GtkListBox" id="outline_list_box">
                         <property name="selection-mode">single</property>

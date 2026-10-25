@@ -1225,6 +1225,12 @@ marker_window_init (MarkerWindow *window)
   gtk_tree_view_column_set_title (column, _("Documents"));
 
   renderer = gtk_cell_renderer_text_new ();
+  /* Ellipsize pour tronquer les noms de fichiers trop longs — sinon la
+   * colonne s'élargit, pousse la sidebar, et décale le StackSwitcher. */
+  g_object_set (renderer,
+                "ellipsize", PANGO_ELLIPSIZE_END,
+                "single-paragraph-mode", TRUE,
+                NULL);
   gtk_tree_view_column_pack_start (column, renderer, TRUE);
   gtk_tree_view_column_set_attributes (column, renderer,
                                        "markup", TITLE_COLUMN,
