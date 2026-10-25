@@ -449,13 +449,51 @@ marker_preview_queue_zoom_prefs_save (MarkerPreview *preview,
     g_timeout_add (300, on_zoom_prefs_timeout_cb, preview);
 }
 
+static gboolean
+restore_scroll_after_zoom_cb (gpointer user_data)
+{
+  MarkerPreview *preview = MARKER_PREVIEW (user_data);
+
+  /* Restaure la position de scroll proportionnellement après le zoom.
+   * Sans ça, WebKitGTK décale la vue (ex: en haut → plus bas). */
+  g_autofree gchar *script = g_strdup_printf (
+    "(function(){"
+    "var r=window.__markerScrollRatio||0;"
+    "var h=document.body?document.body.scrollHeight:0;"
+    "if(h>0)window.scrollTo(0,r*h);"
+    "window.__markerScrollRatio=null;"
+    "})();");
+
+  webkit_web_view_evaluate_javascript (WEBKIT_WEB_VIEW (preview), script, -1,
+                                       NULL, NULL, NULL, NULL, NULL);
+
+  return G_SOURCE_REMOVE;
+}
+
 void
 marker_preview_set_zoom_level (MarkerPreview *preview,
                                gdouble        zoom_level)
 {
   g_return_if_fail (MARKER_IS_PREVIEW (preview));
   zoom_level = CLAMP (zoom_level, MIN_ZOOM, MAX_ZOOM);
+
+  /* Sauvegarde le ratio de scroll AVANT le zoom (scrollY / hauteur totale).
+   * Le zoom change la hauteur du contenu → la position absolue en pixels
+   * n'est plus valide. */
+  g_autofree gchar *save_script =
+    "(function(){"
+    "var h=document.body?document.body.scrollHeight:0;"
+    "window.__markerScrollRatio=(h>0)?(window.scrollY/h):0;"
+    "})();";
+
+  webkit_web_view_evaluate_javascript (WEBKIT_WEB_VIEW (preview), save_script, -1,
+                                       NULL, NULL, NULL, NULL, NULL);
+
   webkit_web_view_set_zoom_level (WEBKIT_WEB_VIEW (preview), zoom_level);
+
+  /* Restaure après 50 ms (le temps que WebKit applique le zoom). */
+  g_timeout_add (50, restore_scroll_after_zoom_cb, preview);
+
   marker_preview_queue_zoom_prefs_save (preview, zoom_level);
   g_signal_emit_by_name (preview, "zoom-changed");
 }
@@ -621,24 +659,15 @@ marker_preview_zoom_out (MarkerPreview *preview)
   gdouble val = webkit_web_view_get_zoom_level (view) - 0.1;
   val = max (val, MIN_ZOOM);
 
-  marker_preview_queue_zoom_prefs_save (preview, val);
-  webkit_web_view_set_zoom_level (view, val);
-
-  g_signal_emit_by_name (preview, "zoom-changed");
+  marker_preview_set_zoom_level (preview, val);
 }
 
 void
 marker_preview_zoom_original (MarkerPreview *preview)
 {
   g_return_if_fail (WEBKIT_IS_WEB_VIEW (preview));
-  WebKitWebView *view = WEBKIT_WEB_VIEW (preview);
 
-  gdouble zoom = 1.0;
-
-  marker_preview_queue_zoom_prefs_save (preview, zoom);
-  webkit_web_view_set_zoom_level (view, zoom);
-
-  g_signal_emit_by_name (preview, "zoom-changed");
+  marker_preview_set_zoom_level (preview, 1.0);
 }
 
 void
@@ -650,10 +679,7 @@ marker_preview_zoom_in (MarkerPreview *preview)
   gdouble val = webkit_web_view_get_zoom_level (view) + 0.1;
   val = min (val, MAX_ZOOM);
 
-  marker_preview_queue_zoom_prefs_save (preview, val);
-  webkit_web_view_set_zoom_level (view, val);
-
-  g_signal_emit_by_name (preview, "zoom-changed");
+  marker_preview_set_zoom_level (preview, val);
 }
 
 void
