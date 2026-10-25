@@ -919,7 +919,7 @@ marker_prefs_show_window (void)
   adw_combo_row_set_selected (css_theme_row,
                               find_string_in_model (G_LIST_MODEL (css_model),
                                                     css_filename ? css_filename : css_theme));
-  free (css_filename);
+  g_free (css_filename);
   g_free (css_theme);
   g_list_free_full (css_list, g_free);
   g_signal_connect (css_theme_row, "notify::selected",

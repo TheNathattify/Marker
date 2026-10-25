@@ -1415,8 +1415,9 @@ marker_window_add_editor (MarkerWindow *window,
   GtkTreeIter iter;
   gtk_tree_store_append (window->documents_tree_store, &iter, NULL);
 
+  g_autofree gchar *store_title = marker_editor_get_title (editor);
   gtk_tree_store_set (window->documents_tree_store, &iter,
-                      TITLE_COLUMN, marker_editor_get_title (editor),
+                      TITLE_COLUMN, store_title,
                       ICON_COLUMN, "window-close-symbolic",
                       NAME_COLUMN, name,
                       EDITOR_COLUMN, editor,

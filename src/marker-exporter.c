@@ -291,7 +291,7 @@ on_export_file_dialog_cb (GObject      *source_object,
       if (html != NULL)
       {
         marker_exporter_export_pandoc (html, stylesheet_path, filename);
-        free (html);
+        g_free (html);
       }
       break;
     }

@@ -648,21 +648,11 @@ marker_preview_render_markdown (MarkerPreview *preview,
                                         css_theme,
                                         cursor);
 
+  /* Cache WebKit non vidé à chaque rendu : cela forçait le re-téléchargement
+   * de KaTeX, mermaid, highlight.js, images et CSS à chaque frappe, causant
+   * des saccades. WebKit gère son cache correctement avec les ETags. */
+
   WebKitWebView *web_view = WEBKIT_WEB_VIEW (preview);
-  WebKitNetworkSession *session = webkit_web_view_get_network_session (web_view);
-  if (session)
-  {
-    WebKitWebsiteDataManager *manager = webkit_network_session_get_website_data_manager (session);
-    if (manager)
-    {
-      webkit_website_data_manager_clear (manager,
-                                         WEBKIT_WEBSITE_DATA_MEMORY_CACHE | WEBKIT_WEBSITE_DATA_DISK_CACHE,
-                                         0,
-                                         NULL,
-                                         NULL,
-                                         NULL);
-    }
-  }
 
   g_autofree gchar *uri = NULL;
   if (base_uri)
@@ -689,7 +679,7 @@ marker_preview_render_markdown (MarkerPreview *preview,
                              html,
                              uri);
 
-  free (html);
+  g_free (html);
 }
 
 WebKitPrintOperationResponse
