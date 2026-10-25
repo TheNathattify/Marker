@@ -55,6 +55,11 @@ struct _MarkerPreview
    * d'inactivité. */
   guint   zoom_prefs_timeout_id;
   gdouble pending_zoom_prefs;
+
+  /* Timeout de restauration du scroll après zoom (50 ms).
+   * Stocké pour pouvoir l'annuler dans dispose() — sinon use-after-free
+   * si le preview est détruit avant l'expiration. */
+  guint   scroll_restore_timeout_id;
 };
 
 G_DEFINE_TYPE (MarkerPreview, marker_preview, WEBKIT_TYPE_WEB_VIEW)
@@ -448,6 +453,7 @@ static gboolean
 restore_scroll_after_zoom_cb (gpointer user_data)
 {
   MarkerPreview *preview = MARKER_PREVIEW (user_data);
+  preview->scroll_restore_timeout_id = 0;
 
   /* Restaure la position de scroll proportionnellement après le zoom.
    * Sans ça, WebKitGTK décale la vue (ex: en haut → plus bas). */
@@ -487,7 +493,10 @@ marker_preview_set_zoom_level (MarkerPreview *preview,
   webkit_web_view_set_zoom_level (WEBKIT_WEB_VIEW (preview), zoom_level);
 
   /* Restaure après 50 ms (le temps que WebKit applique le zoom). */
-  g_timeout_add (50, restore_scroll_after_zoom_cb, preview);
+  if (preview->scroll_restore_timeout_id > 0)
+    g_source_remove (preview->scroll_restore_timeout_id);
+  preview->scroll_restore_timeout_id =
+    g_timeout_add (50, restore_scroll_after_zoom_cb, preview);
 
   marker_preview_queue_zoom_prefs_save (preview, zoom_level);
   g_signal_emit_by_name (preview, "zoom-changed");
@@ -598,6 +607,12 @@ marker_preview_dispose (GObject *object)
   {
     g_source_remove (preview->zoom_prefs_timeout_id);
     preview->zoom_prefs_timeout_id = 0;
+  }
+
+  if (preview->scroll_restore_timeout_id > 0)
+  {
+    g_source_remove (preview->scroll_restore_timeout_id);
+    preview->scroll_restore_timeout_id = 0;
   }
 
   G_OBJECT_CLASS (marker_preview_parent_class)->dispose (object);

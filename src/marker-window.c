@@ -256,6 +256,8 @@ action_zoom_out (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
   marker_preview_zoom_out (marker_editor_get_preview (editor));
 }
 
@@ -266,6 +268,8 @@ action_zoom_original (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
   marker_preview_zoom_original (marker_editor_get_preview (editor));
 }
 
@@ -276,6 +280,8 @@ action_zoom_in (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
   marker_preview_zoom_in (marker_editor_get_preview (editor));
 }
 
@@ -286,6 +292,8 @@ action_zoom_fit (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
   marker_preview_zoom_fit (marker_editor_get_preview (editor));
 }
 
