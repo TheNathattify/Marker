@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-24.04
     container: fedora:latest
     steps:
+      # The fedora image ships no git: install it so checkout can do a real
+      # clone (required for submodules; the REST API fallback ignores them).
+      - name: Install git
+        run: dnf install -y --setopt=install_weak_deps=False git
+
       - uses: actions/checkout@v6
         with:
           submodules: recursive
