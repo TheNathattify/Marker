@@ -1,0 +1,379 @@
+/*
+ * Fedora Dark — thème d'aperçu pour Marker
+ *
+ * Surfaces : tokens officiels libadwaita (GNOME 48+, variante sombre)
+ *   window #222226, view #1d1d20, headerbar #2e2e32, card rgba(255,255,255,8 %)
+ * Accent marque : bleu Fedora #51a2da
+ * Sémantique : échelle officielle GNOME (green/yellow/orange/red/purple, dark)
+ * Coloration du code : mêmes tokens que le schéma GtkSourceView
+ *   « Adwaita Dark » de l'éditeur → aperçu et édition cohérents.
+ *
+ * Embarqué dans data/styles/ ; une copie dans
+ * ~/.local/share/marker/styles/ est prioritaire sur la version système.
+ *
+ * Mis à jour le 25/10/2026 : task lists GFM (cases à cocher), section
+ * impression/export PDF (A4, 12 pt, forcé clair quelle que soit la variante).
+ */
+
+:root {
+  color-scheme: dark;
+  /* libadwaita — surfaces (dark) */
+  --gnome-window: #222226;
+  --gnome-view: #1d1d20;
+  --gnome-headerbar: #2e2e32;
+  --gnome-card: rgba(255, 255, 255, 0.08);
+  --gnome-ink: #ffffff;
+  --gnome-muted: rgba(255, 255, 255, 0.55);
+  --gnome-border: rgba(255, 255, 255, 0.1);
+  /* Fedora — accent marque */
+  --fedora-blue: #51a2da;
+  --fedora-blue-soft: #99c1f1;
+  /* GNOME — sémantique officielle (dark) */
+  --gnome-green: #8ff0a4;
+  --gnome-yellow: #f9f06b;
+  --gnome-orange: #ffa348;
+  --gnome-red: #f66151;
+  --gnome-purple: #dc8add;
+  /* Code — schéma GtkSourceView « Adwaita Dark » */
+  --gnome-code-bg: #1d1d20;
+  --gnome-code-ink: #c0bfbc;
+}
+
+html, body {
+  background: var(--gnome-window);
+  color: var(--gnome-ink);
+  font-family: "Cantarell", "DejaVu Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+::selection {
+  background: rgba(81, 162, 218, 0.4);
+  color: var(--gnome-ink);
+}
+
+/* ---------- Headings ---------- */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--gnome-ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.05rem; color: var(--fedora-blue-soft); }
+h5, h6 { font-size: 1rem; color: var(--gnome-muted); }
+
+/* ---------- Text ---------- */
+
+p { margin: 0 0 1rem; }
+
+a {
+  color: var(--fedora-blue-soft);
+  text-decoration: none;
+  border-bottom: 1px solid var(--fedora-blue);
+}
+a:hover { color: var(--fedora-blue); }
+
+strong { font-weight: 700; color: #ffffff; }
+
+mark {
+  background: var(--gnome-yellow);
+  color: #222226;
+  padding: 0 0.2em;
+  border-radius: 3px;
+}
+
+del, s { color: var(--gnome-muted); }
+
+/* ---------- Blockquote ---------- */
+
+blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1.25rem;
+  background: var(--gnome-view);
+  border: 1px solid var(--gnome-border);
+  border-left: 3px solid var(--fedora-blue);
+  border-radius: 12px;
+}
+blockquote p { margin: 0.25rem 0; }
+
+/* ---------- Lists ---------- */
+
+ul, ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+
+li { margin: 0.25rem 0; }
+li::marker { color: var(--fedora-blue-soft); }
+
+/* ---------- Code ---------- */
+/* Specificity relevée (html body) pour surcharger scidown.css
+   `code { font-family: monospace; }` qui charge APRÈS ce fichier. */
+html body code,
+html body pre,
+html body kbd,
+html body samp {
+  font-family: "Source Code Pro", "DejaVu Sans Mono", monospace;
+}
+
+code {
+  background: var(--gnome-card);
+  border-radius: 6px;
+  color: var(--gnome-red);
+  padding: 0.1em 0.4em;
+  font-size: 0.875em;
+}
+
+pre {
+  background: var(--gnome-code-bg);
+  color: var(--gnome-code-ink);
+  border: 1px solid var(--gnome-border);
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  line-height: 1.55;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font-size: 0.875em;
+}
+
+kbd {
+  background: var(--gnome-headerbar);
+  border: 1px solid var(--gnome-border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 0.1em 0.45em;
+  font-size: 0.85em;
+  color: var(--gnome-ink);
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.95em;
+  border: 1px solid var(--gnome-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--gnome-view);
+}
+
+th {
+  background: var(--gnome-headerbar);
+  border-bottom: 2px solid var(--fedora-blue);
+  color: var(--gnome-ink);
+  text-align: left;
+  font-weight: 700;
+  padding: 0.55rem 0.9rem;
+}
+
+td {
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--gnome-border);
+}
+
+tr:last-child td { border-bottom: none; }
+
+/* ---------- Misc ---------- */
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--gnome-border);
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+/* ---------- Coloration syntaxique (highlight.js) ---------- */
+/* Identique au thème highlight.js « adwaita-dark » embarqué
+   (data/scripts/highlight/styles/adwaita-dark.css) et au schéma
+   GtkSourceView « Adwaita Dark » de l'éditeur. Ce bloc charge APRÈS le
+   <link> du thème highlight.js → il prime sur celui-ci. */
+
+pre code.hljs { display: block; overflow-x: auto; padding: 1em; }
+code.hljs { padding: 3px 5px; }
+
+.hljs {
+  color: #c0bfbc;
+  background: var(--gnome-code-bg);
+}
+
+.hljs-comment,
+.hljs-quote { color: #777777; font-style: italic; }
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-selector-tag { color: #ffa348; font-weight: 700; }
+
+.hljs-string,
+.hljs-regexp { color: #5bc8af; }
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-boolean { color: #7d8ac7; }
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-built_in { color: #62a0ea; }
+
+.hljs-title.class_,
+.hljs-type,
+.hljs-class { color: #5bc8af; font-weight: 700; }
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable { color: #ff7800; }
+
+.hljs-name,
+.hljs-section { color: #33b2a4; font-weight: 700; }
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr { color: #33b2a4; font-weight: 700; }
+
+.hljs-selector-pseudo { color: #7d8ac7; font-weight: 700; }
+
+.hljs-meta,
+.hljs-meta-string { color: #5e5e5e; }
+
+.hljs-link { color: #62a0ea; text-decoration: underline; }
+
+.hljs-addition { color: #33b2a4; }
+.hljs-deletion { color: #f66151; }
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+.hljs-subst { color: #c0bfbc; }
+
+/* ---------- Task lists GFM (cases à cocher Marker) ---------- */
+/* scidown émet <li><input class="task-list-item-checkbox">…</li> ;
+ * le <li> n'a pas de classe → :has() pour cibler les items de liste. */
+
+li:has(> input.task-list-item-checkbox) {
+  list-style-type: none;
+}
+
+li:has(> input.task-list-item-checkbox) input.task-list-item-checkbox {
+  margin: 0 0.35em 0.15em -1.35em;
+  accent-color: var(--fedora-blue);
+  cursor: pointer;
+}
+
+li:has(> input.task-list-item-checkbox):has(> input:checked) {
+  color: var(--gnome-muted);
+}
+li:has(> input.task-list-item-checkbox):has(> input:checked) strong,
+li:has(> input.task-list-item-checkbox):has(> input:checked) b,
+li:has(> input.task-list-item-checkbox):has(> input:checked) em,
+li:has(> input.task-list-item-checkbox):has(> input:checked) i,
+li:has(> input.task-list-item-checkbox):has(> input:checked) code,
+li:has(> input.task-list-item-checkbox):has(> input:checked) a,
+li:has(> input.task-list-item-checkbox):has(> input:checked) mark {
+  color: inherit;
+}
+
+/* ---------- Impression / export PDF ---------- */
+/* Les navigateurs n'impriment pas les fonds : sans ce bloc, le code des
+ * thèmes sombres (encre claire sur fond sombre) devient invisible sur
+ * papier blanc. On force A4 / 12 pt / encre foncée. */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 20mm 18mm;
+  }
+
+  html {
+    font-size: 12pt;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #241f31 !important;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    color: #1a5fb4;
+    text-decoration: underline;
+    border-bottom: none;
+  }
+
+  strong { color: #241f31; }
+  mark { background: #f6d32d; color: #241f31; }
+  del, s { color: #77767b; }
+
+  blockquote {
+    background: #fff !important;
+    border-color: #c0bfbc;
+    color: #3d3846;
+  }
+
+  th, td, tr:nth-child(even) td {
+    background: #fff !important;
+    border-color: #deddda;
+    color: #241f31;
+  }
+
+  pre, code, kbd, samp {
+    background: #fff !important;
+    color: #241f31 !important;
+    border-color: #deddda;
+    box-shadow: none;
+  }
+
+  pre { border: 1px solid #deddda; }
+
+  img { border: none; }
+  hr { background: #c0bfbc !important; }
+
+  /* tokens hljs lisibles sur fond blanc (palette Adwaita light) */
+  .hljs { color: #3d3846; background: #fff !important; }
+  .hljs-comment, .hljs-quote { color: #77767b; }
+  .hljs-doctag, .hljs-keyword, .hljs-meta .hljs-keyword,
+  .hljs-template-tag, .hljs-selector-tag { color: #c64600; }
+  .hljs-string, .hljs-regexp { color: #218787; }
+  .hljs-number, .hljs-literal, .hljs-symbol, .hljs-bullet,
+  .hljs-boolean { color: #4e57ba; }
+  .hljs-title, .hljs-title.function_, .hljs-built_in { color: #1c71d8; }
+  .hljs-title.class_, .hljs-type, .hljs-class { color: #218787; }
+  .hljs-attr, .hljs-attribute, .hljs-variable,
+  .hljs-template-variable { color: #c64600; }
+  .hljs-name, .hljs-section { color: #218787; }
+  .hljs-selector-id, .hljs-selector-class, .hljs-selector-attr { color: #218787; }
+  .hljs-selector-pseudo { color: #4e57ba; }
+  .hljs-meta, .hljs-meta-string { color: #5e5c64; }
+  .hljs-addition { color: #26a269; }
+  .hljs-deletion { color: #c01c28; }
+
+  input.task-list-item-checkbox {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

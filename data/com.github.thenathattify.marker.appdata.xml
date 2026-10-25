@@ -47,6 +47,14 @@
   </provides>
 
   <releases>
+    <release version="2026.10.4" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>New bundled preview themes "Fedora Dark" and "Fedora Light" built on official GNOME/libadwaita surface tokens and the Fedora brand blue accent (#51a2da).</li>
+          <li>New bundled highlight.js themes "adwaita" and "adwaita-dark" matching the GtkSourceView Adwaita / Adwaita-dark editor schemes, so preview code blocks and the editor share the same colors.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.3" date="2026-10-25">
       <description translate="no">
         <ul>

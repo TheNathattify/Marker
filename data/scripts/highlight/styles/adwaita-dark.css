@@ -1,0 +1,71 @@
+/*
+ * Adwaita Dark — thème highlight.js pour l'aperçu de Marker
+ *
+ * Mêmes tokens que le schéma GtkSourceView « Adwaita Dark » utilisé par
+ * l'éditeur (palette officielle GNOME / libadwaita, variante sombre) :
+ *   fond #1d1d20 (view), texte #c0bfbc,
+ *   commentaire #777777, mot-clé #ffa348, chaîne #5bc8af,
+ *   nombre #7d8ac7, fonction #62a0ea, type #5bc8af, attribut #ff7800.
+ *
+ * Sélectionnable dans Préférences → Aperçu → Thème de coloration du code.
+ */
+
+pre code.hljs { display: block; overflow-x: auto; padding: 1em; }
+code.hljs { padding: 3px 5px; }
+
+.hljs {
+  color: #c0bfbc;
+  background: #1d1d20;
+}
+
+.hljs-comment,
+.hljs-quote { color: #777777; font-style: italic; }
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-selector-tag { color: #ffa348; font-weight: 700; }
+
+.hljs-string,
+.hljs-regexp { color: #5bc8af; }
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-boolean { color: #7d8ac7; }
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-built_in { color: #62a0ea; }
+
+.hljs-title.class_,
+.hljs-type,
+.hljs-class { color: #5bc8af; font-weight: 700; }
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable { color: #ff7800; }
+
+.hljs-name,
+.hljs-section { color: #33b2a4; font-weight: 700; }
+
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr { color: #33b2a4; font-weight: 700; }
+
+.hljs-selector-pseudo { color: #7d8ac7; font-weight: 700; }
+
+.hljs-meta,
+.hljs-meta-string { color: #5e5e5e; }
+
+.hljs-link { color: #62a0ea; text-decoration: underline; }
+
+.hljs-addition { color: #33b2a4; }
+.hljs-deletion { color: #f66151; }
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+.hljs-subst { color: #c0bfbc; }
