@@ -11,20 +11,6 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Fullscreen</attribute>
-        <attribute name="action">win.fullscreen</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Sidebar</attribute>
-        <attribute name="action">win.sidebar</attribute>
-      </item>
-    </section>
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">_Save As…</attribute>
-        <attribute name="action">win.saveas</attribute>
-      </item>
-      <item>
         <attribute name="label" translatable="yes">_Rename Document…</attribute>
         <attribute name="action">win.rename-document</attribute>
       </item>
