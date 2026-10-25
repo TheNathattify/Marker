@@ -206,16 +206,17 @@ jobs:
     name: Publish RPM to COPR
     needs: rpm
     runs-on: ubuntu-24.04
+    container: fedora:latest
     steps:
+      # copr-cli is not packaged for Ubuntu: run the job on Fedora instead.
+      # git is needed so checkout does a real clone.
+      - name: Install copr-cli
+        run: dnf install -y --setopt=install_weak_deps=False git copr-cli
+
       - uses: actions/download-artifact@v4
         with:
           name: rpm
           path: artifacts
-
-      - name: Install copr-cli
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y copr-cli
 
       - name: Upload source RPM to COPR
         env:
@@ -254,16 +255,32 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # Download artifacts one by one: the flatpak-repo artifact contains a
+      # directory (the OSTree repo) which must NOT end up in the release.
       - uses: actions/download-artifact@v4
         with:
-          pattern: '*'
+          name: source-tarball
           path: artifacts
-          merge-multiple: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm
+          path: artifacts
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: deb
+          path: artifacts
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: flatpak-bundle
+          path: artifacts
 
       - name: Generate SHA256SUMS
         run: |
           cd artifacts
-          ls -A | grep -v '^SHA256SUMS.txt$' | xargs sha256sum > SHA256SUMS.txt
+          find . -maxdepth 1 -type f ! -name 'SHA256SUMS.txt' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
       - name: Create release
