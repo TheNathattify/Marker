@@ -311,20 +311,6 @@ main (int    argc,
   bind_textdomain_codeset ("marker", "UTF-8");
   textdomain ("marker");
 
-  /* Contournement bug WebKitGTK 2.54 + Wayland + NVIDIA :
-   * le compositing GPU (Accelerated Compositing / DMABUF) freeze
-   * au chargement de la première page dans la preview.
-   * WEBKIT_DISABLE_COMPOSITING_MODE=1 force le rendu logiciel (CPU),
-   * imperceptible sur du texte, mais stable.
-   *
-   * À RETIRER quand le bug upstream WebKitGTK est corrigé.
-   * Bugs connus : WebKitGTK + Wayland + NVIDIA proprietary driver
-   * (testé sur : WebKitGTK 2.54.1, NVIDIA 615.78.08, kernel 7.2, Mutter 51)
-   *
-   * FALSE = ne pas écraser si l'utilisateur a déjà défini la variable. */
-  if (g_strcmp0 (g_getenv ("XDG_SESSION_TYPE"), "wayland") == 0)
-    g_setenv ("WEBKIT_DISABLE_COMPOSITING_MODE", "1", FALSE);
-
   adw_init ();
   gtk_source_init ();
 
