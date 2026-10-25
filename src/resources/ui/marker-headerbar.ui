@@ -14,6 +14,12 @@
         <attribute name="action">win.saveas</attribute>
       </item>
     </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Export…</attribute>
+        <attribute name="action">win.export</attribute>
+      </item>
+    </section>
   </menu>
 
   <menu id="view_mode_menu">
