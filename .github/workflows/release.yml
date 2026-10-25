@@ -1,0 +1,278 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  version-guard:
+    name: Check tag vs meson.build
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.guard.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Compare tag and meson.build versions
+        id: guard
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          MESON_VERSION="$(sed -n "s/^  version: '\([^']*\)',/\1/p" meson.build | head -1)"
+          echo "tag:         $GITHUB_REF_NAME"
+          echo "meson.build: $MESON_VERSION"
+          if [ -z "$MESON_VERSION" ]; then
+            echo "::error::Could not parse the version from meson.build"
+            exit 1
+          fi
+          if [ "$VERSION" != "$MESON_VERSION" ]; then
+            echo "::error::Tag '$GITHUB_REF_NAME' does not match meson.build version '$MESON_VERSION'. Bump the version in meson.build before tagging."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  source-tarball:
+    name: Create source tarball
+    needs: version-guard
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Build tarball (with submodules)
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          ROOT="$PWD"
+          WORK="marker-$VERSION"
+          rm -rf "$WORK" "$WORK.tar.gz"
+          mkdir -p "$WORK"
+          # git archive does not include submodule contents: add them manually
+          git archive HEAD | tar -x -C "$WORK"
+          git submodule status --recursive | awk '{print $2}' | while read -r sub; do
+            mkdir -p "$WORK/$sub"
+            (cd "$sub" && git archive HEAD | tar -x -C "$ROOT/$WORK/$sub")
+          done
+          # sanity checks: the tarball must be self-contained
+          test -f "$WORK/meson.build"
+          test -f "$WORK/src/scidown/src/buffer.c"
+          test -f "$WORK/src/scidown/src/charter/src/charter.c"
+          test -f "$WORK/src/scidown/src/charter/src/tinyexpr/tinyexpr.c"
+          tar -czf "$WORK.tar.gz" "$WORK"
+          echo "tarball entries: $(tar -tzf "$WORK.tar.gz" | wc -l)"
+          mkdir -p artifacts
+          mv "$WORK.tar.gz" artifacts/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-tarball
+          path: artifacts/
+          if-no-files-found: error
+
+  rpm:
+    name: Build RPM (Fedora)
+    needs: [version-guard, source-tarball]
+    runs-on: ubuntu-24.04
+    container: fedora:latest
+    steps:
+      # The fedora image ships no git: install it so checkout does a real clone.
+      - name: Install build tools
+        run: |
+          dnf install -y --setopt=install_weak_deps=False \
+            git rpm-build \
+            meson ninja-build gcc \
+            gtk4-devel libadwaita-devel gtksourceview5-devel webkitgtk6.0-devel \
+            glib2-devel gettext itstool appstream desktop-file-utils
+
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-tarball
+          path: .
+
+      - name: Build RPM
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          cp "marker-$VERSION.tar.gz" ~/rpmbuild/SOURCES/
+          rpmbuild --define "marker_version $VERSION" -ba packaging/rpm/marker.spec
+
+      - name: Collect artifacts
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          mkdir -p artifacts
+          cp ~/rpmbuild/RPMS/x86_64/marker-$VERSION-1.*.rpm artifacts/
+          cp ~/rpmbuild/SRPMS/marker-$VERSION-1.*.src.rpm artifacts/
+          ls -lh artifacts/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rpm
+          path: artifacts/
+          if-no-files-found: error
+
+  deb:
+    name: Build DEB (Debian sid)
+    needs: [version-guard, source-tarball]
+    runs-on: ubuntu-24.04
+    container: debian:sid
+    steps:
+      # The debian image ships no git: install it so checkout does a real clone.
+      - name: Install packaging tools
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y git dpkg-dev
+
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: source-tarball
+          path: .
+
+      - name: Build DEB
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          tar -xzf "marker-$VERSION.tar.gz"
+          cp -r packaging/debian "marker-$VERSION/debian"
+          sed -e "s/@VERSION@/$VERSION/g" -e "s/@DATE@/$(date -R)/g" \
+            packaging/debian/changelog.in > "marker-$VERSION/debian/changelog"
+          cd "marker-$VERSION"
+          apt-get build-dep -y .
+          dpkg-buildpackage -us -uc -b
+
+      - name: Collect artifacts
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          mkdir -p artifacts
+          cp "marker_${VERSION}-1_amd64.deb" artifacts/
+          ls -lh artifacts/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: artifacts/
+          if-no-files-found: error
+
+  flatpak:
+    name: Build Flatpak
+    needs: version-guard
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Build flatpak bundle and OSTree repo
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: com.github.thenathattify.marker.json
+          bundle: com.github.thenathattify.marker.flatpak
+          branch: stable
+          repo-dir: repo
+          cache: true
+          upload-artifact: false
+
+      - name: Prepare gh-pages content
+        run: |
+          mkdir -p gh-pages
+          mv repo gh-pages/repo
+          cp marker.flatpakrepo gh-pages/
+          touch gh-pages/.nojekyll
+
+      - name: Upload flatpak bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-bundle
+          path: com.github.thenathattify.marker.flatpak
+          if-no-files-found: error
+
+      - name: Upload flatpak repo (gh-pages content)
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-repo
+          path: gh-pages/
+          if-no-files-found: error
+
+  copr:
+    name: Publish RPM to COPR
+    needs: rpm
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm
+          path: artifacts
+
+      - name: Install copr-cli
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y copr-cli
+
+      - name: Upload source RPM to COPR
+        env:
+          COPR_API_TOKEN: ${{ secrets.COPR_API_TOKEN }}
+        run: |
+          if [ -z "$COPR_API_TOKEN" ]; then
+            echo "::warning::Secret COPR_API_TOKEN is not set: skipping COPR upload (see RELEASE.md)."
+            exit 0
+          fi
+          mkdir -p ~/.config
+          printf '[copr-cli]\nlogin = thenathattify\ntoken = %s\n' "$COPR_API_TOKEN" > ~/.config/copr
+          chmod 600 ~/.config/copr
+          copr-cli build thenathattify/marker artifacts/*.src.rpm
+
+  flatpak-repo-publish:
+    name: Publish flatpak repo to GitHub Pages
+    needs: flatpak
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: flatpak-repo
+          path: gh-pages
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          publish_branch: gh-pages
+
+  release:
+    name: Create GitHub release
+    needs: [version-guard, source-tarball, rpm, deb, flatpak]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: '*'
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate SHA256SUMS
+        run: |
+          cd artifacts
+          ls -A | grep -v '^SHA256SUMS.txt$' | xargs sha256sum > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          sed "s/@VERSION@/$VERSION/g" packaging/release-notes.md.in > /tmp/release-notes.md
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Marker $VERSION" \
+            --notes-file /tmp/release-notes.md \
+            artifacts/*

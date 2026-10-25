@@ -1,0 +1,43 @@
+## Marker @VERSION@
+
+### Downloads
+
+- **RPM (Fedora)** — `marker-@VERSION@-1.fc*.x86_64.rpm`
+
+  ```sh
+  sudo dnf install ./marker-@VERSION@-1.*.rpm
+  ```
+
+- **DEB (Debian / Ubuntu)** — `marker_@VERSION@-1_amd64.deb`
+
+  ```sh
+  sudo apt install ./marker_@VERSION@-1_amd64.deb
+  ```
+
+- **Flatpak bundle** — `com.github.thenathattify.marker.flatpak`
+
+  ```sh
+  flatpak install ./com.github.thenathattify.marker.flatpak
+  ```
+
+- **Source tarball** — `marker-@VERSION@.tar.gz`
+
+SHA256 checksums of all files above: `SHA256SUMS.txt`.
+
+### Flatpak repository (updated on every release)
+
+```sh
+flatpak remote-add --if-not-exists --no-gpg-verify marker --from=https://thenathattify.github.io/Marker/marker.flatpakrepo
+flatpak install marker com.github.thenathattify.marker
+```
+
+### COPR (Fedora)
+
+```sh
+sudo dnf copr enable thenathattify/marker
+sudo dnf install marker
+```
+
+---
+
+Full change log: https://github.com/TheNathattify/Marker/commits/main
