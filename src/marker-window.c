@@ -51,7 +51,7 @@ struct _MarkerWindow
   GtkEntry             *zoom_entry;
 
   gboolean              is_fullscreen;
-  GtkButton            *unfullscreen_btn;
+  GtkToggleButton      *fullscreen_btn;
 
   GtkBox               *vbox;
   MarkerEditor         *active_editor;
@@ -156,8 +156,8 @@ show_unsaved_documents_warning_async (MarkerWindow           *window,
 
 static void
 on_fullscreen_notify (GtkWindow   *gtk_window,
-                      GParamSpec  *pspec,
-                      gpointer     user_data)
+                      GParamSpec  *pspec G_GNUC_UNUSED,
+                      gpointer     user_data G_GNUC_UNUSED)
 {
   MarkerWindow *window = MARKER_WINDOW (gtk_window);
   gboolean fullscreen = gtk_window_is_fullscreen (gtk_window);
@@ -168,9 +168,24 @@ on_fullscreen_notify (GtkWindow   *gtk_window,
     g_simple_action_set_state (G_SIMPLE_ACTION (action),
                                g_variant_new_boolean (fullscreen));
 
-  if (window->unfullscreen_btn)
-    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn),
-                            fullscreen);
+  /* Un seul bouton toggle : change l'icône et le tooltip selon l'état. */
+  if (window->fullscreen_btn)
+  {
+    if (fullscreen)
+    {
+      gtk_button_set_icon_name (GTK_BUTTON (window->fullscreen_btn),
+                                "view-restore-symbolic");
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->fullscreen_btn),
+                                   _("Leave Fullscreen"));
+    }
+    else
+    {
+      gtk_button_set_icon_name (GTK_BUTTON (window->fullscreen_btn),
+                                "view-fullscreen-symbolic");
+      gtk_widget_set_tooltip_text (GTK_WIDGET (window->fullscreen_btn),
+                                   _("Toggle Fullscreen"));
+    }
+  }
 }
 
 static void
@@ -895,8 +910,7 @@ marker_window_fullscreen (MarkerWindow *window)
 
   window->is_fullscreen = TRUE;
   gtk_window_fullscreen (GTK_WINDOW (window));
-  if (window->unfullscreen_btn)
-    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), TRUE);
+  /* L'icône du bouton est mise à jour dans on_fullscreen_notify. */
 }
 
 void
@@ -907,8 +921,7 @@ marker_window_unfullscreen (MarkerWindow *window)
 
   window->is_fullscreen = FALSE;
   gtk_window_unfullscreen (GTK_WINDOW (window));
-  if (window->unfullscreen_btn)
-    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), FALSE);
+  /* L'icône du bouton est mise à jour dans on_fullscreen_notify. */
 }
 
 typedef struct {
@@ -1386,12 +1399,10 @@ marker_window_init (MarkerWindow *window)
   window->window_title = ADW_WINDOW_TITLE (gtk_builder_get_object (builder, "window_title"));
   gtk_box_append (vbox, GTK_WIDGET (header_bar));
 
-  GtkButton *unfullscreen_btn = GTK_BUTTON (gtk_builder_get_object (builder, "unfullscreen_btn"));
-  window->unfullscreen_btn = unfullscreen_btn;
-  if (unfullscreen_btn)
-  {
-    g_signal_connect_swapped (unfullscreen_btn, "clicked", G_CALLBACK (marker_window_unfullscreen), window);
-  }
+  /* Bouton fullscreen unique (toggle) : l'icône change selon l'état
+   * dans on_fullscreen_notify. Pas besoin de connexion clicked car
+   * action-name="win.fullscreen" gère le toggle automatiquement. */
+  window->fullscreen_btn = GTK_TOGGLE_BUTTON (gtk_builder_get_object (builder, "fullscreen_btn"));
 
   /** Popover / Gear Menu **/
 

@@ -71,17 +71,18 @@
     </child>
 
     <child type="end">
-      <object class="GtkButton" id="unfullscreen_btn">
-        <property name="visible">false</property>
-        <property name="icon-name">view-restore-symbolic</property>
-        <property name="tooltip-text" translatable="yes">Leave Fullscreen</property>
-      </object>
-    </child>
-    <child type="end">
       <object class="GtkMenuButton" id="view_mode_btn">
         <property name="icon-name">view-grid-symbolic</property>
         <property name="tooltip-text" translatable="yes">View Mode</property>
         <property name="menu-model">view_mode_menu</property>
+      </object>
+    </child>
+
+    <child type="end">
+      <object class="GtkToggleButton" id="fullscreen_btn">
+        <property name="icon-name">view-fullscreen-symbolic</property>
+        <property name="action-name">win.fullscreen</property>
+        <property name="tooltip-text" translatable="yes">Toggle Fullscreen</property>
       </object>
     </child>
 
