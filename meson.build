@@ -1,7 +1,7 @@
 project(
   'marker',
   'c',
-  version: '2026.10.2',
+  version: '2026.10.3',
   meson_version: '>= 0.62.0',
   default_options: [
     'warning_level=2',
@@ -80,7 +80,7 @@ hoedown_sources = [
 
 deps = [
   dependency('gtk4', version: '>= 4.16.0'),
-  dependency('libadwaita-1', version: '>= 1.4.0'),
+  dependency('libadwaita-1', version: '>= 1.8.0'),
   dependency('glib-2.0', version: '>= 2.74.0'),
   dependency('gio-2.0', version: '>= 2.74.0'),
   dependency('gtksourceview-5', version: '>= 5.6.0'),

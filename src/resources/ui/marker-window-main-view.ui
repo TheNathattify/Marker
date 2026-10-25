@@ -13,7 +13,7 @@
       <object class="GtkBox" id="sidebar_box">
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkStackSwitcher" id="sidebar_switcher">
+          <object class="AdwViewSwitcher" id="sidebar_switcher">
             <property name="stack">sidebar_stack</property>
             <property name="halign">center</property>
             <property name="margin-top">6</property>
@@ -21,12 +21,11 @@
           </object>
         </child>
         <child>
-          <object class="GtkStack" id="sidebar_stack">
+          <object class="AdwViewStack" id="sidebar_stack">
             <property name="vexpand">true</property>
             <property name="hexpand">true</property>
-            <property name="transition-type">slide-left-right</property>
             <child>
-              <object class="GtkStackPage">
+              <object class="AdwViewStackPage">
                 <property name="name">documents</property>
                 <property name="title" translatable="yes">Documents</property>
                 <property name="icon-name">folder-symbolic</property>
@@ -35,9 +34,11 @@
                     <property name="hscrollbar-policy">never</property>
                     <property name="propagate-natural-width">false</property>
                     <property name="child">
-                      <object class="GtkTreeView" id="documents_tree_view">
-                        <property name="enable-grid-lines">horizontal</property>
-                        <property name="headers-visible">false</property>
+                      <object class="GtkListBox" id="documents_list_box">
+                        <property name="selection-mode">single</property>
+                        <style>
+                          <class name="navigation-sidebar"/>
+                        </style>
                       </object>
                     </property>
                   </object>
@@ -45,7 +46,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkStackPage">
+              <object class="AdwViewStackPage">
                 <property name="name">outline</property>
                 <property name="title" translatable="yes">Outline</property>
                 <property name="icon-name">format-indent-more-symbolic</property>

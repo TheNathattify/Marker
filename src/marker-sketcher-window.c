@@ -327,11 +327,12 @@ large_cb (GtkButton *button G_GNUC_UNUSED,
 }
 
 static void
-color_set_cb (GtkColorChooser *button,
-              gpointer         user_data)
+color_rgba_notify_cb (GtkColorDialogButton *button,
+                      GParamSpec           *pspec G_GNUC_UNUSED,
+                      gpointer              user_data)
 {
   MarkerSketcherWindow *window = MARKER_SKETCHER_WINDOW (user_data);
-  gtk_color_chooser_get_rgba (button, &window->color);
+  window->color = *gtk_color_dialog_button_get_rgba (button);
 }
 
 static char *
@@ -442,10 +443,7 @@ init_ui (MarkerSketcherWindow *window)
   gtk_window_set_default_size (GTK_WINDOW (window), 800, 600);
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
-  GtkBox *vbox = GTK_BOX (gtk_builder_get_object (builder, "vbox"));
-  gtk_box_append (vbox, GTK_WIDGET (drawing_area));
-
-  GtkWidget *hbar = GTK_WIDGET (gtk_builder_get_object (builder, "header_bar"));
+  AdwToolbarView *toolbar_view = ADW_TOOLBAR_VIEW (gtk_builder_get_object (builder, "toolbar_view"));
 
   GtkPopover *text_popover = GTK_POPOVER (gtk_builder_get_object (builder, "text_popover"));
   GtkEntry *text_entry = GTK_ENTRY (gtk_builder_get_object (builder, "text_entry"));
@@ -457,9 +455,8 @@ init_ui (MarkerSketcherWindow *window)
     gtk_popover_set_position (text_popover, GTK_POS_LEFT);
   }
 
-  adw_window_set_content (ADW_WINDOW (window), GTK_WIDGET (vbox));
-  if (hbar)
-    gtk_window_set_titlebar (GTK_WINDOW (window), hbar);
+  adw_toolbar_view_set_content (toolbar_view, GTK_WIDGET (drawing_area));
+  adw_window_set_content (ADW_WINDOW (window), GTK_WIDGET (toolbar_view));
 
   gtk_drawing_area_set_draw_func (drawing_area, sketcher_draw_func, window, NULL);
 
@@ -489,7 +486,7 @@ init_ui (MarkerSketcherWindow *window)
   if ((obj = gtk_builder_get_object (builder, "text_radio_button")))
     g_signal_connect (obj, "clicked", G_CALLBACK (text_cb), window);
   if ((obj = gtk_builder_get_object (builder, "color_selection_button")))
-    g_signal_connect (obj, "color-set", G_CALLBACK (color_set_cb), window);
+    g_signal_connect (obj, "notify::rgba", G_CALLBACK (color_rgba_notify_cb), window);
   if ((obj = gtk_builder_get_object (builder, "insert_button")))
     g_signal_connect (obj, "clicked", G_CALLBACK (insert_sketch_cb), window);
   if ((obj = gtk_builder_get_object (builder, "small_radio_button")))

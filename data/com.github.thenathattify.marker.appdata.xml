@@ -29,6 +29,9 @@
   <launchable type="desktop-id">com.github.thenathattify.marker.desktop</launchable>
   <translation type="gettext">marker</translation>
 
+  <screenshots>
+    <!-- TODO: add screenshots before publishing to Flathub -->
+  </screenshots>
 
   <developer id="com.github.thenathattify">
     <name>Nathan Obry</name>
@@ -44,6 +47,18 @@
   </provides>
 
   <releases>
+    <release version="2026.10.3" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>GNOME HIG compliance: AdwToolbarView, AdwSplitButton, AdwViewSwitcher, AdwViewStack, AdwShortcutsDialog, GtkColorDialogButton.</li>
+          <li>Sidebar documents list migrated from GtkTreeView to GtkListBox with inline rename/close buttons.</li>
+          <li>Fixed crash on startup caused by incorrect AdwViewPage class name in UI file.</li>
+          <li>Added missing languages to LINGUAS (ko, pt_BR, zh_CN).</li>
+          <li>Desktop file: added StartupWMClass, StartupNotify, DBusActivatable, TextEditor category.</li>
+          <li>Removed non-functional Help menu item and dead app.help action.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.2" date="2026-10-25">
       <description translate="no">
         <ul>

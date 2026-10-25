@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 10:02+0100\n"
+"POT-Creation-Date: 2026-10-25 10:41+0100\n"
 "PO-Revision-Date: 2021-08-09 21:48+0800\n"
 "Last-Translator: liulitchi <xingzuo88@qq.com>\n"
 "Language-Team: Chinese <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
 msgid "A simple markdown editor for GTK+"
 msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
 
-#: data/com.github.thenathattify.marker.desktop:25
+#: data/com.github.thenathattify.marker.desktop:28
 msgid "marker;markdown;editor;web;"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Figure captioning and numbering"
 msgstr ""
 
-#: data/com.github.thenathattify.marker.appdata.xml:34
+#: data/com.github.thenathattify.marker.appdata.xml:37
 msgid "Nathan Obry"
 msgstr ""
 
@@ -317,7 +317,7 @@ msgid "Zoom level of the source view widget"
 msgstr ""
 
 #: data/com.github.thenathattify.marker.gschema.xml:175
-#: src/resources/ui/marker-headerbar.ui:109
+#: src/resources/ui/marker-headerbar.ui:95
 msgid "View Mode"
 msgstr "浏览模式"
 
@@ -508,191 +508,48 @@ msgstr "默认浏览模式："
 msgid "Dark mode"
 msgstr "启用暗黑模式："
 
-#: src/resources/ui/marker-shortcuts-window.ui:13
-msgctxt "shortcut window"
-msgid "Documents"
-msgstr "文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:17
-msgctxt "shortcut window"
-msgid "Create a new document"
-msgstr "创建新文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:23
-msgctxt "shortcut window"
-msgid "Open a document"
-msgstr "打开文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:29
-#: src/resources/ui/marker-shortcuts-window.ui:35
-msgctxt "shortcut window"
-msgid "Reload document from disk"
-msgstr ""
-
-#: src/resources/ui/marker-shortcuts-window.ui:41
-msgctxt "shortcut window"
-msgid "Open a document in a new window"
-msgstr "在新窗口打开某文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:47
-msgctxt "shortcut window"
-msgid "Save the document"
-msgstr "保存文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:53
-msgctxt "shortcut window"
-msgid "Save the document with a new filename"
-msgstr "保存文档为一新文件名"
-
-#: src/resources/ui/marker-shortcuts-window.ui:59
-#, fuzzy
-msgctxt "shortcut window"
-msgid "Rename document"
-msgstr "打开文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:65
-msgctxt "shortcut window"
-msgid "Close the document"
-msgstr "关闭文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:72
-msgctxt "shortcut window"
-msgid "Editing"
-msgstr "编辑"
-
-#: src/resources/ui/marker-shortcuts-window.ui:76
-msgctxt "shortcut window"
-msgid "Make selection bold"
-msgstr "加粗所选文字"
-
-#: src/resources/ui/marker-shortcuts-window.ui:82
-msgctxt "shortcut window"
-msgid "Make selection italic"
-msgstr "所选文字斜体化"
-
-#: src/resources/ui/marker-shortcuts-window.ui:88
-msgctxt "shortcut window"
-msgid "Make selection monospace"
-msgstr "所选文字等宽"
-
-#: src/resources/ui/marker-shortcuts-window.ui:94
-msgctxt "shortcut window"
-msgid "Insert link"
-msgstr "插入链接"
-
-#: src/resources/ui/marker-shortcuts-window.ui:100
-#, fuzzy
-msgctxt "shortcut window"
-msgid "Draw a sketch"
-msgstr "插入草稿"
-
-#: src/resources/ui/marker-shortcuts-window.ui:106
-msgctxt "shortcut window"
-msgid "Search in the document"
-msgstr "在文档中搜索"
-
-#: src/resources/ui/marker-shortcuts-window.ui:112
-msgctxt "shortcut window"
-msgid "Find and replace"
-msgstr ""
-
-#: src/resources/ui/marker-shortcuts-window.ui:119
-msgctxt "shortcut window"
-msgid "Tools"
-msgstr "工具"
-
-#: src/resources/ui/marker-shortcuts-window.ui:123
-msgctxt "shortcut window"
-msgid "Print the document"
-msgstr "打印文档"
-
-#: src/resources/ui/marker-shortcuts-window.ui:130
-msgctxt "shortcut window"
-msgid "Window"
-msgstr "窗口"
-
-#: src/resources/ui/marker-shortcuts-window.ui:134
-msgctxt "shortcut window"
-msgid "Open a new window"
-msgstr "打开新窗口"
-
-#: src/resources/ui/marker-shortcuts-window.ui:140
-msgctxt "shortcut window"
-msgid "Close all windows"
-msgstr "关闭所有窗口"
-
-#: src/resources/ui/marker-shortcuts-window.ui:146
-msgctxt "shortcut window"
-msgid "Toggle fullscreen mode"
-msgstr "切换为全屏模式"
-
-#: src/resources/ui/marker-shortcuts-window.ui:152
-msgctxt "shortcut window"
-msgid "Switch to editor-only mode"
-msgstr "转为仅限编辑模式"
-
-#: src/resources/ui/marker-shortcuts-window.ui:158
-msgctxt "shortcut window"
-msgid "Switch to preview-only mode"
-msgstr "转为仅限预览模式"
-
-#: src/resources/ui/marker-shortcuts-window.ui:164
-msgctxt "shortcut window"
-msgid "Switch to dual-pane mode"
-msgstr "转为双面板模式"
-
-#: src/resources/ui/marker-shortcuts-window.ui:170
-msgctxt "shortcut window"
-msgid "Switch to dual-window mode"
-msgstr "转为双窗口模式"
-
-#: src/resources/ui/marker-shortcuts-window.ui:176
-msgctxt "shortcut window"
-msgid "Quit the application"
-msgstr "关闭应用"
-
-#: src/resources/ui/marker-sketcher-window.ui:21
+#: src/resources/ui/marker-sketcher-window.ui:22
 msgid "Add Text"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:27
+#: src/resources/ui/marker-sketcher-window.ui:28
 msgid "Close"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:44
+#: src/resources/ui/marker-sketcher-window.ui:47
 msgid "Pen Tool"
 msgstr "面板工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:51
+#: src/resources/ui/marker-sketcher-window.ui:54
 msgid "Eraser Tool"
 msgstr "擦除工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:58
+#: src/resources/ui/marker-sketcher-window.ui:61
 msgid "Text Insertion Tool"
 msgstr "文本插入工具"
 
-#: src/resources/ui/marker-sketcher-window.ui:67
+#: src/resources/ui/marker-sketcher-window.ui:70
 msgid "Color Chooser"
 msgstr "颜色选项"
 
-#: src/resources/ui/marker-sketcher-window.ui:81
+#: src/resources/ui/marker-sketcher-window.ui:88
 msgid "Small"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:87
+#: src/resources/ui/marker-sketcher-window.ui:94
 msgid "Medium"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:95
+#: src/resources/ui/marker-sketcher-window.ui:102
 msgid "Large"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:111
+#: src/resources/ui/marker-sketcher-window.ui:118
 #, fuzzy
 msgid "Insert Sketch"
 msgstr "插入草稿"
 
-#: src/resources/ui/marker-sketcher-window.ui:117
+#: src/resources/ui/marker-sketcher-window.ui:124
 msgid "Cancel"
 msgstr ""
 
@@ -730,12 +587,12 @@ msgstr "快捷键"
 msgid "_About Marker"
 msgstr "关于 Marker"
 
-#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#: src/resources/ui/marker-window-main-view.ui:30
 #, fuzzy
 msgid "Documents"
 msgstr "文档"
 
-#: src/resources/ui/marker-window-main-view.ui:50
+#: src/resources/ui/marker-window-main-view.ui:51
 msgid "Outline"
 msgstr ""
 
@@ -776,48 +633,44 @@ msgstr "侧边栏"
 msgid "Open…"
 msgstr "打开..."
 
-#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
-#: src/marker-window.c:1848
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1743
+#: src/marker-window.c:1782
 #, fuzzy
 msgid "Open Document"
 msgstr "打开文档"
 
-#: src/resources/ui/marker-headerbar.ui:76
+#: src/resources/ui/marker-headerbar.ui:71
 #, fuzzy
 msgid "Save Document"
 msgstr "保存文档"
 
-#: src/resources/ui/marker-headerbar.ui:83
-msgid "Save Options"
-msgstr "保存选项"
-
-#: src/resources/ui/marker-headerbar.ui:92
+#: src/resources/ui/marker-headerbar.ui:78
 #, fuzzy
 msgid "New Document"
 msgstr "文档"
 
-#: src/resources/ui/marker-headerbar.ui:101
+#: src/resources/ui/marker-headerbar.ui:87
 msgid "Main Menu"
 msgstr "主菜单"
 
-#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#: src/resources/ui/marker-headerbar.ui:104 src/marker-window.c:199
 #, fuzzy
 msgid "Toggle Fullscreen"
 msgstr "切换为全屏模式"
 
-#: src/resources/ui/marker-headerbar.ui:132
+#: src/resources/ui/marker-headerbar.ui:118
 msgid "Zoom Out"
 msgstr "缩小"
 
-#: src/resources/ui/marker-headerbar.ui:142
+#: src/resources/ui/marker-headerbar.ui:128
 msgid "Zoom level (%). Type a value and press Enter."
 msgstr ""
 
-#: src/resources/ui/marker-headerbar.ui:149
+#: src/resources/ui/marker-headerbar.ui:135
 msgid "Zoom In"
 msgstr "放大"
 
-#: src/resources/ui/marker-headerbar.ui:155
+#: src/resources/ui/marker-headerbar.ui:141
 msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
 msgstr ""
 
@@ -851,13 +704,180 @@ msgstr "插入链接"
 msgid "Sketcher"
 msgstr "草稿"
 
-#: src/marker.c:187
+#: src/marker.c:172
 msgid "A markdown editor for GNOME"
 msgstr "一款 Markdown 编辑器，来自 GNOME 团队"
 
-#: src/marker.c:194
+#: src/marker.c:179
 msgid "translator-credits"
 msgstr "翻译人员"
+
+#: src/marker.c:210
+msgctxt "shortcut window"
+msgid "Documents"
+msgstr "文档"
+
+#: src/marker.c:211
+msgctxt "shortcut window"
+msgid "Create a new document"
+msgstr "创建新文档"
+
+#: src/marker.c:212
+msgctxt "shortcut window"
+msgid "Open a document"
+msgstr "打开文档"
+
+#: src/marker.c:213
+msgctxt "shortcut window"
+msgid "Open a document in a new window"
+msgstr "在新窗口打开某文档"
+
+#: src/marker.c:214
+msgctxt "shortcut window"
+msgid "Save the document"
+msgstr "保存文档"
+
+#: src/marker.c:215
+msgctxt "shortcut window"
+msgid "Save the document with a new filename"
+msgstr "保存文档为一新文件名"
+
+#: src/marker.c:216
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Export the document"
+msgstr "打印文档"
+
+#: src/marker.c:217
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "打开文档"
+
+#: src/marker.c:218 src/marker.c:219
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/marker.c:220
+msgctxt "shortcut window"
+msgid "Close the document"
+msgstr "关闭文档"
+
+#: src/marker.c:226
+msgctxt "shortcut window"
+msgid "Editing"
+msgstr "编辑"
+
+#: src/marker.c:227
+msgctxt "shortcut window"
+msgid "Make selection bold"
+msgstr "加粗所选文字"
+
+#: src/marker.c:228
+msgctxt "shortcut window"
+msgid "Make selection italic"
+msgstr "所选文字斜体化"
+
+#: src/marker.c:229
+msgctxt "shortcut window"
+msgid "Make selection monospace"
+msgstr "所选文字等宽"
+
+#: src/marker.c:230
+msgctxt "shortcut window"
+msgid "Insert link"
+msgstr "插入链接"
+
+#: src/marker.c:231
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "插入草稿"
+
+#: src/marker.c:232
+msgctxt "shortcut window"
+msgid "Search in the document"
+msgstr "在文档中搜索"
+
+#: src/marker.c:233
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/marker.c:239
+#, fuzzy
+msgctxt "shortcut window"
+msgid "View"
+msgstr "浏览模式"
+
+#: src/marker.c:240
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Zoom in"
+msgstr "放大"
+
+#: src/marker.c:241
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Zoom out"
+msgstr "缩小"
+
+#: src/marker.c:242
+msgctxt "shortcut window"
+msgid "Reset zoom"
+msgstr ""
+
+#: src/marker.c:243
+msgctxt "shortcut window"
+msgid "Switch to editor-only mode"
+msgstr "转为仅限编辑模式"
+
+#: src/marker.c:244
+msgctxt "shortcut window"
+msgid "Switch to preview-only mode"
+msgstr "转为仅限预览模式"
+
+#: src/marker.c:245
+msgctxt "shortcut window"
+msgid "Switch to dual-pane mode"
+msgstr "转为双面板模式"
+
+#: src/marker.c:246
+msgctxt "shortcut window"
+msgid "Switch to dual-window mode"
+msgstr "转为双窗口模式"
+
+#: src/marker.c:252
+msgctxt "shortcut window"
+msgid "Window"
+msgstr "窗口"
+
+#: src/marker.c:253
+msgctxt "shortcut window"
+msgid "Open a new window"
+msgstr "打开新窗口"
+
+#: src/marker.c:254
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Toggle sidebar"
+msgstr "侧边栏"
+
+#: src/marker.c:255
+msgctxt "shortcut window"
+msgid "Toggle fullscreen mode"
+msgstr "切换为全屏模式"
+
+#: src/marker.c:256
+msgctxt "shortcut window"
+msgid "Print the document"
+msgstr "打印文档"
+
+#: src/marker.c:257
+msgctxt "shortcut window"
+msgid "Quit the application"
+msgstr "关闭应用"
 
 #: src/marker-editor.c:395
 msgid "Toggle Replace"
@@ -892,78 +912,94 @@ msgstr "Untitled.md"
 msgid "Export"
 msgstr "导出为..."
 
-#: src/marker-window.c:133
+#: src/marker-window.c:144
 #, fuzzy, c-format
 msgid "Discard changes to the document '%s'?"
 msgstr "在文档中搜索"
 
-#: src/marker-window.c:135 src/marker-window.c:140
+#: src/marker-window.c:146 src/marker-window.c:151
 msgid "The document has unsaved changes that will be lost if it is closed now."
 msgstr ""
 
-#: src/marker-window.c:139
+#: src/marker-window.c:150
 #, fuzzy
 msgid "Discard changes to the document?"
 msgstr "在文档中搜索"
 
-#: src/marker-window.c:144 src/marker-window.c:1080
+#: src/marker-window.c:155 src/marker-window.c:1077
 msgid "_Cancel"
 msgstr ""
 
-#: src/marker-window.c:145
+#: src/marker-window.c:156
 msgid "_Discard"
 msgstr ""
 
-#: src/marker-window.c:181
+#: src/marker-window.c:192
 #, fuzzy
 msgid "Leave Fullscreen"
 msgstr "全屏"
 
-#: src/marker-window.c:940
+#: src/marker-window.c:947
 msgid "Cannot Rename"
 msgstr ""
 
-#: src/marker-window.c:941
+#: src/marker-window.c:948
 msgid "_OK"
 msgstr ""
 
-#: src/marker-window.c:958
+#: src/marker-window.c:965
 msgid "File name cannot be empty."
 msgstr ""
 
-#: src/marker-window.c:964
+#: src/marker-window.c:971
 msgid "File name cannot contain '/'."
 msgstr ""
 
-#: src/marker-window.c:981
+#: src/marker-window.c:988
 msgid "A file with that name already exists."
 msgstr ""
 
-#: src/marker-window.c:988
+#: src/marker-window.c:995
 msgid "Failed to rename file."
 msgstr ""
 
-#: src/marker-window.c:1054
+#: src/marker-window.c:1051
 msgid "The document must be saved before it can be renamed."
 msgstr ""
 
-#: src/marker-window.c:1077
+#: src/marker-window.c:1074 src/marker-window.c:1191
 #, fuzzy
 msgid "Rename Document"
 msgstr "打开文档"
 
-#: src/marker-window.c:1081
+#: src/marker-window.c:1078
 msgid "_Rename"
 msgstr ""
 
-#: src/marker-window.c:1528
+#: src/marker-window.c:1197
+#, fuzzy
+msgid "Close Document"
+msgstr "关闭文档"
+
+#: src/marker-window.c:1486
 msgid "No headings found"
 msgstr ""
 
-#: src/marker-window.c:1896
+#: src/marker-window.c:1830
 #, fuzzy
 msgid "Save Document As"
 msgstr "保存文档"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Tools"
+#~ msgstr "工具"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Close all windows"
+#~ msgstr "关闭所有窗口"
+
+#~ msgid "Save Options"
+#~ msgstr "保存选项"
 
 #~ msgid "Help"
 #~ msgstr "帮助"

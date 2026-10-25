@@ -47,14 +47,13 @@ static const GOptionEntry CLI_OPTIONS[] =
   { NULL }
 };
 
-const int APP_MENU_ACTION_ENTRIES_LEN = 6;
+const int APP_MENU_ACTION_ENTRIES_LEN = 5;
 
 const GActionEntry APP_MENU_ACTION_ENTRIES[] =
 {
   { "new", new_cb, NULL, NULL, NULL },
   { "prefs", marker_prefs_cb, NULL, NULL, NULL },
   { "shortcuts", marker_shortcuts_cb, NULL, NULL, NULL },
-  { "help", marker_help_cb, NULL, NULL, NULL },
   { "about", marker_about_cb, NULL, NULL, NULL },
   { "quit", marker_quit_cb, NULL, NULL, NULL }
 };
@@ -144,20 +143,6 @@ marker_prefs_cb (GSimpleAction *action,
 }
 
 void
-marker_help_cb (GSimpleAction *action,
-                GVariant      *parameter,
-                gpointer       user_data)
-{
-  (void) action;
-  (void) parameter;
-  (void) user_data;
-  GtkApplication *app = marker_get_app ();
-  GtkWindow *parent = gtk_application_get_active_window (app);
-
-  gtk_show_uri (parent, "help:Marker", GDK_CURRENT_TIME);
-}
-
-void
 marker_about_cb (GSimpleAction *action,
                  GVariant      *parameter,
                  gpointer       user_data)
@@ -214,19 +199,66 @@ marker_shortcuts_cb (GSimpleAction *action,
   (void) action;
   (void) parameter;
   (void) user_data;
-  g_autoptr(GtkBuilder) builder =
-    gtk_builder_new_from_resource ("/com/github/thenathattify/marker/ui/marker-shortcuts-window.ui");
 
-  GtkWidget *dialog = GTK_WIDGET (gtk_builder_get_object (builder, "shortcuts"));
   GtkApplication *app = marker_get_app ();
   GtkWindow *parent = gtk_application_get_active_window (app);
 
-  if (GTK_WINDOW (parent) != gtk_window_get_transient_for (GTK_WINDOW (dialog)))
+  AdwShortcutsDialog *dialog = ADW_SHORTCUTS_DIALOG (adw_shortcuts_dialog_new ());
+
+  /* Documents */
   {
-    gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (parent));
+    AdwShortcutsSection *section = adw_shortcuts_section_new (C_("shortcut window", "Documents"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Create a new document"), "<Ctrl>n"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Open a document"), "<Ctrl>o"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Open a document in a new window"), "<Ctrl><Shift>o"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Save the document"), "<Ctrl>s"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Save the document with a new filename"), "<Ctrl><Shift>s"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Export the document"), "<Ctrl>e"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Rename document"), "F2"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Reload document from disk"), "F5"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Reload document from disk"), "<Ctrl>r"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Close the document"), "<Ctrl>w"));
+    adw_shortcuts_dialog_add (dialog, section);
   }
 
-  gtk_window_present (GTK_WINDOW (dialog));
+  /* Editing */
+  {
+    AdwShortcutsSection *section = adw_shortcuts_section_new (C_("shortcut window", "Editing"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Make selection bold"), "<Ctrl>b"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Make selection italic"), "<Ctrl>i"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Make selection monospace"), "<Ctrl>m"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Insert link"), "<Ctrl>k"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Draw a sketch"), "<Ctrl>d"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Search in the document"), "<Ctrl>f"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Find and replace"), "<Ctrl>h"));
+    adw_shortcuts_dialog_add (dialog, section);
+  }
+
+  /* View */
+  {
+    AdwShortcutsSection *section = adw_shortcuts_section_new (C_("shortcut window", "View"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Zoom in"), "<Ctrl>plus"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Zoom out"), "<Ctrl>minus"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Reset zoom"), "<Ctrl>0"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Switch to editor-only mode"), "<Ctrl>1"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Switch to preview-only mode"), "<Ctrl>2"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Switch to dual-pane mode"), "<Ctrl>3"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Switch to dual-window mode"), "<Ctrl>4"));
+    adw_shortcuts_dialog_add (dialog, section);
+  }
+
+  /* Window */
+  {
+    AdwShortcutsSection *section = adw_shortcuts_section_new (C_("shortcut window", "Window"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Open a new window"), "<Ctrl><Shift>n"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Toggle sidebar"), "F12"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Toggle fullscreen mode"), "F11"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Print the document"), "<Ctrl>p"));
+    adw_shortcuts_section_add (section, adw_shortcuts_item_new (C_("shortcut window", "Quit the application"), "<Ctrl>q"));
+    adw_shortcuts_dialog_add (dialog, section);
+  }
+
+  adw_dialog_present (ADW_DIALOG (dialog), GTK_WIDGET (parent));
 }
 
 gboolean

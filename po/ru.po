@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: marker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 10:02+0100\n"
+"POT-Creation-Date: 2026-10-25 10:41+0100\n"
 "PO-Revision-Date: 2019-04-30 14:33+0300\n"
 "Last-Translator: Artem Polishchuk <ego.cordatus@gmail.com>\n"
 "Language-Team: \n"
@@ -36,7 +36,7 @@ msgstr "Markdown редактор для GNOME"
 msgid "A simple markdown editor for GTK+"
 msgstr "Markdown редактор для GNOME"
 
-#: data/com.github.thenathattify.marker.desktop:25
+#: data/com.github.thenathattify.marker.desktop:28
 msgid "marker;markdown;editor;web;"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Figure captioning and numbering"
 msgstr ""
 
-#: data/com.github.thenathattify.marker.appdata.xml:34
+#: data/com.github.thenathattify.marker.appdata.xml:37
 msgid "Nathan Obry"
 msgstr ""
 
@@ -314,7 +314,7 @@ msgid "Zoom level of the source view widget"
 msgstr ""
 
 #: data/com.github.thenathattify.marker.gschema.xml:175
-#: src/resources/ui/marker-headerbar.ui:109
+#: src/resources/ui/marker-headerbar.ui:95
 msgid "View Mode"
 msgstr "Режим просмотра"
 
@@ -502,191 +502,48 @@ msgstr "Режим просмотра по умолчанию: "
 msgid "Dark mode"
 msgstr "Включить тёмный режим"
 
-#: src/resources/ui/marker-shortcuts-window.ui:13
-msgctxt "shortcut window"
-msgid "Documents"
-msgstr "Документы"
-
-#: src/resources/ui/marker-shortcuts-window.ui:17
-msgctxt "shortcut window"
-msgid "Create a new document"
-msgstr "Создать новый документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:23
-msgctxt "shortcut window"
-msgid "Open a document"
-msgstr "Открыть документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:29
-#: src/resources/ui/marker-shortcuts-window.ui:35
-msgctxt "shortcut window"
-msgid "Reload document from disk"
-msgstr ""
-
-#: src/resources/ui/marker-shortcuts-window.ui:41
-msgctxt "shortcut window"
-msgid "Open a document in a new window"
-msgstr "Открыть документ в новом окне"
-
-#: src/resources/ui/marker-shortcuts-window.ui:47
-msgctxt "shortcut window"
-msgid "Save the document"
-msgstr "Сохранить документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:53
-msgctxt "shortcut window"
-msgid "Save the document with a new filename"
-msgstr "Сохранить документ с новым именем файла"
-
-#: src/resources/ui/marker-shortcuts-window.ui:59
-#, fuzzy
-msgctxt "shortcut window"
-msgid "Rename document"
-msgstr "Открыть документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:65
-msgctxt "shortcut window"
-msgid "Close the document"
-msgstr "Закрыть документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:72
-msgctxt "shortcut window"
-msgid "Editing"
-msgstr "Редактирование"
-
-#: src/resources/ui/marker-shortcuts-window.ui:76
-msgctxt "shortcut window"
-msgid "Make selection bold"
-msgstr "Сделать выделенное жирным"
-
-#: src/resources/ui/marker-shortcuts-window.ui:82
-msgctxt "shortcut window"
-msgid "Make selection italic"
-msgstr "Сделать выделенное курсивом"
-
-#: src/resources/ui/marker-shortcuts-window.ui:88
-msgctxt "shortcut window"
-msgid "Make selection monospace"
-msgstr "Сделать выделенное моноширинным"
-
-#: src/resources/ui/marker-shortcuts-window.ui:94
-msgctxt "shortcut window"
-msgid "Insert link"
-msgstr "Вставить ссылку"
-
-#: src/resources/ui/marker-shortcuts-window.ui:100
-#, fuzzy
-msgctxt "shortcut window"
-msgid "Draw a sketch"
-msgstr "Вставить рисунок"
-
-#: src/resources/ui/marker-shortcuts-window.ui:106
-msgctxt "shortcut window"
-msgid "Search in the document"
-msgstr "Поиск в документе"
-
-#: src/resources/ui/marker-shortcuts-window.ui:112
-msgctxt "shortcut window"
-msgid "Find and replace"
-msgstr ""
-
-#: src/resources/ui/marker-shortcuts-window.ui:119
-msgctxt "shortcut window"
-msgid "Tools"
-msgstr "Инструменты"
-
-#: src/resources/ui/marker-shortcuts-window.ui:123
-msgctxt "shortcut window"
-msgid "Print the document"
-msgstr "Распечатать документ"
-
-#: src/resources/ui/marker-shortcuts-window.ui:130
-msgctxt "shortcut window"
-msgid "Window"
-msgstr "Окно"
-
-#: src/resources/ui/marker-shortcuts-window.ui:134
-msgctxt "shortcut window"
-msgid "Open a new window"
-msgstr "Открыть новое окно"
-
-#: src/resources/ui/marker-shortcuts-window.ui:140
-msgctxt "shortcut window"
-msgid "Close all windows"
-msgstr "Закрыть все окна"
-
-#: src/resources/ui/marker-shortcuts-window.ui:146
-msgctxt "shortcut window"
-msgid "Toggle fullscreen mode"
-msgstr "Переключить полноэкранный режим"
-
-#: src/resources/ui/marker-shortcuts-window.ui:152
-msgctxt "shortcut window"
-msgid "Switch to editor-only mode"
-msgstr "Переключить в режим только для редактирования"
-
-#: src/resources/ui/marker-shortcuts-window.ui:158
-msgctxt "shortcut window"
-msgid "Switch to preview-only mode"
-msgstr "Переключить в режим только для предварительного просмотра"
-
-#: src/resources/ui/marker-shortcuts-window.ui:164
-msgctxt "shortcut window"
-msgid "Switch to dual-pane mode"
-msgstr "Переключить в режим двойной панели"
-
-#: src/resources/ui/marker-shortcuts-window.ui:170
-msgctxt "shortcut window"
-msgid "Switch to dual-window mode"
-msgstr "Переключить в двухоконный режим"
-
-#: src/resources/ui/marker-shortcuts-window.ui:176
-msgctxt "shortcut window"
-msgid "Quit the application"
-msgstr "Завершить приложение"
-
-#: src/resources/ui/marker-sketcher-window.ui:21
+#: src/resources/ui/marker-sketcher-window.ui:22
 msgid "Add Text"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:27
+#: src/resources/ui/marker-sketcher-window.ui:28
 msgid "Close"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:44
+#: src/resources/ui/marker-sketcher-window.ui:47
 msgid "Pen Tool"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:51
+#: src/resources/ui/marker-sketcher-window.ui:54
 msgid "Eraser Tool"
 msgstr "Ластик"
 
-#: src/resources/ui/marker-sketcher-window.ui:58
+#: src/resources/ui/marker-sketcher-window.ui:61
 msgid "Text Insertion Tool"
 msgstr "Инструмент для вставки текста"
 
-#: src/resources/ui/marker-sketcher-window.ui:67
+#: src/resources/ui/marker-sketcher-window.ui:70
 msgid "Color Chooser"
 msgstr "Выбор цвета"
 
-#: src/resources/ui/marker-sketcher-window.ui:81
+#: src/resources/ui/marker-sketcher-window.ui:88
 msgid "Small"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:87
+#: src/resources/ui/marker-sketcher-window.ui:94
 msgid "Medium"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:95
+#: src/resources/ui/marker-sketcher-window.ui:102
 msgid "Large"
 msgstr ""
 
-#: src/resources/ui/marker-sketcher-window.ui:111
+#: src/resources/ui/marker-sketcher-window.ui:118
 #, fuzzy
 msgid "Insert Sketch"
 msgstr "Вставить рисунок"
 
-#: src/resources/ui/marker-sketcher-window.ui:117
+#: src/resources/ui/marker-sketcher-window.ui:124
 msgid "Cancel"
 msgstr ""
 
@@ -724,12 +581,12 @@ msgstr "Комбинации клавиш"
 msgid "_About Marker"
 msgstr "О Marker"
 
-#: src/resources/ui/marker-window-main-view.ui:31 src/marker-window.c:1479
+#: src/resources/ui/marker-window-main-view.ui:30
 #, fuzzy
 msgid "Documents"
 msgstr "Документы"
 
-#: src/resources/ui/marker-window-main-view.ui:50
+#: src/resources/ui/marker-window-main-view.ui:51
 msgid "Outline"
 msgstr ""
 
@@ -770,48 +627,44 @@ msgstr "Боковая панель"
 msgid "Open…"
 msgstr "Открыть…"
 
-#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1809
-#: src/marker-window.c:1848
+#: src/resources/ui/marker-headerbar.ui:64 src/marker-window.c:1743
+#: src/marker-window.c:1782
 #, fuzzy
 msgid "Open Document"
 msgstr "Открыть документ"
 
-#: src/resources/ui/marker-headerbar.ui:76
+#: src/resources/ui/marker-headerbar.ui:71
 #, fuzzy
 msgid "Save Document"
 msgstr "Сохранить документ"
 
-#: src/resources/ui/marker-headerbar.ui:83
-msgid "Save Options"
-msgstr "Параметры сохранения"
-
-#: src/resources/ui/marker-headerbar.ui:92
+#: src/resources/ui/marker-headerbar.ui:78
 #, fuzzy
 msgid "New Document"
 msgstr "Документы"
 
-#: src/resources/ui/marker-headerbar.ui:101
+#: src/resources/ui/marker-headerbar.ui:87
 msgid "Main Menu"
 msgstr "Главное меню"
 
-#: src/resources/ui/marker-headerbar.ui:118 src/marker-window.c:188
+#: src/resources/ui/marker-headerbar.ui:104 src/marker-window.c:199
 #, fuzzy
 msgid "Toggle Fullscreen"
 msgstr "Переключить полноэкранный режим"
 
-#: src/resources/ui/marker-headerbar.ui:132
+#: src/resources/ui/marker-headerbar.ui:118
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: src/resources/ui/marker-headerbar.ui:142
+#: src/resources/ui/marker-headerbar.ui:128
 msgid "Zoom level (%). Type a value and press Enter."
 msgstr ""
 
-#: src/resources/ui/marker-headerbar.ui:149
+#: src/resources/ui/marker-headerbar.ui:135
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: src/resources/ui/marker-headerbar.ui:155
+#: src/resources/ui/marker-headerbar.ui:141
 msgid "Fit to Width (click) — Auto-fit on Resize (hold)"
 msgstr ""
 
@@ -845,13 +698,180 @@ msgstr "Вставить ссылку"
 msgid "Sketcher"
 msgstr ""
 
-#: src/marker.c:187
+#: src/marker.c:172
 msgid "A markdown editor for GNOME"
 msgstr "Markdown редактор для GNOME"
 
-#: src/marker.c:194
+#: src/marker.c:179
 msgid "translator-credits"
 msgstr "Artem Polishchuk <ego.cordatus@gmail.com>, 2019."
+
+#: src/marker.c:210
+msgctxt "shortcut window"
+msgid "Documents"
+msgstr "Документы"
+
+#: src/marker.c:211
+msgctxt "shortcut window"
+msgid "Create a new document"
+msgstr "Создать новый документ"
+
+#: src/marker.c:212
+msgctxt "shortcut window"
+msgid "Open a document"
+msgstr "Открыть документ"
+
+#: src/marker.c:213
+msgctxt "shortcut window"
+msgid "Open a document in a new window"
+msgstr "Открыть документ в новом окне"
+
+#: src/marker.c:214
+msgctxt "shortcut window"
+msgid "Save the document"
+msgstr "Сохранить документ"
+
+#: src/marker.c:215
+msgctxt "shortcut window"
+msgid "Save the document with a new filename"
+msgstr "Сохранить документ с новым именем файла"
+
+#: src/marker.c:216
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Export the document"
+msgstr "Распечатать документ"
+
+#: src/marker.c:217
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Rename document"
+msgstr "Открыть документ"
+
+#: src/marker.c:218 src/marker.c:219
+msgctxt "shortcut window"
+msgid "Reload document from disk"
+msgstr ""
+
+#: src/marker.c:220
+msgctxt "shortcut window"
+msgid "Close the document"
+msgstr "Закрыть документ"
+
+#: src/marker.c:226
+msgctxt "shortcut window"
+msgid "Editing"
+msgstr "Редактирование"
+
+#: src/marker.c:227
+msgctxt "shortcut window"
+msgid "Make selection bold"
+msgstr "Сделать выделенное жирным"
+
+#: src/marker.c:228
+msgctxt "shortcut window"
+msgid "Make selection italic"
+msgstr "Сделать выделенное курсивом"
+
+#: src/marker.c:229
+msgctxt "shortcut window"
+msgid "Make selection monospace"
+msgstr "Сделать выделенное моноширинным"
+
+#: src/marker.c:230
+msgctxt "shortcut window"
+msgid "Insert link"
+msgstr "Вставить ссылку"
+
+#: src/marker.c:231
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Draw a sketch"
+msgstr "Вставить рисунок"
+
+#: src/marker.c:232
+msgctxt "shortcut window"
+msgid "Search in the document"
+msgstr "Поиск в документе"
+
+#: src/marker.c:233
+msgctxt "shortcut window"
+msgid "Find and replace"
+msgstr ""
+
+#: src/marker.c:239
+#, fuzzy
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Режим просмотра"
+
+#: src/marker.c:240
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Zoom in"
+msgstr "Увеличить"
+
+#: src/marker.c:241
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Zoom out"
+msgstr "Уменьшить"
+
+#: src/marker.c:242
+msgctxt "shortcut window"
+msgid "Reset zoom"
+msgstr "Сбросить масштаб"
+
+#: src/marker.c:243
+msgctxt "shortcut window"
+msgid "Switch to editor-only mode"
+msgstr "Переключить в режим только для редактирования"
+
+#: src/marker.c:244
+msgctxt "shortcut window"
+msgid "Switch to preview-only mode"
+msgstr "Переключить в режим только для предварительного просмотра"
+
+#: src/marker.c:245
+msgctxt "shortcut window"
+msgid "Switch to dual-pane mode"
+msgstr "Переключить в режим двойной панели"
+
+#: src/marker.c:246
+msgctxt "shortcut window"
+msgid "Switch to dual-window mode"
+msgstr "Переключить в двухоконный режим"
+
+#: src/marker.c:252
+msgctxt "shortcut window"
+msgid "Window"
+msgstr "Окно"
+
+#: src/marker.c:253
+msgctxt "shortcut window"
+msgid "Open a new window"
+msgstr "Открыть новое окно"
+
+#: src/marker.c:254
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Toggle sidebar"
+msgstr "Боковая панель"
+
+#: src/marker.c:255
+msgctxt "shortcut window"
+msgid "Toggle fullscreen mode"
+msgstr "Переключить полноэкранный режим"
+
+#: src/marker.c:256
+msgctxt "shortcut window"
+msgid "Print the document"
+msgstr "Распечатать документ"
+
+#: src/marker.c:257
+msgctxt "shortcut window"
+msgid "Quit the application"
+msgstr "Завершить приложение"
 
 #: src/marker-editor.c:395
 msgid "Toggle Replace"
@@ -886,78 +906,94 @@ msgstr "Без названия.md"
 msgid "Export"
 msgstr "Экспортировать…"
 
-#: src/marker-window.c:133
+#: src/marker-window.c:144
 #, fuzzy, c-format
 msgid "Discard changes to the document '%s'?"
 msgstr "Поиск в документе"
 
-#: src/marker-window.c:135 src/marker-window.c:140
+#: src/marker-window.c:146 src/marker-window.c:151
 msgid "The document has unsaved changes that will be lost if it is closed now."
 msgstr ""
 
-#: src/marker-window.c:139
+#: src/marker-window.c:150
 #, fuzzy
 msgid "Discard changes to the document?"
 msgstr "Поиск в документе"
 
-#: src/marker-window.c:144 src/marker-window.c:1080
+#: src/marker-window.c:155 src/marker-window.c:1077
 msgid "_Cancel"
 msgstr ""
 
-#: src/marker-window.c:145
+#: src/marker-window.c:156
 msgid "_Discard"
 msgstr ""
 
-#: src/marker-window.c:181
+#: src/marker-window.c:192
 #, fuzzy
 msgid "Leave Fullscreen"
 msgstr "Полный экран"
 
-#: src/marker-window.c:940
+#: src/marker-window.c:947
 msgid "Cannot Rename"
 msgstr ""
 
-#: src/marker-window.c:941
+#: src/marker-window.c:948
 msgid "_OK"
 msgstr ""
 
-#: src/marker-window.c:958
+#: src/marker-window.c:965
 msgid "File name cannot be empty."
 msgstr ""
 
-#: src/marker-window.c:964
+#: src/marker-window.c:971
 msgid "File name cannot contain '/'."
 msgstr ""
 
-#: src/marker-window.c:981
+#: src/marker-window.c:988
 msgid "A file with that name already exists."
 msgstr ""
 
-#: src/marker-window.c:988
+#: src/marker-window.c:995
 msgid "Failed to rename file."
 msgstr ""
 
-#: src/marker-window.c:1054
+#: src/marker-window.c:1051
 msgid "The document must be saved before it can be renamed."
 msgstr ""
 
-#: src/marker-window.c:1077
+#: src/marker-window.c:1074 src/marker-window.c:1191
 #, fuzzy
 msgid "Rename Document"
 msgstr "Открыть документ"
 
-#: src/marker-window.c:1081
+#: src/marker-window.c:1078
 msgid "_Rename"
 msgstr ""
 
-#: src/marker-window.c:1528
+#: src/marker-window.c:1197
+#, fuzzy
+msgid "Close Document"
+msgstr "Закрыть документ"
+
+#: src/marker-window.c:1486
 msgid "No headings found"
 msgstr ""
 
-#: src/marker-window.c:1896
+#: src/marker-window.c:1830
 #, fuzzy
 msgid "Save Document As"
 msgstr "Сохранить документ"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Tools"
+#~ msgstr "Инструменты"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Close all windows"
+#~ msgstr "Закрыть все окна"
+
+#~ msgid "Save Options"
+#~ msgstr "Параметры сохранения"
 
 #~ msgid "Help"
 #~ msgstr "Справка"

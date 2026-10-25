@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface domain="marker">
   <requires lib="gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
 
   <object class="GtkPopover" id="text_popover">
     <property name="child">
@@ -31,7 +32,9 @@
     </property>
   </object>
 
-  <object class="GtkHeaderBar" id="header_bar">
+  <object class="AdwToolbarView" id="toolbar_view">
+    <child type="top">
+      <object class="AdwHeaderBar" id="header_bar">
     <child type="start">
       <object class="GtkBox" id="tool_box">
         <property name="orientation">horizontal</property>
@@ -63,9 +66,13 @@
     </child>
 
     <child type="start">
-      <object class="GtkColorButton" id="color_selection_button">
+      <object class="GtkColorDialogButton" id="color_selection_button">
         <property name="tooltip-text" translatable="yes">Color Chooser</property>
-        <property name="use-alpha">true</property>
+        <property name="dialog">
+          <object class="GtkColorDialog">
+            <property name="with-alpha">true</property>
+          </object>
+        </property>
       </object>
     </child>
 
@@ -119,11 +126,7 @@
         </child>
       </object>
     </child>
-  </object>
-
-  <object class="GtkBox" id="vbox">
-    <property name="orientation">vertical</property>
-    <property name="hexpand">true</property>
-    <property name="vexpand">true</property>
+      </object>
+    </child>
   </object>
 </interface>
