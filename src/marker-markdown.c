@@ -64,9 +64,9 @@ char* html_header(MarkerMathJSMode    mathjs_mode,
   case MATHJS_NET:
       if (backend == KATEX)
       {
-        mathjs_css = g_strdup("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css\" crossorigin=\"anonymous\">");
-        mathjs_script = g_strdup("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.js\" crossorigin=\"anonymous\"></script>");
-        mathjs_auto = g_strdup("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script>");
+        mathjs_css = g_strdup("<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.css\" crossorigin=\"anonymous\">");
+        mathjs_script = g_strdup("<script src=\"https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/katex.min.js\" crossorigin=\"anonymous\"></script>");
+        mathjs_auto = g_strdup("<script src=\"https://cdn.jsdelivr.net/npm/katex@0.19.1/dist/contrib/auto-render.min.js\" crossorigin=\"anonymous\"></script>");
       } else
       {
         mathjs_css = g_strdup(" ");
@@ -95,13 +95,13 @@ char* html_header(MarkerMathJSMode    mathjs_mode,
       highlight_script = g_strdup(" ");
       break;
     case HIGHLIGHT_NET:
-      highlight_css = g_strdup_printf("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/%s.min.css\">",
+      highlight_css = g_strdup_printf("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/%s.min.css\">",
                                       local_highlight_css);
-      highlight_script = g_strdup("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js\"></script>");
+      highlight_script = g_strdup("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js\"></script>");
       break;
     case HIGHLIGHT_LOCAL:
       highlight_css = g_strdup_printf("<link rel=\"stylesheet\" href=\"file://%shighlight/styles/%s.css\">", scripts_dir, local_highlight_css);
-      highlight_script = g_strdup_printf("<script src=\"file://%shighlight/highlight.pack.js\"></script>", scripts_dir);
+      highlight_script = g_strdup_printf("<script src=\"file://%shighlight/highlight.min.js\"></script>", scripts_dir);
       break;
   }
 
@@ -111,7 +111,7 @@ char* html_header(MarkerMathJSMode    mathjs_mode,
       mermaid_script = g_strdup(" ");
       break;
     case MERMAID_NET:
-      mermaid_script = g_strdup("<script src=\"https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js\"></script>");
+      mermaid_script = g_strdup("<script src=\"https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.min.js\"></script>");
       break;
     case MERMAID_LOCAL:
       mermaid_script = g_strdup_printf("<script src=\"file://%smermaid/mermaid.min.js\"></script>", scripts_dir);
@@ -172,7 +172,7 @@ html_footer(MarkerMathJSMode     mathjs_mode,
       highlight_render = g_strdup(" ");
       break;
     default:
-      highlight_render = g_strdup("<script>if (typeof hljs !== 'undefined') { hljs.initHighlightingOnLoad(); }</script>");
+      highlight_render = g_strdup("<script>if (typeof hljs !== 'undefined') { if (typeof hljs.highlightAll === 'function') { hljs.highlightAll(); } else { hljs.initHighlightingOnLoad(); } }</script>");
       break;
   }
 
@@ -515,6 +515,197 @@ preprocess_task_lists (const char *markdown, size_t size)
 }
 
 /*
+ * Fenced code blocks interrupting a paragraph ---------------------------------
+ *
+ * scidown (like upstream hoedown) cannot start a fenced code block in the
+ * middle of a paragraph: parse_paragraph (src/scidown/src/document.c) does
+ * not break on code fences, so a fence opening that directly follows a
+ * non-blank line is swallowed by the current paragraph — at top level, but
+ * also inside list items and block quotes (lazy continuation). The "code"
+ * then renders as regular Markdown: "# comment" lines become headings,
+ * commands become paragraphs or inline code spans. CommonMark allows fenced
+ * code blocks to interrupt paragraphs.
+ *
+ * Fix: insert a blank line before every fence opening whose previous line
+ * does not already end a block. Lines that already end a block (the fence
+ * is then parsed correctly by scidown) are: blank lines, ATX headings,
+ * table rows, hrules / setext underlines, HTML block starts and other
+ * fence markers. Block quote lines are NOT in that list: scidown applies
+ * lazy continuation, so a fence after "> quote" is swallowed by the quote.
+ *
+ * Each insertion is a single '\n' byte, so byte offsets shift: the cursor
+ * position used for preview scroll synchronization is adjusted by the
+ * number of bytes inserted before it (*adjusted_cursor_position, only when
+ * cursor_position >= 0). Returns a newly allocated string, or NULL when
+ * nothing was inserted.
+ */
+
+/* Position after up to 3 leading spaces (scidown's block indentation limit). */
+static const char*
+skip_block_indent (const char *line, const char *line_end)
+{
+  const char *p = line;
+  while (p < line_end && *p == ' ' && (p - line) < 3)
+    p++;
+  return p;
+}
+
+static gboolean
+line_is_blank (const char *line, const char *line_end)
+{
+  const char *q;
+  for (q = line; q < line_end && (*q == ' ' || *q == '\t' || *q == '\r'); q++);
+  return q >= line_end;
+}
+
+/* After these lines scidown already parses a fence correctly. */
+static gboolean
+line_ends_block (const char *line, const char *line_end)
+{
+  const char *p = skip_block_indent (line, line_end);
+  const char *q;
+
+  if (line_is_blank (line, line_end))
+    return TRUE;
+
+  /* ATX heading */
+  if (*p == '#')
+    {
+      for (q = p + 1; q < line_end && *q == '#'; q++);
+      return q >= line_end || *q == ' ' || *q == '\t';
+    }
+
+  /* table row */
+  if (*p == '|')
+    return TRUE;
+
+  /* hrule / setext underline: a single run of '=', '-', '*' or '_' */
+  if (*p == '=' || *p == '-' || *p == '*' || *p == '_')
+    {
+      const char c = *p;
+      for (q = p + 1; q < line_end && *q == c; q++);
+      while (q < line_end && (*q == ' ' || *q == '\t' || *q == '\r'))
+        q++;
+      return q >= line_end;
+    }
+
+  /* HTML block start */
+  if (*p == '<')
+    return TRUE;
+
+  /* another fence marker (e.g. the closing fence of the previous block) */
+  if (*p == '`' || *p == '~')
+    {
+      const char c = *p;
+      int n = 0;
+      for (q = p; q < line_end && *q == c; q++)
+        n++;
+      return n >= 3;
+    }
+
+  return FALSE;
+}
+
+/* scidown is_codefence(): up to 3 spaces, then at least 3 '`' or '~'. */
+static gboolean
+line_is_fence (const char  *line,
+               const char  *line_end,
+               char        *fence_char,
+               int         *fence_width,
+               const char **rest)
+{
+  const char *p = skip_block_indent (line, line_end);
+  char c;
+  const char *q;
+  int n = 0;
+
+  if (p >= line_end || (*p != '`' && *p != '~'))
+    return FALSE;
+
+  c = *p;
+  for (q = p; q < line_end && *q == c; q++)
+    n++;
+  if (n < 3)
+    return FALSE;
+
+  if (fence_char)
+    *fence_char = c;
+  if (fence_width)
+    *fence_width = n;
+  if (rest)
+    *rest = q;
+  return TRUE;
+}
+
+static gchar*
+preprocess_fences (const char *markdown,
+                   size_t      size,
+                   int         cursor_position,
+                   int        *adjusted_cursor_position)
+{
+  GString *out = NULL;
+  const char *copied = markdown;
+  const char *p = markdown;
+  const char *end = markdown + size;
+  const char *prev_line = NULL;
+  const char *prev_line_end = NULL;
+  gboolean in_fence = FALSE;
+  char fence_char = 0;
+  int fence_width = 0;
+  int inserted_before_cursor = 0;
+
+  while (p < end)
+  {
+    const char *eol = (const char *) memchr (p, '\n', (size_t) (end - p));
+    const char *line_end = eol ? eol : end;
+    char lchar = 0;
+    int lwidth = 0;
+    const char *lrest = NULL;
+
+    if (line_is_fence (p, line_end, &lchar, &lwidth, &lrest))
+      {
+        if (in_fence)
+          {
+            /* scidown closes on the same char and width, empty remainder */
+            const char *q = lrest;
+            while (q < line_end && (*q == ' ' || *q == '\t' || *q == '\r'))
+              q++;
+            if (lchar == fence_char && lwidth == fence_width && q >= line_end)
+              in_fence = FALSE;
+          }
+        else
+          {
+            if (prev_line && !line_ends_block (prev_line, prev_line_end))
+              {
+                if (!out)
+                  out = g_string_sized_new (size + 32);
+                g_string_append_len (out, copied, (gssize) (p - copied));
+                g_string_append_c (out, '\n');
+                if (cursor_position >= 0 && (p - markdown) <= cursor_position)
+                  inserted_before_cursor++;
+                copied = p;
+              }
+            in_fence = TRUE;
+            fence_char = lchar;
+            fence_width = lwidth;
+          }
+      }
+
+    prev_line = p;
+    prev_line_end = line_end;
+    p = eol ? eol + 1 : end;
+  }
+
+  if (!out)
+    return NULL;
+
+  g_string_append_len (out, copied, (gssize) (end - copied));
+  if (adjusted_cursor_position && cursor_position >= 0)
+    *adjusted_cursor_position = cursor_position + inserted_before_cursor;
+  return g_string_free (out, FALSE);
+}
+
+/*
  * Takes ownership of html; swaps the placeholders (in document order)
  * for numbered checkbox inputs. data-task-index matches the 0-based
  * task-item order used by marker_markdown_get_task_item_offset(), so
@@ -641,6 +832,109 @@ mermaid_escape_postprocess (gchar *html)
   return g_string_free (str, FALSE);
 }
 
+/* Prochain titre généré par scidown : "<hN id=\"toc_..." (N entre 2 et 7). */
+static const char*
+find_scidown_heading (const char *s)
+{
+  const char *p = s;
+  while ((p = strstr (p, "<h")) != NULL)
+  {
+    if (p[2] >= '2' && p[2] <= '7' &&
+        strncmp (p + 3, " id=\"toc_", 9) == 0)
+      return p;
+    p += 2;
+  }
+  return NULL;
+}
+
+/*
+ * Deux bizarreries de scidown sur les titres générés (attribut id="toc_..."),
+ * corrigées ici ; les titres écrits en HTML brut par l'utilisateur passent
+ * à travers tels quels.
+ *
+ * 1. scidown émet chaque titre à level+1 (rndr_header, src/scidown/src/html.c :
+ * "<h%d ...>", level+1) — un décalage pensé pour les articles scientifiques où
+ * le titre du document vit dans l'en-tête de page. Dans l'aperçu d'un éditeur
+ * Markdown, un "#" doit être un vrai <h1> : sans correction, tous les niveaux
+ * sont décalés d'un cran (h1→h2, …) et le niveau 6 devient un <h7>, élément
+ * HTML invalide que les feuilles de style ne reconnaissent pas. On décrémente
+ * d'un cran.
+ *
+ * 2. scidown interprète une ligne isolée "-" (ou "=") comme un soulignement
+ * setext (is_headerline appelé sur la première ligne de parse_paragraph,
+ * src/scidown/src/document.c) : il émet alors un titre VIDE qui, en plus,
+ * consomme un numéro dans la numérotation toc_ (les id des titres suivants
+ * sont décalés). Un titre vide n'a aucun rendu utile (juste une marge) :
+ * on le supprime purement et simplement.
+ * Prend possession de html.
+ */
+static gchar*
+fix_scidown_headings_postprocess (gchar *html)
+{
+  GString *out;
+  const char *cur;
+
+  if (!html)
+    return html;
+
+  if (!find_scidown_heading (html))
+    return html;
+
+  out = g_string_new ("");
+  cur = html;
+
+  for (;;)
+  {
+    const char *h = find_scidown_heading (cur);
+    const char *gt, *cl;
+    char close[16];
+    int level;
+
+    if (!h)
+    {
+      g_string_append (out, cur);
+      break;
+    }
+
+    /* Copie tout ce qui précède le titre. */
+    g_string_append_len (out, cur, (gssize) (h - cur));
+
+    level = h[2] - '0';
+    gt = strchr (h, '>');
+    snprintf (close, sizeof (close), "</h%d>", level);
+    cl = gt ? strstr (gt, close) : NULL;
+
+    if (!gt || !cl)
+    {
+      /* Malformé : recopie le reste tel quel. */
+      g_string_append (out, h);
+      break;
+    }
+
+    if (cl == gt + 1)
+    {
+      /* Titre vide (ligne "-" ou "=" isolée) : on le supprime. */
+      cur = cl + strlen (close);
+      continue;
+    }
+
+    /* Balise ouvrante à level-1, attributs et '>' inchangés. */
+    g_string_append_c (out, '<');
+    g_string_append_c (out, 'h');
+    g_string_append_c (out, (char) ('0' + level - 1));
+    g_string_append_len (out, h + 3, (gssize) (gt - (h + 3) + 1));
+
+    /* Contenu du titre tel quel, puis balise fermante à level-1. */
+    g_string_append_len (out, gt + 1, (gssize) (cl - (gt + 1)));
+    g_string_append_printf (out, "</h%d>", level - 1);
+
+    cur = cl + strlen (close);
+  }
+
+  g_free (html);
+  return g_string_free (out, FALSE);
+}
+
 /*
  * Script injected in the live preview only (cursor_position >= 0):
  * checkbox clicks are reported to the application through a custom
@@ -759,13 +1053,18 @@ marker_markdown_to_html(const char*         markdown,
 
   buffer = hoedown_buffer_new(500);
   g_autofree gchar *tasklist_md = preprocess_task_lists(markdown, size);
+  const char *fence_src = tasklist_md ? tasklist_md : markdown;
+  size_t fence_size = tasklist_md ? strlen(tasklist_md) : size;
+  int adjusted_cursor = cursor_position;
+  g_autofree gchar *fence_md =
+    preprocess_fences (fence_src, fence_size, cursor_position, &adjusted_cursor);
   hoedown_document_render(document, buffer,
-                          (uint8_t*) (tasklist_md ? tasklist_md : markdown),
-                          tasklist_md ? strlen(tasklist_md) : size,
-                          cursor_position);
+                          (uint8_t*) (fence_md ? fence_md : fence_src),
+                          fence_md ? strlen(fence_md) : fence_size,
+                          adjusted_cursor);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = tasklists_postprocess(mermaid_escape_postprocess(g_strdup(buf_cstr)));
+  html = tasklists_postprocess(mermaid_escape_postprocess(fix_scidown_headings_postprocess(g_strdup(buf_cstr))));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);
@@ -821,13 +1120,18 @@ marker_markdown_to_html_with_css_inline(const char*         markdown,
 
   buffer = hoedown_buffer_new(500);
   g_autofree gchar *tasklist_md = preprocess_task_lists(markdown, size);
+  const char *fence_src = tasklist_md ? tasklist_md : markdown;
+  size_t fence_size = tasklist_md ? strlen(tasklist_md) : size;
+  int adjusted_cursor = cursor_position;
+  g_autofree gchar *fence_md =
+    preprocess_fences (fence_src, fence_size, cursor_position, &adjusted_cursor);
   hoedown_document_render(document, buffer,
-                          (uint8_t*) (tasklist_md ? tasklist_md : markdown),
-                          tasklist_md ? strlen(tasklist_md) : size,
-                          cursor_position);
+                          (uint8_t*) (fence_md ? fence_md : fence_src),
+                          fence_md ? strlen(fence_md) : fence_size,
+                          adjusted_cursor);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
-  html = tasklists_postprocess(mermaid_escape_postprocess(g_strdup(buf_cstr)));
+  html = tasklists_postprocess(mermaid_escape_postprocess(fix_scidown_headings_postprocess(g_strdup(buf_cstr))));
 
   hoedown_html_renderer_free(renderer);
   hoedown_document_free(document);
@@ -866,7 +1170,11 @@ marker_markdown_to_latex(const char*         markdown,
                                   16);
 
   buffer = hoedown_buffer_new(500);
-  hoedown_document_render(document, buffer, (uint8_t*) markdown, size, -1);
+  g_autofree gchar *fence_md = preprocess_fences (markdown, size, -1, NULL);
+  hoedown_document_render(document, buffer,
+                          (uint8_t*) (fence_md ? fence_md : markdown),
+                          fence_md ? strlen(fence_md) : size,
+                          -1);
 
   const char* buf_cstr = hoedown_buffer_cstr(buffer);
   latex = g_strdup(buf_cstr);

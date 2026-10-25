@@ -47,6 +47,17 @@
   </provides>
 
   <releases>
+    <release version="2026.10.6" date="2026-10-25">
+      <description translate="no">
+        <ul>
+          <li>Fix: headings are rendered at their true level again. scidown emitted every heading one level too deep ("#" became an h2, "######" became an invalid h7), and a lone "-" or "=" line produced an empty phantom heading that also stole a table-of-contents number.</li>
+          <li>Fix: fenced code blocks directly following a text line are rendered as code again. scidown cannot interrupt a paragraph with a fence, so the block was swallowed and its content rendered as regular Markdown (in one document, 44 broken blocks turned bash "#" comments into giant h1 headings). A blank line is now inserted before such fences, and preview cursor synchronization accounts for the shift.</li>
+          <li>Update: bundled KaTeX 0.9.0-alpha2 to 0.19.1 (formulas using \boldsymbol and other newer commands now render; the CDN fallback moved from cdnjs to jsdelivr).</li>
+          <li>Update: bundled highlight.js 9.12.0 to 11.12.0 (richer highlighting, TOML support, 82 upstream themes plus the custom adwaita themes).</li>
+          <li>Update: bundled mermaid 10.9.8 to 12.2.0.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.5" date="2026-10-25">
       <description translate="no">
         <ul>
