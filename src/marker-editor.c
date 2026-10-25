@@ -622,10 +622,22 @@ marker_editor_set_view_mode (MarkerEditor   *editor,
       gtk_paned_set_resize_end_child (GTK_PANED (paned), TRUE);
       gtk_paned_set_shrink_start_child (GTK_PANED (paned), FALSE);
       gtk_paned_set_shrink_end_child (GTK_PANED (paned), FALSE);
-      guint pane_pos = marker_prefs_get_editor_pane_width ();
-      if (pane_pos == 0)
-        pane_pos = 450;
-      gtk_paned_set_position (GTK_PANED (paned), pane_pos);
+      /* Séparateur au milieu de la fenêtre quand le paned est déjà alloué
+       * (ex: transition aperçu seul → double panneau). Sinon, retombe sur
+       * la préférence sauvegardée. */
+      {
+        int paned_width = gtk_widget_get_width (paned);
+        guint pane_pos;
+        if (paned_width > 0)
+          pane_pos = paned_width / 2;
+        else
+        {
+          pane_pos = marker_prefs_get_editor_pane_width ();
+          if (pane_pos == 0)
+            pane_pos = 450;
+        }
+        gtk_paned_set_position (GTK_PANED (paned), pane_pos);
+      }
       gtk_widget_grab_focus (GTK_WIDGET (editor->source_view));
       break;
 
