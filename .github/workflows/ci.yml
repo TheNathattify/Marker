@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ main ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ main ]
 
 jobs:
   validate:
@@ -21,11 +21,11 @@ jobs:
 
       - name: Validate AppStream Metadata
         run: |
-          appstreamcli validate --no-net --explain data/com.github.adrighem.marker.appdata.xml
+          appstreamcli validate --no-net --explain data/com.github.thenathattify.marker.appdata.xml
 
       - name: Validate Desktop Entry
         run: |
-          desktop-file-validate data/com.github.adrighem.marker.desktop
+          desktop-file-validate data/com.github.thenathattify.marker.desktop
 
       - name: Compile GSettings Schema
         run: |
@@ -44,6 +44,6 @@ jobs:
 
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: com.github.adrighem.marker.flatpak
-          manifest-path: com.github.adrighem.marker.json
+          bundle: com.github.thenathattify.marker.flatpak
+          manifest-path: com.github.thenathattify.marker.json
           cache: false
