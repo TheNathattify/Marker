@@ -59,6 +59,20 @@
                 <property name="title" translatable="yes">Syntax theme</property>
               </object>
             </child>
+            <child>
+              <object class="AdwSpinRow" id="editor_font_size_row">
+                <property name="title" translatable="yes">Font size</property>
+                <property name="subtitle" translatable="yes">Base font size in points (combined with zoom)</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">6</property>
+                    <property name="upper">36</property>
+                    <property name="step_increment">1</property>
+                    <property name="page_increment">2</property>
+                  </object>
+                </property>
+              </object>
+            </child>
           </object>
         </child>
         <child>

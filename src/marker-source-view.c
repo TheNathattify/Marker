@@ -272,7 +272,12 @@ marker_source_view_set_zoom_level (MarkerSourceView *source_view,
     g_object_set_data_full (G_OBJECT (source_view), "zoom-provider", provider, g_object_unref);
   }
 
-  g_autofree gchar *css = g_strdup_printf ("textview.marker-source-view, textview.marker-source-view text { font-size: %d%%; }", percent);
+  /* Combine the user-configurable base font size (pt) with the zoom percentage. */
+  guint base_pt = marker_prefs_get_editor_font_size ();
+  double font_pt = base_pt * percent / 100.0;
+  g_autofree gchar *css = g_strdup_printf (
+    "textview.marker-source-view, textview.marker-source-view text { font-size: %.1fpt; }",
+    font_pt);
   gtk_css_provider_load_from_string (provider, css);
 
   g_object_set_data (G_OBJECT (source_view), "zoom-percent", GINT_TO_POINTER (percent));

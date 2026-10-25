@@ -306,11 +306,6 @@ scroll_cb (GtkEventControllerScroll *controller,
   if ((state & GDK_CONTROL_MASK) == 0)
     return FALSE;
 
-  /* The topbar zoom widget follows the pane being zoomed (Ctrl+wheel). */
-  GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (preview));
-  if (MARKER_IS_WINDOW (root))
-    marker_window_set_zoom_pane (MARKER_WINDOW (root), MARKER_WINDOW_ZOOM_PANE_PREVIEW);
-
   /* Accumulate smooth deltas so one wheel notch = one zoom step (10%).
    * Without this, touchpads send many small events and the zoom runs to the
    * MIN/MAX bounds in a single gesture. */

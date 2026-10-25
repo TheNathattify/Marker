@@ -303,6 +303,18 @@ marker_prefs_set_trim_trailing_whitespace (gboolean state)
   g_settings_set_boolean (prefs.editor_settings, "trim-trailing-whitespace", state);
 }
 
+guint
+marker_prefs_get_editor_font_size (void)
+{
+  return g_settings_get_uint (prefs.editor_settings, "font-size");
+}
+
+void
+marker_prefs_set_editor_font_size (guint size)
+{
+  g_settings_set_uint (prefs.editor_settings, "font-size", size);
+}
+
 gboolean
 marker_prefs_get_show_spaces (void)
 {
@@ -785,6 +797,8 @@ marker_prefs_show_window (void)
     ADW_SPIN_ROW (gtk_builder_get_object (builder, "tab_width_row"));
   AdwSwitchRow *trim_trailing_whitespace_row =
     ADW_SWITCH_ROW (gtk_builder_get_object (builder, "trim_trailing_whitespace_row"));
+  AdwSpinRow *editor_font_size_row =
+    ADW_SPIN_ROW (gtk_builder_get_object (builder, "editor_font_size_row"));
 
   AdwSwitchRow *spell_check_row =
     ADW_SWITCH_ROW (gtk_builder_get_object (builder, "spell_check_row"));
@@ -843,6 +857,11 @@ marker_prefs_show_window (void)
                                 NULL, NULL);
   g_settings_bind (prefs.editor_settings, "trim-trailing-whitespace",
                    trim_trailing_whitespace_row, "active", G_SETTINGS_BIND_DEFAULT);
+  g_settings_bind_with_mapping (prefs.editor_settings, "font-size",
+                                editor_font_size_row, "value",
+                                G_SETTINGS_BIND_DEFAULT,
+                                uint_to_double_mapping, double_to_uint_mapping,
+                                NULL, NULL);
   g_settings_bind (prefs.editor_settings, "spell-check",
                    spell_check_row, "active", G_SETTINGS_BIND_DEFAULT);
 

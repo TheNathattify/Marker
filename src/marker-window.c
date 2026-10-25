@@ -49,7 +49,6 @@ struct _MarkerWindow
   AdwHeaderBar         *header_bar;
   AdwWindowTitle       *window_title;
   GtkEntry             *zoom_entry;
-  MarkerWindowZoomPane  zoom_pane;
 
   gboolean              is_fullscreen;
   GtkButton            *unfullscreen_btn;
@@ -257,10 +256,7 @@ action_zoom_out (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
-  if (window->zoom_pane == MARKER_WINDOW_ZOOM_PANE_SOURCE)
-    marker_editor_zoom_source (editor, -0.1);
-  else
-    marker_preview_zoom_out (marker_editor_get_preview (editor));
+  marker_preview_zoom_out (marker_editor_get_preview (editor));
 }
 
 static void
@@ -270,10 +266,7 @@ action_zoom_original (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
-  if (window->zoom_pane == MARKER_WINDOW_ZOOM_PANE_SOURCE)
-    marker_editor_set_source_zoom_level (editor, 1.0);
-  else
-    marker_preview_zoom_original (marker_editor_get_preview (editor));
+  marker_preview_zoom_original (marker_editor_get_preview (editor));
 }
 
 static void
@@ -283,10 +276,7 @@ action_zoom_in (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
-  if (window->zoom_pane == MARKER_WINDOW_ZOOM_PANE_SOURCE)
-    marker_editor_zoom_source (editor, +0.1);
-  else
-    marker_preview_zoom_in (marker_editor_get_preview (editor));
+  marker_preview_zoom_in (marker_editor_get_preview (editor));
 }
 
 static void
@@ -296,8 +286,6 @@ action_zoom_fit (GSimpleAction *action,
 {
   MarkerWindow *window = user_data;
   MarkerEditor *editor = marker_window_get_active_editor (window);
-  /* « Ajuster » = concept de page → toujours l'aperçu, qui devient actif. */
-  marker_window_set_zoom_pane (window, MARKER_WINDOW_ZOOM_PANE_PREVIEW);
   marker_preview_zoom_fit (marker_editor_get_preview (editor));
 }
 
@@ -588,63 +576,12 @@ zoom_entry_update (MarkerWindow *window,
   if (editor == NULL)
     return;
 
-  gdouble zoom_percentage;
-  if (window->zoom_pane == MARKER_WINDOW_ZOOM_PANE_SOURCE)
-    zoom_percentage = 100.0 * marker_source_view_get_zoom_level (marker_editor_get_source_view (editor));
-  else
-    zoom_percentage = 100.0 * webkit_web_view_get_zoom_level (WEBKIT_WEB_VIEW (marker_editor_get_preview (editor)));
+  /* Le widget de zoom ne contrôle que l'aperçu (preview). */
+  gdouble zoom_percentage =
+    100.0 * webkit_web_view_get_zoom_level (WEBKIT_WEB_VIEW (marker_editor_get_preview (editor)));
 
   g_autofree gchar *zoom_level_str = g_strdup_printf ("%.0f%%", zoom_percentage);
   gtk_editable_set_text (GTK_EDITABLE (window->zoom_entry), zoom_level_str);
-}
-
-static void
-source_zoom_changed_cb (MarkerSourceView *source_view,
-                        gpointer          user_data)
-{
-  MarkerWindow *window = MARKER_WINDOW (user_data);
-  if (window->zoom_pane != MARKER_WINDOW_ZOOM_PANE_SOURCE)
-    return;
-  if (window->zoom_entry == NULL || !GTK_IS_ENTRY (window->zoom_entry))
-    return;
-
-  const gdouble zoom_percentage = 100.0 * marker_source_view_get_zoom_level (source_view);
-  g_autofree gchar *zoom_level_str = g_strdup_printf ("%.0f%%", zoom_percentage);
-  gtk_editable_set_text (GTK_EDITABLE (window->zoom_entry), zoom_level_str);
-}
-
-static void
-focus_widget_notify_cb (MarkerWindow *window,
-                        GParamSpec   *pspec G_GNUC_UNUSED,
-                        gpointer      user_data G_GNUC_UNUSED)
-{
-  GtkWidget *focus = gtk_window_get_focus (GTK_WINDOW (window));
-  if (focus == NULL)
-    return;
-
-  MarkerEditor *editor = marker_window_get_active_editor (window);
-  if (editor == NULL)
-    return;
-
-  GtkWidget *source_view = GTK_WIDGET (marker_editor_get_source_view (editor));
-  GtkWidget *preview = GTK_WIDGET (marker_editor_get_preview (editor));
-
-  if (focus == source_view || gtk_widget_is_ancestor (focus, source_view))
-    marker_window_set_zoom_pane (window, MARKER_WINDOW_ZOOM_PANE_SOURCE);
-  else if (focus == preview || gtk_widget_is_ancestor (focus, preview))
-    marker_window_set_zoom_pane (window, MARKER_WINDOW_ZOOM_PANE_PREVIEW);
-  /* Tout le reste (champ zoom, topbar, sidebar…) : on garde le panneau. */
-}
-
-void
-marker_window_set_zoom_pane (MarkerWindow         *window,
-                             MarkerWindowZoomPane  pane)
-{
-  g_return_if_fail (MARKER_IS_WINDOW (window));
-  if (window->zoom_pane == pane)
-    return;
-  window->zoom_pane = pane;
-  zoom_entry_update (window, marker_window_get_active_editor (window));
 }
 
 static void
@@ -653,8 +590,6 @@ preview_zoom_changed_cb (MarkerPreview *preview,
 {
   MarkerWindow *window = user_data;
   if (!window->zoom_entry || !GTK_IS_ENTRY (window->zoom_entry))
-    return;
-  if (window->zoom_pane != MARKER_WINDOW_ZOOM_PANE_PREVIEW)
     return;
 
   const gdouble zoom_percentage = 100 * webkit_web_view_get_zoom_level (WEBKIT_WEB_VIEW (preview));
@@ -671,7 +606,7 @@ zoom_entry_activated_cb (GtkEntry *entry,
   g_return_if_fail (editor != NULL);
   MarkerPreview *preview = marker_editor_get_preview (editor);
 
-  /* Accept "125", "125%", "125,5", "125.5 %"... (percent; clamped 10–400). */
+  /* Le champ zoom ne s'applique qu'à l'aperçu. */
   const gchar *text = gtk_editable_get_text (GTK_EDITABLE (entry));
   g_autofree gchar *buf = g_strdup (text);
   gsize j = 0;
@@ -684,20 +619,10 @@ zoom_entry_activated_cb (GtkEntry *entry,
   buf[j] = '\0';
 
   gdouble percent = g_ascii_strtod (buf, NULL);
-  if (window->zoom_pane == MARKER_WINDOW_ZOOM_PANE_SOURCE)
-  {
-    if (percent > 0.0)
-      marker_editor_set_source_zoom_level (editor, percent / 100.0);
-    else
-      g_signal_emit_by_name (marker_editor_get_source_view (editor), "zoom-changed");  /* invalid input: resync */
-  }
+  if (percent > 0.0)
+    marker_preview_set_zoom_level (preview, percent / 100.0);
   else
-  {
-    if (percent > 0.0)
-      marker_preview_set_zoom_level (preview, percent / 100.0);
-    else
-      g_signal_emit_by_name (preview, "zoom-changed");  /* invalid input: resync */
-  }
+    g_signal_emit_by_name (preview, "zoom-changed");  /* invalid input: resync */
 }
 
 static void
@@ -1260,8 +1185,6 @@ marker_window_init (MarkerWindow *window)
   window->zoom_entry = GTK_ENTRY (gtk_builder_get_object (builder, "zoom_entry"));
   if (window->zoom_entry != NULL)
     g_signal_connect (window->zoom_entry, "activate", G_CALLBACK (zoom_entry_activated_cb), window);
-  g_signal_connect (window, "notify::focus-widget",
-                    G_CALLBACK (focus_widget_notify_cb), NULL);
   window->header_bar = header_bar;
   window->window_title = ADW_WINDOW_TITLE (gtk_builder_get_object (builder, "window_title"));
   gtk_box_append (vbox, GTK_WIDGET (header_bar));
@@ -1440,9 +1363,6 @@ marker_window_add_editor (MarkerWindow *window,
   g_signal_connect (marker_editor_get_preview (editor), "zoom-changed",
                     G_CALLBACK (preview_zoom_changed_cb),
                     window);
-  g_signal_connect (marker_editor_get_source_view (editor), "zoom-changed",
-                    G_CALLBACK (source_zoom_changed_cb),
-                    window);
   g_signal_connect (marker_editor_get_preview (editor), "open-file-requested",
                     G_CALLBACK (preview_open_file_requested_cb),
                     window);
@@ -1451,8 +1371,6 @@ marker_window_add_editor (MarkerWindow *window,
   GtkWidget *source_view = GTK_WIDGET (marker_editor_get_source_view (editor));
   gtk_widget_grab_focus (source_view);
 
-  /* Le widget suit le panneau focus : l'éditeur au démarrage. */
-  window->zoom_pane = MARKER_WINDOW_ZOOM_PANE_SOURCE;
   zoom_entry_update (window, editor);
   marker_window_update_outline (window);
 }

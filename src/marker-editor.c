@@ -339,11 +339,6 @@ source_scroll_cb (GtkEventControllerScroll *controller,
   if ((state & GDK_CONTROL_MASK) == 0)
     return FALSE;
 
-  /* The topbar zoom widget follows the pane being zoomed (Ctrl+wheel). */
-  GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (editor));
-  if (MARKER_IS_WINDOW (root))
-    marker_window_set_zoom_pane (MARKER_WINDOW (root), MARKER_WINDOW_ZOOM_PANE_SOURCE);
-
   /* Accumulate smooth deltas so one wheel notch = one zoom step (10%). */
   GtkWidget *scroll_widget = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (controller));
   gdouble *accum = g_object_get_data (G_OBJECT (scroll_widget), "zoom-accum");

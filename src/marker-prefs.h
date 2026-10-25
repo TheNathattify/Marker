@@ -60,6 +60,8 @@ gboolean             marker_prefs_get_auto_indent                (void);
 void                 marker_prefs_set_auto_indent                (gboolean            state);
 gboolean             marker_prefs_get_trim_trailing_whitespace   (void);
 void                 marker_prefs_set_trim_trailing_whitespace   (gboolean            state);
+guint                marker_prefs_get_editor_font_size           (void);
+void                 marker_prefs_set_editor_font_size           (guint               size);
 gboolean             marker_prefs_get_show_spaces                (void);
 void                 marker_prefs_set_show_spaces                (gboolean            state);
 gboolean             marker_prefs_get_spell_check                (void);

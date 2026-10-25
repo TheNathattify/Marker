@@ -102,6 +102,12 @@
       <summary>Trim trailing whitespace</summary>
       <description>Whether to trim trailing whitespace on save.</description>
     </key>
+
+    <key name="font-size" type="u">
+      <default>11</default>
+      <summary>Editor font size</summary>
+      <description>Base font size in points for the editor. Combined with the zoom level.</description>
+    </key>
   </schema>
 
   <schema path="/com/github/thenathattify/marker/preferences/preview/" id="com.github.thenathattify.marker.preferences.preview">
