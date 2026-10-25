@@ -116,7 +116,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkToggleButton" id="zoom_fit_btn">
+          <object class="GtkButton" id="zoom_fit_btn">
             <property name="icon-name">zoom-fit-best-symbolic</property>
             <property name="tooltip-text" translatable="yes">Fit to Width (click) — Auto-fit on Resize (hold)</property>
           </object>

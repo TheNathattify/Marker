@@ -60,6 +60,12 @@ struct _MarkerPreview
    * Stocké pour pouvoir l'annuler dans dispose() — sinon use-after-free
    * si le preview est détruit avant l'expiration. */
   guint   scroll_restore_timeout_id;
+
+  /* Quand TRUE : au prochain rendu, calculer le zoom-fit depuis le CSS
+   * (max-width/width du body) et l'appliquer AVANT le load_html().
+   * La page charge directement au bon zoom — un seul rendu, pas de flash.
+   * Consommé après usage. */
+  gboolean auto_fit_on_load;
 };
 
 G_DEFINE_TYPE (MarkerPreview, marker_preview, WEBKIT_TYPE_WEB_VIEW)
@@ -354,6 +360,13 @@ load_changed_cb (WebKitWebView   *preview,
       break;
 
     case WEBKIT_LOAD_FINISHED:
+      /* Fallback : si le pre-load zoom-fit a échoué (pane_width=0 au
+       * démarrage), applique le zoom-fit post-chargement. */
+      if (MARKER_PREVIEW (preview)->auto_fit_on_load)
+      {
+        MARKER_PREVIEW (preview)->auto_fit_on_load = FALSE;
+        marker_preview_zoom_fit (MARKER_PREVIEW (preview));
+      }
       webkit_web_view_evaluate_javascript (preview,
                                            "document.getElementById('cursor_pos')?.scrollIntoView({behavior: 'instant', block: 'center'});",
                                            -1,
@@ -512,6 +525,14 @@ zoom_fit_js_finished_cb (GObject      *web_view,
 }
 
 void
+marker_preview_set_auto_fit_on_load (MarkerPreview *preview,
+                                     gboolean       enabled)
+{
+  g_return_if_fail (MARKER_IS_PREVIEW (preview));
+  preview->auto_fit_on_load = enabled;
+}
+
+void
 marker_preview_zoom_fit (MarkerPreview *preview)
 {
   g_return_if_fail (MARKER_IS_PREVIEW (preview));
@@ -559,6 +580,8 @@ marker_preview_zoom_fit (MarkerPreview *preview)
 static void
 marker_preview_init (MarkerPreview *preview)
 {
+  preview->auto_fit_on_load = FALSE;
+
   WebKitWebContext *context = webkit_web_view_get_context (WEBKIT_WEB_VIEW (preview));
   if (context != NULL)
   {
@@ -692,6 +715,63 @@ marker_preview_zoom_in (MarkerPreview *preview)
   marker_preview_set_zoom_level (preview, val);
 }
 
+/* Extrait la largeur du contenu (width ou max-width du body) depuis le CSS
+ * du thème. Retourne la valeur en pixels, ou 0 si non trouvée.
+ * Gère les unités px, mm, rem, em (1rem/em ≈ 16px, 1mm = 96/25.4 px). */
+static double
+extract_body_width_from_css (const char *css)
+{
+  if (css == NULL)
+    return 0.0;
+
+  /* Extrait le bloc "body { ... }" ou "html, body { ... }" */
+  GRegex *body_re = g_regex_new ("(?:^|[\\s,])body\\s*\\{([^}]*)\\}",
+                                G_REGEX_MULTILINE, 0, NULL);
+  if (body_re == NULL)
+    return 0.0;
+
+  GMatchInfo *match = NULL;
+  if (!g_regex_match (body_re, css, 0, &match))
+  {
+    g_regex_unref (body_re);
+    return 0.0;
+  }
+
+  gchar *body_block = g_match_info_fetch (match, 1);
+  g_regex_unref (body_re);
+  g_match_info_free (match);
+
+  if (body_block == NULL)
+    return 0.0;
+
+  /* Dans le bloc body, cherche max-width ou width en px, mm, rem ou em */
+  double result = 0.0;
+  GRegex *width_re = g_regex_new ("(?:max-width|width)\\s*:\\s*([\\d.]+)(px|mm|rem|em)\\b",
+                                 0, 0, NULL);
+  if (width_re != NULL)
+  {
+    GMatchInfo *wmatch = NULL;
+    if (g_regex_match (width_re, body_block, 0, &wmatch))
+    {
+      gchar *val_str = g_match_info_fetch (wmatch, 1);
+      gchar *unit_str = g_match_info_fetch (wmatch, 2);
+      double val = g_ascii_strtod (val_str, NULL);
+      if (g_strcmp0 (unit_str, "mm") == 0)
+        val *= 96.0 / 25.4; /* mm → px à 96 DPI */
+      else if (g_strcmp0 (unit_str, "rem") == 0 || g_strcmp0 (unit_str, "em") == 0)
+        val *= 16.0; /* 1rem/em ≈ 16px (font-size racine par défaut) */
+      result = val;
+      g_free (val_str);
+      g_free (unit_str);
+    }
+    g_regex_unref (width_re);
+    g_match_info_free (wmatch);
+  }
+
+  g_free (body_block);
+  return result;
+}
+
 void
 marker_preview_render_markdown (MarkerPreview *preview,
                                 const char    *markdown,
@@ -737,6 +817,59 @@ marker_preview_render_markdown (MarkerPreview *preview,
    * des saccades. WebKit gère son cache correctement avec les ETags. */
 
   WebKitWebView *web_view = WEBKIT_WEB_VIEW (preview);
+
+  /* Zoom-fit AVANT chargement : calcule le fit depuis le CSS du thème
+   * (max-width/width du body) et applique le zoom WebKit directement.
+   * La page charge au bon zoom dès le premier rendu — pas de flash,
+   * pas de double chargement. */
+  if (preview->auto_fit_on_load)
+  {
+    int pane_width = gtk_widget_get_width (GTK_WIDGET (preview));
+
+    /* Fallback : widget pas encore alloué (démarrage) → taille par défaut
+     * de la fenêtre parente */
+    if (pane_width <= 0)
+    {
+      GtkRoot *root = gtk_widget_get_root (GTK_WIDGET (preview));
+      if (root != NULL && GTK_IS_WINDOW (root))
+      {
+        int def_w = 0, def_h = 0;
+        gtk_window_get_default_size (GTK_WINDOW (root), &def_w, &def_h);
+        if (def_w > 0)
+          pane_width = def_w - 60; /* -60 pour sidebar/marges approximatives */
+      }
+    }
+
+    if (pane_width > 0)
+    {
+      /* Charge le CSS effectif (thème custom + base scidown) pour extraire
+       * la largeur du body. Le paramètre css_theme est le NOM du thème,
+       * pas le contenu CSS. */
+      g_autofree char *custom_css = marker_markdown_css (css_theme);
+      g_autofree char *base_css = marker_markdown_scidown_css ();
+
+      double content_width = 0.0;
+      /* Le thème custom peut surcharger → chercher d'abord dedans */
+      if (custom_css != NULL)
+        content_width = extract_body_width_from_css (custom_css);
+      if (content_width <= 0.0 && base_css != NULL)
+        content_width = extract_body_width_from_css (base_css);
+
+      if (content_width > 0.0)
+      {
+        double fit = (double) pane_width / content_width;
+        /* Applique directement (pas marker_preview_set_zoom_level pour ne
+         * pas sauvegarder la pref ni restaurer le scroll au chargement). */
+        if (fit > 0.01 && fit < 100.0)
+        {
+          webkit_web_view_set_zoom_level (web_view, fit);
+          preview->auto_fit_on_load = FALSE; /* succès → consomme le flag */
+        }
+      }
+    }
+    /* Si pane_width=0 ou CSS illisible : laisse auto_fit_on_load=TRUE
+     * → le fallback post-chargement (load_changed_cb) s'activera. */
+  }
 
   g_autofree gchar *uri = NULL;
   if (base_uri)

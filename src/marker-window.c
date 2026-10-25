@@ -72,8 +72,7 @@ struct _MarkerWindow
 
   int                   last_alloc_width;
 
-  GtkToggleButton      *zoom_fit_btn;
-  guint                 zoom_fit_press_timeout_id;
+  GtkButton            *zoom_fit_btn;
   gboolean              zoom_fit_long_pressed;
 
   guint32               last_click_;
@@ -300,9 +299,14 @@ action_zoom_fit_auto (GSimpleAction *action,
   gboolean state = g_variant_get_boolean (value);
   g_simple_action_set_state (action, value);
 
-  /* Synchronise l'apparence du bouton toggle. */
-  if (window->zoom_fit_btn)
-    gtk_toggle_button_set_active (window->zoom_fit_btn, state);
+  /* Synchronise l'apparence du bouton : classe CSS pour l'état actif. */
+  if (window->zoom_fit_btn != NULL)
+  {
+    if (state)
+      gtk_widget_add_css_class (GTK_WIDGET (window->zoom_fit_btn), "suggested-action");
+    else
+      gtk_widget_remove_css_class (GTK_WIDGET (window->zoom_fit_btn), "suggested-action");
+  }
 
   /* Applique immédiatement le fit quand on active l'auto-resize. */
   if (state)
@@ -313,73 +317,47 @@ action_zoom_fit_auto (GSimpleAction *action,
   }
 }
 
-static gboolean
-zoom_fit_long_press_cb (gpointer user_data)
+static void
+zoom_fit_long_press_activated_cb (GtkGestureLongPress *gesture G_GNUC_UNUSED,
+                                  double               x G_GNUC_UNUSED,
+                                  double               y G_GNUC_UNUSED,
+                                  gpointer             user_data)
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
-  window->zoom_fit_press_timeout_id = 0;
   window->zoom_fit_long_pressed = TRUE;
-  return G_SOURCE_REMOVE;
+
+  /* Toggle l'auto-resize */
+  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfitauto");
+  GVariant *state = g_action_get_state (action);
+  gboolean current = state ? g_variant_get_boolean (state) : FALSE;
+  if (state) g_variant_unref (state);
+
+  g_action_group_change_action_state (G_ACTION_GROUP (window), "zoomfitauto",
+                                      g_variant_new_boolean (!current));
 }
 
 static void
-zoom_fit_btn_pressed_cb (GtkGestureClick *gesture G_GNUC_UNUSED,
-                         int              n_press G_GNUC_UNUSED,
-                         double           x G_GNUC_UNUSED,
-                         double           y G_GNUC_UNUSED,
-                         gpointer         user_data)
+zoom_fit_long_press_cancelled_cb (GtkGestureLongPress *gesture G_GNUC_UNUSED,
+                                  gpointer             user_data)
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
   window->zoom_fit_long_pressed = FALSE;
-  if (window->zoom_fit_press_timeout_id > 0)
-    g_source_remove (window->zoom_fit_press_timeout_id);
-  window->zoom_fit_press_timeout_id =
-    g_timeout_add (300, zoom_fit_long_press_cb, window);
-}
-
-static gboolean
-zoom_fit_btn_clicked_cb (GtkButton *btn,
-                         gpointer   user_data G_GNUC_UNUSED)
-{
-  /* Bloque le changement d'état automatique du GtkToggleButton.
-   * L'état visuel est synchronisé manuellement via action_zoom_fit_auto. */
-  gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (btn));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (btn), !active);
-  return TRUE; /* stoppe le signal, empêche le handler par défaut */
 }
 
 static void
-zoom_fit_btn_released_cb (GtkGestureClick *gesture G_GNUC_UNUSED,
-                          int              n_press G_GNUC_UNUSED,
-                          double           x G_GNUC_UNUSED,
-                          double           y G_GNUC_UNUSED,
-                          gpointer         user_data)
+zoom_fit_btn_clicked_cb (GtkButton *btn G_GNUC_UNUSED,
+                         gpointer   user_data)
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
 
-  if (window->zoom_fit_press_timeout_id > 0)
+  /* Si le long press n'a pas été déclenché → clic court → fit immédiat. */
+  if (!window->zoom_fit_long_pressed)
   {
-    /* Clic court (< 300 ms) → fit immédiat, sans changer l'état auto. */
-    g_source_remove (window->zoom_fit_press_timeout_id);
-    window->zoom_fit_press_timeout_id = 0;
-
     MarkerEditor *editor = marker_window_get_active_editor (window);
     if (editor != NULL)
       marker_preview_zoom_fit (marker_editor_get_preview (editor));
   }
-  else if (window->zoom_fit_long_pressed)
-  {
-    /* Clic long (≥ 300 ms) → toggle l'auto-resize. */
-    window->zoom_fit_long_pressed = FALSE;
-
-    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfitauto");
-    GVariant *state = g_action_get_state (action);
-    gboolean current = state ? g_variant_get_boolean (state) : FALSE;
-    if (state) g_variant_unref (state);
-
-    g_action_group_change_action_state (G_ACTION_GROUP (window), "zoomfitauto",
-                                        g_variant_new_boolean (!current));
-  }
+  window->zoom_fit_long_pressed = FALSE;
 }
 
 /* Applique le zoom-fit sur l'éditeur actif si le toggle auto est actif.
@@ -405,17 +383,18 @@ apply_zoom_fit_if_active (MarkerWindow *window)
   g_variant_unref (state);
 }
 
+/* Vfunc size_allocate : détecte le redimensionnement de la fenêtre pour
+ * réappliquer le zoom-fit auto si le toggle est actif. Appelée par GTK
+ * à chaque changement de taille du widget. */
 static void
-on_content_size_allocate (GtkWidget *widget G_GNUC_UNUSED,
-                          int        width,
-                          int        height G_GNUC_UNUSED,
-                          int        baseline G_GNUC_UNUSED,
-                          gpointer   user_data)
+marker_window_size_allocate (GtkWidget *widget,
+                             int        width,
+                             int        height G_GNUC_UNUSED,
+                             int        baseline G_GNUC_UNUSED)
 {
-  MarkerWindow *window = MARKER_WINDOW (user_data);
+  GTK_WIDGET_CLASS (marker_window_parent_class)->size_allocate (widget, width, height, baseline);
 
-  /* Ne réapplique que si la largeur a vraiment changé (évite les appels
-   * répétés quand seule la hauteur change). */
+  MarkerWindow *window = MARKER_WINDOW (widget);
   if (width > 0 && width != window->last_alloc_width)
   {
     window->last_alloc_width = width;
@@ -1319,10 +1298,6 @@ marker_window_init (MarkerWindow *window)
   window->last_alloc_width = 0;
   adw_application_window_set_content (ADW_APPLICATION_WINDOW (window), GTK_WIDGET (vbox));
 
-  /* Détecte le redimensionnement pour le zoom-fit auto (toggle). */
-  g_signal_connect (vbox, "size-allocate",
-                    G_CALLBACK (on_content_size_allocate), window);
-
   /** HeaderBar **/
   gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-gear-popover.ui", NULL);
   gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-headerbar.ui", NULL);
@@ -1332,23 +1307,26 @@ marker_window_init (MarkerWindow *window)
   if (window->zoom_entry != NULL)
     g_signal_connect (window->zoom_entry, "activate", G_CALLBACK (zoom_entry_activated_cb), window);
 
-  /* Bouton zoom-fit unique : clic court = fit immédiat, clic long = toggle auto. */
-  window->zoom_fit_btn = GTK_TOGGLE_BUTTON (gtk_builder_get_object (builder, "zoom_fit_btn"));
-  window->zoom_fit_press_timeout_id = 0;
+  /* Bouton zoom-fit unique : clic court = fit immédiat, clic long = toggle auto.
+   * GtkGestureLongPress détecte le clic long nativement (pas de timer manuel). */
+  window->zoom_fit_btn = GTK_BUTTON (gtk_builder_get_object (builder, "zoom_fit_btn"));
   window->zoom_fit_long_pressed = FALSE;
   if (window->zoom_fit_btn != NULL)
   {
-    /* Bloque le changement d'état auto du GtkToggleButton — géré manuellement. */
+    /* Clic court → fit immédiat */
     g_signal_connect (window->zoom_fit_btn, "clicked",
                       G_CALLBACK (zoom_fit_btn_clicked_cb), window);
 
-    GtkGesture *gesture = gtk_gesture_click_new ();
-    gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (gesture), 0); /* tout bouton */
-    gtk_widget_add_controller (GTK_WIDGET (window->zoom_fit_btn), GTK_EVENT_CONTROLLER (gesture));
-    g_signal_connect (gesture, "pressed",
-                      G_CALLBACK (zoom_fit_btn_pressed_cb), window);
-    g_signal_connect (gesture, "released",
-                      G_CALLBACK (zoom_fit_btn_released_cb), window);
+    /* Clic long → toggle auto-resize */
+    GtkGesture *long_press = gtk_gesture_long_press_new ();
+    gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (long_press), 0);
+    /* Réduit le délai à ~300ms (défaut 500ms × 0.6) */
+    g_object_set (long_press, "delay-factor", 0.6, NULL);
+    gtk_widget_add_controller (GTK_WIDGET (window->zoom_fit_btn), GTK_EVENT_CONTROLLER (long_press));
+    g_signal_connect (long_press, "pressed",
+                      G_CALLBACK (zoom_fit_long_press_activated_cb), window);
+    g_signal_connect (long_press, "cancelled",
+                      G_CALLBACK (zoom_fit_long_press_cancelled_cb), window);
   }
 
   window->header_bar = header_bar;
@@ -1504,6 +1482,9 @@ marker_window_class_init (MarkerWindowClass *class)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (class);
   object_class->dispose = marker_window_dispose;
+
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
+  widget_class->size_allocate = marker_window_size_allocate;
 }
 
 void

@@ -81,24 +81,6 @@ on_debounce_refresh_preview_cb (gpointer user_data)
 }
 
 static void
-auto_zoom_fit_load_changed_cb (WebKitWebView   *web_view,
-                               WebKitLoadEvent  event,
-                               gpointer         user_data)
-{
-  if (event != WEBKIT_LOAD_FINISHED)
-    return;
-
-  /* Le document est chargé et affiché → on ajuste le zoom à la largeur. */
-  marker_preview_zoom_fit (MARKER_PREVIEW (web_view));
-
-  /* One-shot : déconnecte et libère la référence. */
-  g_signal_handlers_disconnect_by_func (web_view,
-                                        auto_zoom_fit_load_changed_cb,
-                                        user_data);
-  g_object_unref (user_data);
-}
-
-static void
 on_document_external_change (MarkerDocument *doc,
                              gpointer        user_data)
 {
@@ -723,16 +705,13 @@ marker_editor_open_file (MarkerEditor *editor,
   editor->needs_refresh = TRUE;
   marker_editor_refresh_preview (editor);
 
-  /* Zoom-fit automatique : attend que WebKit ait fini de charger la page
-   * (load-changed / WEBKIT_LOAD_FINISHED) avant de mesurer la largeur. */
+  /* Active le zoom-fit au chargement : le preview cachera le contenu
+   * au LOAD_FINISHED, appliquera le fit, puis rendra visible.
+   * Plus de flash de la page à 100% avant le zoom. */
   {
     MarkerPreview *preview = marker_editor_get_preview (editor);
     if (preview != NULL)
-    {
-      g_signal_connect (preview, "load-changed",
-                        G_CALLBACK (auto_zoom_fit_load_changed_cb),
-                        g_object_ref (editor));
-    }
+      marker_preview_set_auto_fit_on_load (preview, TRUE);
   }
 
   emit_signal_title_changed (editor);

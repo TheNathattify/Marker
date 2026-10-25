@@ -39,6 +39,8 @@ void                 marker_preview_zoom_out                     (MarkerPreview 
 void                 marker_preview_zoom_original                (MarkerPreview      *preview);
 void                 marker_preview_zoom_in                      (MarkerPreview      *preview);
 void                 marker_preview_zoom_fit                      (MarkerPreview      *preview);
+void                 marker_preview_set_auto_fit_on_load          (MarkerPreview      *preview,
+                                                                  gboolean            enabled);
 void                 marker_preview_render_markdown              (MarkerPreview      *preview,
                                                                   const char         *markdown,
                                                                   const char         *css_theme,
