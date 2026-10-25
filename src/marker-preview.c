@@ -668,6 +668,15 @@ marker_preview_class_init (MarkerPreviewClass *class)
                 0, NULL, NULL, NULL,
                 G_TYPE_NONE, 1, G_TYPE_UINT);
 
+  /* Émis quand l'utilisateur change le zoom manuellement (boutons,
+   * entry, Ctrl+molette). La fenêtre écoute ce signal pour désactiver
+   * le mode auto-fit. PAS émis par le zoom-fit automatique. */
+  g_signal_new ("manual-zoom-changed",
+                G_TYPE_FROM_CLASS (class),
+                G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE,
+                0, NULL, NULL, NULL,
+                G_TYPE_NONE, 0);
+
   WEBKIT_WEB_VIEW_CLASS (class)->load_changed = load_changed_cb;
 
   GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -693,6 +702,7 @@ marker_preview_zoom_out (MarkerPreview *preview)
   val = max (val, MIN_ZOOM);
 
   marker_preview_set_zoom_level (preview, val);
+  g_signal_emit_by_name (preview, "manual-zoom-changed");
 }
 
 void
@@ -701,6 +711,7 @@ marker_preview_zoom_original (MarkerPreview *preview)
   g_return_if_fail (WEBKIT_IS_WEB_VIEW (preview));
 
   marker_preview_set_zoom_level (preview, 1.0);
+  g_signal_emit_by_name (preview, "manual-zoom-changed");
 }
 
 void
@@ -713,6 +724,7 @@ marker_preview_zoom_in (MarkerPreview *preview)
   val = min (val, MAX_ZOOM);
 
   marker_preview_set_zoom_level (preview, val);
+  g_signal_emit_by_name (preview, "manual-zoom-changed");
 }
 
 /* Extrait la largeur du contenu (width ou max-width du body) depuis le CSS

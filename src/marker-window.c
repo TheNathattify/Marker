@@ -88,6 +88,8 @@ typedef struct {
   gpointer                user_data;
 } WarningClosure;
 
+static void disable_zoom_fit_auto (MarkerWindow *window);
+
 gboolean
 get_current_iter (MarkerWindow *window,
                   GtkTreeIter  *iter)
@@ -255,11 +257,12 @@ action_refresh (GSimpleAction *action,
 }
 
 static void
-action_zoom_out (GSimpleAction *action,
-                 GVariant      *parameter,
+action_zoom_out (GSimpleAction *action G_GNUC_UNUSED,
+                 GVariant      *parameter G_GNUC_UNUSED,
                  gpointer       user_data)
 {
   MarkerWindow *window = user_data;
+  disable_zoom_fit_auto (window);
   MarkerEditor *editor = marker_window_get_active_editor (window);
   if (editor == NULL)
     return;
@@ -267,11 +270,12 @@ action_zoom_out (GSimpleAction *action,
 }
 
 static void
-action_zoom_original (GSimpleAction *action,
-                      GVariant      *parameter,
+action_zoom_original (GSimpleAction *action G_GNUC_UNUSED,
+                      GVariant      *parameter G_GNUC_UNUSED,
                       gpointer       user_data)
 {
   MarkerWindow *window = user_data;
+  disable_zoom_fit_auto (window);
   MarkerEditor *editor = marker_window_get_active_editor (window);
   if (editor == NULL)
     return;
@@ -279,11 +283,12 @@ action_zoom_original (GSimpleAction *action,
 }
 
 static void
-action_zoom_in (GSimpleAction *action,
-                GVariant      *parameter,
+action_zoom_in (GSimpleAction *action G_GNUC_UNUSED,
+                GVariant      *parameter G_GNUC_UNUSED,
                 gpointer       user_data)
 {
   MarkerWindow *window = user_data;
+  disable_zoom_fit_auto (window);
   MarkerEditor *editor = marker_window_get_active_editor (window);
   if (editor == NULL)
     return;
@@ -350,14 +355,34 @@ zoom_fit_btn_clicked_cb (GtkButton *btn G_GNUC_UNUSED,
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
 
-  /* Si le long press n'a pas été déclenché → clic court → fit immédiat. */
-  if (!window->zoom_fit_long_pressed)
+  /* Si le long press a été déclenché, le clic est ignoré (géré par le gesture). */
+  if (window->zoom_fit_long_pressed)
   {
+    window->zoom_fit_long_pressed = FALSE;
+    return;
+  }
+
+  /* Comportement contextuel :
+   * - Auto ON  → clic court = désactiver auto (sans appliquer de fit)
+   * - Auto OFF → clic court = fit immédiat */
+  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfitauto");
+  GVariant *state = g_action_get_state (action);
+  gboolean auto_active = state ? g_variant_get_boolean (state) : FALSE;
+  if (state) g_variant_unref (state);
+
+  if (auto_active)
+  {
+    /* Désactive l'auto-fit sans appliquer de fit. */
+    g_action_group_change_action_state (G_ACTION_GROUP (window), "zoomfitauto",
+                                        g_variant_new_boolean (FALSE));
+  }
+  else
+  {
+    /* Fit immédiat. */
     MarkerEditor *editor = marker_window_get_active_editor (window);
     if (editor != NULL)
       marker_preview_zoom_fit (marker_editor_get_preview (editor));
   }
-  window->zoom_fit_long_pressed = FALSE;
 }
 
 /* Applique le zoom-fit sur l'éditeur actif si le toggle auto est actif.
@@ -383,9 +408,36 @@ apply_zoom_fit_if_active (MarkerWindow *window)
   g_variant_unref (state);
 }
 
-/* Vfunc size_allocate : détecte le redimensionnement de la fenêtre pour
- * réappliquer le zoom-fit auto si le toggle est actif. Appelée par GTK
- * à chaque changement de taille du widget. */
+/* Désactive le mode auto-fit si actif. Appelé quand l'utilisateur change
+ * le zoom manuellement (boutons, entry, Ctrl+molette). */
+static void
+disable_zoom_fit_auto (MarkerWindow *window)
+{
+  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfitauto");
+  if (action == NULL)
+    return;
+
+  GVariant *state = g_action_get_state (action);
+  if (state != NULL)
+  {
+    if (g_variant_get_boolean (state))
+    {
+      g_action_group_change_action_state (G_ACTION_GROUP (window), "zoomfitauto",
+                                          g_variant_new_boolean (FALSE));
+    }
+    g_variant_unref (state);
+  }
+}
+
+/* Callback du signal "manual-zoom-changed" émis par le preview quand
+ * l'utilisateur change le zoom manuellement (Ctrl+molette). */
+static void
+on_manual_zoom_cb (MarkerPreview *preview G_GNUC_UNUSED,
+                   gpointer       user_data)
+{
+  disable_zoom_fit_auto (MARKER_WINDOW (user_data));
+}
+
 static void
 marker_window_size_allocate (GtkWidget *widget,
                              int        width,
@@ -715,6 +767,7 @@ zoom_entry_activated_cb (GtkEntry *entry,
                          gpointer  user_data)
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
+  disable_zoom_fit_auto (window);
   MarkerEditor *editor = marker_window_get_active_editor (window);
   g_return_if_fail (editor != NULL);
   MarkerPreview *preview = marker_editor_get_preview (editor);
@@ -1537,6 +1590,9 @@ marker_window_add_editor (MarkerWindow *window,
                     window);
   g_signal_connect (marker_editor_get_preview (editor), "zoom-changed",
                     G_CALLBACK (preview_zoom_changed_cb),
+                    window);
+  g_signal_connect (marker_editor_get_preview (editor), "manual-zoom-changed",
+                    G_CALLBACK (on_manual_zoom_cb),
                     window);
   g_signal_connect (marker_editor_get_preview (editor), "open-file-requested",
                     G_CALLBACK (preview_open_file_requested_cb),

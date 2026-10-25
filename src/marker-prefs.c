@@ -576,8 +576,15 @@ on_preview_settings_changed (GSettings   *settings,
                              gpointer     user_data)
 {
   (void) settings;
-  (void) key;
   (void) user_data;
+
+  /* Le zoom est appliqué directement via WebKit. Quand la pref est sauvegardée
+   * (300ms après le changement), GSettings émet changed::preview-zoom-level.
+   * Ignorer cette clé évite un rechargement complet de toutes les previews
+   * à chaque changement de zoom. */
+  if (g_strcmp0 (key, "preview-zoom-level") == 0)
+    return;
+
   refresh_preview ();
 }
 
