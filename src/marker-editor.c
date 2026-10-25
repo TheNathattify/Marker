@@ -80,6 +80,19 @@ on_debounce_refresh_preview_cb (gpointer user_data)
   return G_SOURCE_REMOVE;
 }
 
+static gboolean
+auto_zoom_fit_cb (gpointer user_data)
+{
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  MarkerPreview *preview = marker_editor_get_preview (editor);
+  if (preview != NULL)
+  {
+    marker_preview_zoom_fit (preview);
+  }
+  g_object_unref (editor);
+  return G_SOURCE_REMOVE;
+}
+
 static void
 on_document_external_change (MarkerDocument *doc,
                              gpointer        user_data)
@@ -704,6 +717,10 @@ marker_editor_open_file (MarkerEditor *editor,
   marker_document_set_is_modified (editor->document, FALSE);
   editor->needs_refresh = TRUE;
   marker_editor_refresh_preview (editor);
+
+  /* Zoom-fit automatique après ouverture : laisse WebKit charger le HTML
+   * (~400 ms) avant de mesurer la largeur du contenu. */
+  g_timeout_add (400, auto_zoom_fit_cb, g_object_ref (editor));
 
   emit_signal_title_changed (editor);
   emit_signal_subtitle_changed (editor);
