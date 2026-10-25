@@ -446,8 +446,12 @@ msgid "Leave Fullscreen"
 msgstr "Quitter le plein écran"
 
 #: src/resources/ui/marker-headerbar.ui
-msgid "Fit to Page Width (auto on resize)"
-msgstr "Ajuster à la largeur (auto au redimensionnement)"
+msgid "Fit to Page Width"
+msgstr "Ajuster à la largeur"
+
+#: src/resources/ui/marker-headerbar.ui
+msgid "Auto Fit on Window Resize"
+msgstr "Ajustement auto au redimensionnement"
 
 #: src/resources/ui/marker-headerbar.ui
 msgid "Zoom level (%). Type a value and press Enter."

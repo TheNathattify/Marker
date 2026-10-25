@@ -116,10 +116,17 @@
           </object>
         </child>
         <child>
-          <object class="GtkToggleButton" id="zoom_fit_btn">
+          <object class="GtkButton" id="zoom_fit_btn">
             <property name="icon-name">zoom-fit-best-symbolic</property>
             <property name="action-name">win.zoomfit</property>
-            <property name="tooltip-text" translatable="yes">Fit to Page Width (auto on resize)</property>
+            <property name="tooltip-text" translatable="yes">Fit to Page Width</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkToggleButton" id="zoom_fit_auto_btn">
+            <property name="icon-name">view-refresh-symbolic</property>
+            <property name="action-name">win.zoomfitauto</property>
+            <property name="tooltip-text" translatable="yes">Auto Fit on Window Resize</property>
           </object>
         </child>
       </object>

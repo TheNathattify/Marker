@@ -288,30 +288,40 @@ action_zoom_in (GSimpleAction *action,
 }
 
 static void
-action_zoom_fit (GSimpleAction *action,
-                 GVariant      *value,
+action_zoom_fit (GSimpleAction *action G_GNUC_UNUSED,
+                 GVariant      *parameter G_GNUC_UNUSED,
                  gpointer       user_data)
 {
   MarkerWindow *window = user_data;
-  gboolean state = g_variant_get_boolean (value);
+  MarkerEditor *editor = marker_window_get_active_editor (window);
+  if (editor == NULL)
+    return;
+  marker_preview_zoom_fit (marker_editor_get_preview (editor));
+}
 
+static void
+action_zoom_fit_auto (GSimpleAction *action,
+                      GVariant      *value,
+                      gpointer       user_data)
+{
   g_simple_action_set_state (action, value);
 
-  /* Applique le zoom-fit immédiatement quand on active le toggle. */
-  if (state)
+  /* Applique immédiatement le fit quand on active le toggle. */
+  if (g_variant_get_boolean (value))
   {
+    MarkerWindow *window = user_data;
     MarkerEditor *editor = marker_window_get_active_editor (window);
     if (editor != NULL)
       marker_preview_zoom_fit (marker_editor_get_preview (editor));
   }
 }
 
-/* Applique le zoom-fit sur l'éditeur actif si le toggle est actif.
+/* Applique le zoom-fit sur l'éditeur actif si le toggle auto est actif.
  * Utilisé au redimensionnement de la fenêtre et au changement d'éditeur. */
 static void
 apply_zoom_fit_if_active (MarkerWindow *window)
 {
-  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfit");
+  GAction *action = g_action_map_lookup_action (G_ACTION_MAP (window), "zoomfitauto");
   if (action == NULL)
     return;
 
@@ -330,9 +340,10 @@ apply_zoom_fit_if_active (MarkerWindow *window)
 }
 
 static void
-on_content_size_allocate (GtkWidget *widget,
+on_content_size_allocate (GtkWidget *widget G_GNUC_UNUSED,
                           int        width,
                           int        height G_GNUC_UNUSED,
+                          int        baseline G_GNUC_UNUSED,
                           gpointer   user_data)
 {
   MarkerWindow *window = MARKER_WINDOW (user_data);
@@ -1139,8 +1150,12 @@ marker_window_init (MarkerWindow *window)
     gtk_application_set_accels_for_action (app, "win.zoomout", zoomout_accels);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
-    action = G_ACTION (g_simple_action_new_stateful ("zoomfit", NULL, g_variant_new_boolean (FALSE)));
-    g_signal_connect (G_SIMPLE_ACTION (action), "change-state", G_CALLBACK (action_zoom_fit), window);
+    action = G_ACTION (g_simple_action_new ("zoomfit", NULL));
+    g_signal_connect (G_SIMPLE_ACTION (action), "activate", G_CALLBACK (action_zoom_fit), window);
+    g_action_map_add_action (G_ACTION_MAP (window), action);
+
+    action = G_ACTION (g_simple_action_new_stateful ("zoomfitauto", NULL, g_variant_new_boolean (FALSE)));
+    g_signal_connect (G_SIMPLE_ACTION (action), "change-state", G_CALLBACK (action_zoom_fit_auto), window);
     g_action_map_add_action (G_ACTION_MAP (window), action);
 
     action = G_ACTION (g_simple_action_new ("editoronlymode", NULL));
