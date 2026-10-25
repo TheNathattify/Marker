@@ -46,9 +46,10 @@ struct _MarkerEditor
   gboolean               needs_refresh;
   guint                  timer_id;
 
-  /* Debounce du zoom éditeur : accumuler les deltas de molette et appliquer
-   * après 80 ms d'inactivité. Évite le re-layout CSS à chaque cran (1-2 s
-   * de latence sur les gros documents). */
+  /* Debounce du zoom éditeur : accumuler les deltas de molette, appliquer
+   * le CSS font-size + sauvegarder la pref après 100 ms d'inactivité.
+   * Le re-layout GtkTextView est inévitable (pas de scale GPU dans GTK4),
+   * mais on évite de le déclencher à chaque cran. */
   guint                  zoom_timeout_id;
   gdouble                pending_zoom;
 };
@@ -283,7 +284,7 @@ marker_editor_key_pressed_cb (GtkEventControllerKey *controller,
 }
 
 static gboolean
-on_source_zoom_timeout_cb (gpointer user_data)
+on_zoom_timeout_cb (gpointer user_data)
 {
   MarkerEditor *editor = MARKER_EDITOR (user_data);
   editor->zoom_timeout_id = 0;
@@ -298,23 +299,22 @@ marker_editor_set_source_zoom_level (MarkerEditor *editor,
 {
   zoom = CLAMP (zoom, 0.2, 5.0);
 
-  /* Annuler un debounce en cours (appel direct, ex: init ou reset). */
+  /* Annuler un debounce en cours (appel direct : init, reset, champ %). */
   if (editor->zoom_timeout_id > 0)
   {
     g_source_remove (editor->zoom_timeout_id);
     editor->zoom_timeout_id = 0;
   }
 
-  marker_prefs_set_source_zoom_level (zoom);
   marker_source_view_set_zoom_level (editor->source_view, zoom);
+  marker_prefs_set_source_zoom_level (zoom);
 }
 
 void
 marker_editor_zoom_source (MarkerEditor *editor,
                            gdouble       delta)
 {
-  /* Debounce : accumuler le delta, appliquer après 80 ms d'inactivité.
-   * Évite le re-layout CSS du GtkTextView à chaque cran de molette. */
+  /* Debounce : accumuler le delta, appliquer après 100 ms d'inactivité. */
   gdouble current = editor->pending_zoom > 0.0
     ? editor->pending_zoom
     : marker_source_view_get_zoom_level (editor->source_view);
@@ -325,7 +325,7 @@ marker_editor_zoom_source (MarkerEditor *editor,
   if (editor->zoom_timeout_id > 0)
     g_source_remove (editor->zoom_timeout_id);
 
-  editor->zoom_timeout_id = g_timeout_add (80, on_source_zoom_timeout_cb, editor);
+  editor->zoom_timeout_id = g_timeout_add (100, on_zoom_timeout_cb, editor);
 }
 
 static gboolean
