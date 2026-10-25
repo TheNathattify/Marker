@@ -729,6 +729,6 @@ msgstr "Tout remplacer"
 msgid "Export"
 msgstr "Exporter"
 
-#: src/resources/ui/marker-window-main-view.ui
-msgid "Close Sidebar"
-msgstr "Fermer la barre latérale"
+#: src/resources/ui/marker-headerbar.ui
+msgid "Toggle Sidebar"
+msgstr "Afficher/masquer la barre latérale"

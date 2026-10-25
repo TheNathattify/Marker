@@ -83,8 +83,6 @@ typedef struct {
   gpointer                user_data;
 } WarningClosure;
 
-static void sidebar_close_btn_clicked_cb (GtkButton *btn, gpointer user_data);
-
 gboolean
 get_current_iter (MarkerWindow *window,
                   GtkTreeIter  *iter)
@@ -1275,14 +1273,6 @@ marker_window_init (MarkerWindow *window)
     g_signal_connect (outline_list_box, "row-activated", G_CALLBACK (on_outline_row_activated), window);
   }
 
-  /** SIDEBAR CLOSE BUTTON **/
-  GtkButton *sidebar_close_btn = GTK_BUTTON (gtk_builder_get_object (builder, "sidebar_close_btn"));
-  if (sidebar_close_btn)
-  {
-    g_signal_connect_swapped (sidebar_close_btn, "clicked",
-                              G_CALLBACK (sidebar_close_btn_clicked_cb), window);
-  }
-
   /** EDITOR STACKS **/
   window->editors_stack = GTK_STACK (gtk_builder_get_object (builder, "documents_stack"));
 
@@ -1296,17 +1286,17 @@ marker_window_init (MarkerWindow *window)
   window->paned2 = gtk_paned_get_end_child (GTK_PANED (main_paned));
   window->main_paned = GTK_PANED (main_paned);
 
-  /* Largeur minimale de la sidebar = largeur naturelle du header
-   * (StackSwitcher + bouton fermer) pour éviter que les boutons ne
+  /* Largeur minimale de la sidebar = largeur naturelle du StackSwitcher
+   * (boutons Documents/Plan) + marges, pour éviter que les boutons ne
    * débordent quand on réduit la sidebar. */
   {
-    GtkWidget *header_box = GTK_WIDGET (gtk_builder_get_object (builder, "sidebar_header_box"));
-    if (header_box && window->paned1)
+    GtkWidget *switcher = GTK_WIDGET (gtk_builder_get_object (builder, "sidebar_switcher"));
+    if (switcher && window->paned1)
     {
       int nat_width = 0;
-      gtk_widget_measure (header_box, GTK_ORIENTATION_HORIZONTAL, -1, NULL, &nat_width, NULL, NULL);
-      int margin_start = gtk_widget_get_margin_start (header_box);
-      int margin_end = gtk_widget_get_margin_end (header_box);
+      gtk_widget_measure (switcher, GTK_ORIENTATION_HORIZONTAL, -1, NULL, &nat_width, NULL, NULL);
+      int margin_start = gtk_widget_get_margin_start (switcher);
+      int margin_end = gtk_widget_get_margin_end (switcher);
       int min_width = nat_width + margin_start + margin_end + 4; /* +4 marge de sécurité */
       gtk_widget_set_size_request (window->paned1, min_width, -1);
     }
@@ -1830,16 +1820,6 @@ marker_window_hide_sidebar (MarkerWindow *window)
     gtk_widget_set_visible (window->paned1, FALSE);
     gtk_paned_set_position (window->main_paned, 0);
   }
-}
-
-static void
-sidebar_close_btn_clicked_cb (GtkButton *btn G_GNUC_UNUSED,
-                              gpointer   user_data)
-{
-  MarkerWindow *window = MARKER_WINDOW (user_data);
-  /* Passe par l'action pour synchroniser état + pref + visibilité. */
-  g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
-                                      g_variant_new_boolean (FALSE));
 }
 
 void
