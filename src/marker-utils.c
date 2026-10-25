@@ -261,8 +261,8 @@ marker_utils_get_scripts_dir (void)
     "./data/scripts",
     "../data/scripts",
     "/home/vincent/src/marker/data/scripts",
-    "/app/share/com.github.adrighem.marker/scripts",
-    "/usr/share/com.github.adrighem.marker/scripts",
+    "/app/share/com.github.thenathattify.marker/scripts",
+    "/usr/share/com.github.thenathattify.marker/scripts",
     NULL
   };
 
@@ -318,8 +318,8 @@ marker_utils_get_styles_dir (void)
     "./data/styles",
     "../data/styles",
     "/home/vincent/src/marker/data/styles",
-    "/app/share/com.github.adrighem.marker/styles",
-    "/usr/share/com.github.adrighem.marker/styles",
+    "/app/share/com.github.thenathattify.marker/styles",
+    "/usr/share/com.github.thenathattify.marker/styles",
     NULL
   };
 

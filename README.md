@@ -1,4 +1,4 @@
-# <img width="32" src="data/com.github.adrighem.marker.svg" alt="Marker Logo"/> Marker
+# <img width="32" src="data/com.github.thenathattify.marker.svg" alt="Marker Logo"/> Marker
 
 A modern, fast, and feature-rich Markdown editor designed for GNOME, built with GTK 4 and Libadwaita.
 
@@ -40,7 +40,7 @@ Marker combines a distraction-free writing environment with a powerful live prev
 
 #### Build Commands
 ```bash
-git clone https://github.com/adrighem/Marker.git
+git clone https://github.com/thenathattify/Marker.git
 cd Marker
 meson setup build --prefix=/usr
 ninja -C build
@@ -52,12 +52,12 @@ sudo ninja -C build install
 You can build and test Marker in a clean Flatpak sandbox using Flatpak Builder:
 
 ```bash
-flatpak-builder --user --install --force-clean build-flatpak com.github.adrighem.marker.json
+flatpak-builder --user --install --force-clean build-flatpak com.github.thenathattify.marker.json
 ```
 
 Or run directly:
 ```bash
-flatpak-builder --run build-flatpak com.github.adrighem.marker.json marker
+flatpak-builder --run build-flatpak com.github.thenathattify.marker.json marker
 ```
 
 ---

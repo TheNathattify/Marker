@@ -1253,8 +1253,8 @@ marker_window_init (MarkerWindow *window)
   adw_application_window_set_content (ADW_APPLICATION_WINDOW (window), GTK_WIDGET (vbox));
 
   /** HeaderBar **/
-  gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-gear-popover.ui", NULL);
-  gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-headerbar.ui", NULL);
+  gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-gear-popover.ui", NULL);
+  gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-headerbar.ui", NULL);
   AdwHeaderBar *header_bar = ADW_HEADER_BAR (gtk_builder_get_object (builder, "header_bar"));
 
   window->zoom_entry = GTK_ENTRY (gtk_builder_get_object (builder, "zoom_entry"));
@@ -1276,7 +1276,7 @@ marker_window_init (MarkerWindow *window)
   /** Popover / Gear Menu **/
 
   /** Main View **/
-  gtk_builder_add_from_resource (builder, "/com/github/adrighem/marker/ui/marker-window-main-view.ui", NULL);
+  gtk_builder_add_from_resource (builder, "/com/github/thenathattify/marker/ui/marker-window-main-view.ui", NULL);
 
   /** DOCUMENTS TREE **/
   GtkTreeView *documents_tree_view = GTK_TREE_VIEW (gtk_builder_get_object (builder, "documents_tree_view"));

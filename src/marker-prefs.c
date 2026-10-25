@@ -730,11 +730,11 @@ void
 marker_prefs_load (void)
 {
   prefs.editor_settings =
-    g_settings_new ("com.github.adrighem.marker.preferences.editor");
+    g_settings_new ("com.github.thenathattify.marker.preferences.editor");
   prefs.preview_settings =
-    g_settings_new ("com.github.adrighem.marker.preferences.preview");
+    g_settings_new ("com.github.thenathattify.marker.preferences.preview");
   prefs.window_settings =
-    g_settings_new ("com.github.adrighem.marker.preferences.window");
+    g_settings_new ("com.github.thenathattify.marker.preferences.window");
 
   g_signal_connect (prefs.editor_settings, "changed",
                     G_CALLBACK (on_editor_settings_changed), NULL);
@@ -755,7 +755,7 @@ marker_prefs_show_window (void)
 {
   GtkBuilder *builder =
     gtk_builder_new_from_resource (
-      "/com/github/adrighem/marker/ui/marker-prefs-window.ui");
+      "/com/github/thenathattify/marker/ui/marker-prefs-window.ui");
 
   AdwPreferencesWindow *prefs_win =
     ADW_PREFERENCES_WINDOW (gtk_builder_get_object (builder, "prefs_win"));

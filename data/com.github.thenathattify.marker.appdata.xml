@@ -2,7 +2,7 @@
 <!-- Copyright 2018-2020 Fabio Colacio <fabio.colacio.dev@gmail.com> -->
 <!-- Copyright 2026 Vincent van Adrighem <44673609+adrighem@users.noreply.github.com> -->
 <component type="desktop-application">
-  <id>com.github.adrighem.marker.desktop</id>
+  <id>com.github.thenathattify.marker.desktop</id>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0</project_license>
   <name>Marker</name>
@@ -26,21 +26,21 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">com.github.adrighem.marker.desktop</launchable>
+  <launchable type="desktop-id">com.github.thenathattify.marker.desktop</launchable>
   <translation type="gettext">marker</translation>
 
 
-  <developer id="com.github.adrighem">
+  <developer id="com.github.thenathattify">
     <name>Vincent van Adrighem</name>
   </developer>
-  <url type="homepage">https://github.com/adrighem/Marker</url>
-  <url type="bugtracker">https://github.com/adrighem/Marker/issues</url>
-  <url type="vcs-browser">https://github.com/adrighem/Marker</url>
-  <url type="translate">https://github.com/adrighem/Marker/tree/master/po</url>
+  <url type="homepage">https://github.com/thenathattify/Marker</url>
+  <url type="bugtracker">https://github.com/thenathattify/Marker/issues</url>
+  <url type="vcs-browser">https://github.com/thenathattify/Marker</url>
+  <url type="translate">https://github.com/thenathattify/Marker/tree/master/po</url>
 
   <provides>
     <binary>marker</binary>
-    <id>com.github.adrighem.marker</id>
+    <id>com.github.thenathattify.marker</id>
   </provides>
 
   <releases>
