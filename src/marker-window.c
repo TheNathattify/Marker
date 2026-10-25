@@ -1575,13 +1575,9 @@ marker_window_init (MarkerWindow *window)
                                width ? width : 900,
                                height ? height : 600);
 
-  if (marker_prefs_get_show_sidebar ())
-  {
-    /* change_action_state (pas activate) pour une action stateful :
-     * déclenche action_sidebar → met à jour l'état, la pref et la visibilité. */
-    g_action_group_change_action_state (G_ACTION_GROUP (window), "sidebar",
-                                        g_variant_new_boolean (TRUE));
-  }
+  /* La sidebar est toujours cachée au démarrage, même si la pref était
+   * TRUE à la session précédente. Elle ne s'affiche que via F12/menu ou
+   * automatiquement quand 2+ documents sont ouverts. */
 
   g_signal_connect (window, "close-request", G_CALLBACK (window_close_request_cb), window);
   g_object_unref (builder);
