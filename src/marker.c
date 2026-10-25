@@ -338,6 +338,15 @@ int
 main (int    argc,
       char **argv)
 {
+  for (int i = 1; i < argc; i++)
+  {
+    if (g_strcmp0 (argv[i], "--version") == 0)
+      {
+        g_print ("marker %s\n", MARKER_VERSION);
+        return 0;
+      }
+  }
+
   setlocale (LC_ALL, "");
   bindtextdomain ("marker", LOCALE_DIR);
   bind_textdomain_codeset ("marker", "UTF-8");
