@@ -1,0 +1,7 @@
+[Flatpak Repo]
+Version=1
+Url=https://thenathattify.github.io/Marker/repo
+DefaultBranch=stable
+Title=Marker (thenathattify)
+Homepage=https://github.com/TheNathattify/Marker
+Description=Powerful markdown editor for the GNOME desktop (thenathattify fork)
