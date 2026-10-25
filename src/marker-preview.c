@@ -48,6 +48,13 @@
 struct _MarkerPreview
 {
   WebKitWebView parent_instance;
+
+  /* Debounce de la sauvegarde GSettings du zoom : l'écriture D-Bus synchrone
+   * à chaque cran de molette causait 1-2 s de latence. On applique le zoom
+   * WebKit immédiatement (rapide, GPU) et on sauvegarde la pref après 300 ms
+   * d'inactivité. */
+  guint   zoom_prefs_timeout_id;
+  gdouble pending_zoom_prefs;
 };
 
 G_DEFINE_TYPE (MarkerPreview, marker_preview, WEBKIT_TYPE_WEB_VIEW)
@@ -418,6 +425,30 @@ pdf_print_failed_cb (WebKitPrintOperation *print_op,
   }
 }
 
+static gboolean
+on_zoom_prefs_timeout_cb (gpointer user_data)
+{
+  MarkerPreview *preview = MARKER_PREVIEW (user_data);
+  preview->zoom_prefs_timeout_id = 0;
+  marker_prefs_set_zoom_level (preview->pending_zoom_prefs);
+  return G_SOURCE_REMOVE;
+}
+
+/* Debounce la sauvegarde GSettings : le zoom WebKit est appliqué
+ * immédiatement (rapide), mais l'écriture D-Bus est différée de 300 ms. */
+static void
+marker_preview_queue_zoom_prefs_save (MarkerPreview *preview,
+                                      gdouble        zoom_level)
+{
+  preview->pending_zoom_prefs = zoom_level;
+
+  if (preview->zoom_prefs_timeout_id > 0)
+    g_source_remove (preview->zoom_prefs_timeout_id);
+
+  preview->zoom_prefs_timeout_id =
+    g_timeout_add (300, on_zoom_prefs_timeout_cb, preview);
+}
+
 void
 marker_preview_set_zoom_level (MarkerPreview *preview,
                                gdouble        zoom_level)
@@ -425,7 +456,7 @@ marker_preview_set_zoom_level (MarkerPreview *preview,
   g_return_if_fail (MARKER_IS_PREVIEW (preview));
   zoom_level = CLAMP (zoom_level, MIN_ZOOM, MAX_ZOOM);
   webkit_web_view_set_zoom_level (WEBKIT_WEB_VIEW (preview), zoom_level);
-  marker_prefs_set_zoom_level (zoom_level);
+  marker_preview_queue_zoom_prefs_save (preview, zoom_level);
   g_signal_emit_by_name (preview, "zoom-changed");
 }
 
@@ -526,6 +557,20 @@ marker_preview_init (MarkerPreview *preview)
 }
 
 static void
+marker_preview_dispose (GObject *object)
+{
+  MarkerPreview *preview = MARKER_PREVIEW (object);
+
+  if (preview->zoom_prefs_timeout_id > 0)
+  {
+    g_source_remove (preview->zoom_prefs_timeout_id);
+    preview->zoom_prefs_timeout_id = 0;
+  }
+
+  G_OBJECT_CLASS (marker_preview_parent_class)->dispose (object);
+}
+
+static void
 marker_preview_class_init (MarkerPreviewClass *class)
 {
   g_signal_newv ("zoom-changed",
@@ -553,6 +598,9 @@ marker_preview_class_init (MarkerPreviewClass *class)
                 G_TYPE_NONE, 1, G_TYPE_UINT);
 
   WEBKIT_WEB_VIEW_CLASS (class)->load_changed = load_changed_cb;
+
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+  object_class->dispose = marker_preview_dispose;
 }
 
 MarkerPreview *
@@ -573,7 +621,7 @@ marker_preview_zoom_out (MarkerPreview *preview)
   gdouble val = webkit_web_view_get_zoom_level (view) - 0.1;
   val = max (val, MIN_ZOOM);
 
-  marker_prefs_set_zoom_level (val);
+  marker_preview_queue_zoom_prefs_save (preview, val);
   webkit_web_view_set_zoom_level (view, val);
 
   g_signal_emit_by_name (preview, "zoom-changed");
@@ -587,7 +635,7 @@ marker_preview_zoom_original (MarkerPreview *preview)
 
   gdouble zoom = 1.0;
 
-  marker_prefs_set_zoom_level (zoom);
+  marker_preview_queue_zoom_prefs_save (preview, zoom);
   webkit_web_view_set_zoom_level (view, zoom);
 
   g_signal_emit_by_name (preview, "zoom-changed");
@@ -602,7 +650,7 @@ marker_preview_zoom_in (MarkerPreview *preview)
   gdouble val = webkit_web_view_get_zoom_level (view) + 0.1;
   val = min (val, MAX_ZOOM);
 
-  marker_prefs_set_zoom_level (val);
+  marker_preview_queue_zoom_prefs_save (preview, val);
   webkit_web_view_set_zoom_level (view, val);
 
   g_signal_emit_by_name (preview, "zoom-changed");

@@ -45,6 +45,12 @@ struct _MarkerEditor
 
   gboolean               needs_refresh;
   guint                  timer_id;
+
+  /* Debounce du zoom éditeur : accumuler les deltas de molette et appliquer
+   * après 80 ms d'inactivité. Évite le re-layout CSS à chaque cran (1-2 s
+   * de latence sur les gros documents). */
+  guint                  zoom_timeout_id;
+  gdouble                pending_zoom;
 };
 
 G_DEFINE_TYPE (MarkerEditor, marker_editor, GTK_TYPE_BOX);
@@ -222,6 +228,12 @@ marker_editor_dispose (GObject *object)
     editor->timer_id = 0;
   }
 
+  if (editor->zoom_timeout_id > 0)
+  {
+    g_source_remove (editor->zoom_timeout_id);
+    editor->zoom_timeout_id = 0;
+  }
+
   g_clear_object (&editor->document);
   g_clear_object (&editor->search_controller);
 
@@ -270,11 +282,29 @@ marker_editor_key_pressed_cb (GtkEventControllerKey *controller,
   return GDK_EVENT_PROPAGATE;
 }
 
+static gboolean
+on_source_zoom_timeout_cb (gpointer user_data)
+{
+  MarkerEditor *editor = MARKER_EDITOR (user_data);
+  editor->zoom_timeout_id = 0;
+  marker_source_view_set_zoom_level (editor->source_view, editor->pending_zoom);
+  marker_prefs_set_source_zoom_level (editor->pending_zoom);
+  return G_SOURCE_REMOVE;
+}
+
 void
 marker_editor_set_source_zoom_level (MarkerEditor *editor,
                                      gdouble       zoom)
 {
   zoom = CLAMP (zoom, 0.2, 5.0);
+
+  /* Annuler un debounce en cours (appel direct, ex: init ou reset). */
+  if (editor->zoom_timeout_id > 0)
+  {
+    g_source_remove (editor->zoom_timeout_id);
+    editor->zoom_timeout_id = 0;
+  }
+
   marker_prefs_set_source_zoom_level (zoom);
   marker_source_view_set_zoom_level (editor->source_view, zoom);
 }
@@ -283,8 +313,19 @@ void
 marker_editor_zoom_source (MarkerEditor *editor,
                            gdouble       delta)
 {
-  marker_editor_set_source_zoom_level (editor,
-                                       marker_source_view_get_zoom_level (editor->source_view) + delta);
+  /* Debounce : accumuler le delta, appliquer après 80 ms d'inactivité.
+   * Évite le re-layout CSS du GtkTextView à chaque cran de molette. */
+  gdouble current = editor->pending_zoom > 0.0
+    ? editor->pending_zoom
+    : marker_source_view_get_zoom_level (editor->source_view);
+  gdouble target = CLAMP (current + delta, 0.2, 5.0);
+
+  editor->pending_zoom = target;
+
+  if (editor->zoom_timeout_id > 0)
+    g_source_remove (editor->zoom_timeout_id);
+
+  editor->zoom_timeout_id = g_timeout_add (80, on_source_zoom_timeout_cb, editor);
 }
 
 static gboolean
