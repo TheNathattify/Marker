@@ -11,6 +11,7 @@ upstream_tag_template: "v{version}"
 jobs:
   - job: copr_build
     trigger: release
+    specfile_path: packaging/rpm/marker.spec
     owner: thenathattify
     project: marker
     targets:
