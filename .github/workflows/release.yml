@@ -239,7 +239,8 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y python3-pip
-          sudo pip install --break-system-packages copr-cli
+          pip install --break-system-packages --user copr-cli
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Configure COPR
         run: |
@@ -313,6 +314,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.version-guard.outputs.version }}"
+          # Delete pre-existing release (e.g. manually re-created to re-trigger
+          # Packit) so gh release create does not fail with "already exists".
+          gh release delete "$GITHUB_REF_NAME" --yes || true
           # Static part: download links and install instructions (template)
           sed "s/@VERSION@/$VERSION/g" packaging/release-notes.md.in > /tmp/release-notes.md
           # Auto-generated part: changelog from commits (GitHub generate-notes API)
