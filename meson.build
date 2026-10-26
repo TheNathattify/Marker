@@ -26,7 +26,6 @@ executable_name = 'marker'
 
 gnome = import('gnome')
 i18n = import('i18n')
-subdir('help')
 subdir('po')
 
 res = gnome.compile_resources(
