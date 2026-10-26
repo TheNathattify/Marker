@@ -250,6 +250,8 @@ jobs:
           username = thenathattify
           token = ${{ secrets.COPR_API_TOKEN }}
           login = ${{ secrets.COPR_LOGIN_TOKEN }}
+          copr_url = https://copr.fedorainfracloud.org
+          encrypted = False
           EOF
           chmod 600 ~/.config/copr
 
