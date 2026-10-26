@@ -1,10 +1,40 @@
+# Build directories
 build
+_build
 .flatpak-builder
+
+# Meson generated files (when running meson in-tree)
+meson-private/
+meson-info/
+meson-logs/
+compile_commands.json
 resources.c
+
+# Compiled objects
+*.o
+*.a
+*.so
+*.compiled
+
+# Editor / IDE
 *~
 .vscode
-_build
+.idea
 *.sublime-project
 *.sublime-workspace
-*.compiled
 .agents/
+
+# Generated packages and archives
+*.rpm
+*.deb
+*.src.rpm
+*.tar.gz
+*.tar.xz
+*.flatpak
+*.flatpakrepo
+repo/
+
+# Logs and misc
+*.log
+tags
+AGENTS.md
