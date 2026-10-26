@@ -237,9 +237,9 @@ jobs:
 
       - name: Install copr-cli
         run: |
-          apt-get update -qq
-          apt-get install -y python3-pip
-          pip install --break-system-packages copr-cli
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-pip
+          sudo pip install --break-system-packages copr-cli
 
       - name: Configure COPR
         run: |
