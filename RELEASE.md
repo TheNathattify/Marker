@@ -10,6 +10,7 @@ La CI fait le reste automatiquement une fois le tag pushé.
 |---|---|---|
 | RPM Fedora | **COPR** (copr.fedorainfracloud.org) via GitHub Actions | automatique à chaque tag `v*` |
 | DEB Ubuntu | **PPA Launchpad** (miroirs git + recette) | « Request build(s) » manuel à chaque release |
+| RPM Arch | **AUR** (aur.archlinux.org) | manuel à chaque release (PKGBUILD) |
 | Flatpak | **dépôt perso GitHub Pages** signé GPG (docs.flatpak.org) | automatique à chaque tag, via la CI |
 | Release | **GitHub Releases** + notes auto-générées | automatique à chaque tag, via la CI |
 
@@ -162,7 +163,35 @@ les 3 sous-modules en plus et les « nest » à la main.
 > publiée reprend celle du `debian/changelog` (`2026.10.X`, avec le
 > suffixe `~ubuntu26.04.1` ajouté par Launchpad).
 
-### 1.4 Signature GPG du dépôt flatpak — déjà en place
+### 1.4 AUR (Arch Linux) — PKGBUILD, méthode officielle
+
+L'AUR (Arch User Repository) est le dépôt communautaire officiel d'Arch.
+Le `PKGBUILD` vit dans `packaging/aur/` (versionné dans ce dépôt).
+
+1. **Compte AUR** (une seule fois) : https://aur.archlinux.org/register/
+   + ajoute ta **clé SSH publique** : https://aur.archlinux.org/account/
+2. **Premier push** (le dépôt AUR est créé automatiquement) :
+
+   ```sh
+   git clone ssh://aur@aur.archlinux.org/marker.git /tmp/marker-aur
+   cp ~/Marker/packaging/aur/PKGBUILD ~/Marker/packaging/aur/.SRCINFO /tmp/marker-aur/
+   cd /tmp/marker-aur
+   git add -A
+   git commit -m "marker 2026.10.7-1"
+   git push
+   ```
+
+3. **Mise à jour à chaque release** : bump `pkgver`/`sha256sums` dans
+   `packaging/aur/PKGBUILD`, régénère `.SRCINFO` (`makepkg --printsrcinfo`
+   sur Arch), commit + push sur `~/Marker`, puis copie les 2 fichiers
+   vers `/tmp/marker-aur` et push.
+
+> **Pourquoi le tarball de la release et pas `git archive`** : le tarball
+> GitHub auto-généré n'inclut pas les sous-modules git (scidown, charter,
+> tinyexpr). Le tarball attaché à la release GitHub (`marker-X.Y.Z.tar.gz`)
+> est généré par la CI et **inclut** les sous-modules.
+
+### 1.5 Signature GPG du dépôt flatpak — déjà en place
 
 Le dépôt flatpak est **signé** (bonne pratique officielle, docs.flatpak.org
 *Hosting a repository*) : la clé publique est dans `marker.flatpakrepo`
@@ -181,7 +210,7 @@ La clé privée est aussi dans ton trousseau GPG local. En cas de perte :
 régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
 `marker.flatpakrepo` (`gpg --export --armor <ID> | base64 -w0`).
 
-### 1.5 Secrets GitHub (récapitulatif)
+### 1.6 Secrets GitHub (récapitulatif)
 
 | Secret | Obligatoire | Usage |
 |---|---|---|
@@ -238,6 +267,21 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
    release GitHub (assets + `SHA256SUMS.txt` + notes auto-générées),
    publication gh-pages, et le job `copr-publish` pousse le SRPM sur COPR
    en parallèle (suivi dans l'onglet Actions).
+6. **AUR (Arch)** : mets à jour `packaging/aur/PKGBUILD` (`pkgver` +
+   `sha256sums` du tarball source de la release), régénère `.SRCINFO`,
+   puis pousse sur l'AUR (voir §1.4) :
+
+   ```sh
+   cd ~/Marker
+   sed -i "s/^pkgver=.*/pkgver=2026.10.X/" packaging/aur/PKGBUILD
+   # mettre à jour sha256sums avec le checksum du marker-2026.10.X.tar.gz
+   # de la release (fichier SHA256SUMS.txt)
+   cd /tmp/marker-aur   # créé en §1.4
+   cp ~/Marker/packaging/aur/PKGBUILD ~/Marker/packaging/aur/.SRCINFO .
+   git add -A
+   git commit -m "marker 2026.10.X-1"
+   git push
+   ```
 
 > **Garde-fou** : si le tag ne correspond pas à la version dans
 > `meson.build`, le pipeline s'arrête immédiatement (job `version-guard`).
@@ -304,6 +348,17 @@ sudo dnf install marker
 ```sh
 sudo add-apt-repository ppa:thenathattify/marker
 sudo apt update && sudo apt install marker
+```
+
+### AUR (Arch Linux)
+
+```sh
+yay -S marker
+# ou
+paru -S marker
+# ou manuellement :
+git clone https://aur.archlinux.org/marker.git
+cd marker && makepkg -si
 ```
 
 ### RPM / DEB manuels

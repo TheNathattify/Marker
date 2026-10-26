@@ -1,0 +1,46 @@
+# Maintainer: Nathan Obry <nathan170262@proton.me>
+# AUR: https://aur.archlinux.org/packages/marker
+pkgname=marker
+pkgver=2026.10.7
+pkgrel=1
+pkgdesc="Powerful markdown editor for the GNOME desktop (GTK4/libadwaita, thenathattify fork)"
+arch=('x86_64')
+url="https://github.com/TheNathattify/Marker"
+license=('GPL-3.0-or-later')
+depends=(
+    'gtk4'
+    'libadwaita'
+    'gtksourceview5'
+    'webkitgtk-6.0'
+    'glib2'
+)
+makedepends=(
+    'meson'
+    'ninja'
+    'git'
+    'gettext'
+    'itstool'
+    'appstream'
+    'desktop-file-utils'
+)
+# The GitHub auto-generated source tarball does NOT include git submodules.
+# Use the source tarball attached to the GitHub release (built by CI, includes
+# the scidown/charter/tinyexpr submodule sources).
+source=("$pkgname-$pkgver.tar.gz::https://github.com/TheNathattify/Marker/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha256sums=('5ba340756f5a7a6d14f13f948b3653a895d118ef6b2a763538b55c5e3cf2ab60')
+
+build() {
+    cd "$pkgname-$pkgver"
+    meson setup build --prefix=/usr --buildtype=release
+    ninja -C build
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+    ninja -C build test || true
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    DESTDIR="$pkgdir" ninja -C build install
+}

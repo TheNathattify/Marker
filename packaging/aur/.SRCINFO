@@ -1,0 +1,23 @@
+pkgbase = marker
+	pkgdesc = Powerful markdown editor for the GNOME desktop (GTK4/libadwaita, thenathattify fork)
+	pkgver = 2026.10.7
+	pkgrel = 1
+	arch = x86_64
+	url = https://github.com/TheNathattify/Marker
+	license = GPL-3.0-or-later
+	makedepends = meson
+	makedepends = ninja
+	makedepends = git
+	makedepends = gettext
+	makedepends = itstool
+	makedepends = appstream
+	makedepends = desktop-file-utils
+	depends = gtk4
+	depends = libadwaita
+	depends = gtksourceview5
+	depends = webkitgtk-6.0
+	depends = glib2
+	source = marker-2026.10.7.tar.gz::https://github.com/TheNathattify/Marker/releases/download/v2026.10.7/marker-2026.10.7.tar.gz
+	sha256sums = 5ba340756f5a7a6d14f13f948b3653a895d118ef6b2a763538b55c5e3cf2ab60
+
+pkgname = marker
