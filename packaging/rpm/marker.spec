@@ -1,11 +1,9 @@
-# The version is NOT hardcoded in this spec: the release pipeline passes it
-# from the git tag (rpmbuild --define "marker_version $VERSION", where
-# $VERSION is the tag without the leading "v"). Building without the define
-# fails immediately with a clear message instead of shipping a wrong version.
-%{!?marker_version:%{error:marker_version is not defined - pass the git tag version, e.g. rpmbuild --define "marker_version 2026.10.7" -ba packaging/rpm/marker.spec}}
-
+# The version lives in this spec (standard RPM practice, also what Packit
+# expects: it updates this line from the git tag when building the SRPM).
+# Bump it together with meson.build on every release - the CI release job
+# fails if the spec version does not match the tag.
 Name:           marker
-Version:        %{marker_version}
+Version:        2026.10.7
 Release:        1%{?dist}
 Summary:        Powerful markdown editor for the GNOME desktop
 License:        GPL-3.0-or-later
