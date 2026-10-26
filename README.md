@@ -197,31 +197,29 @@ sudo ninja -C build uninstall
 
 This is a personal hard fork of [adrighem/Marker](https://github.com/adrighem/Marker) maintained by **Nathan Obry** ([@thenathattify](https://github.com/thenathattify)), rebranded under the app-ID `com.github.thenathattify.marker`. Versions follow a date-based scheme (`2026.10.x`).
 
-Since the GTK 4 port, the fork adds:
-
 **Interface and workflow**
 
-- **GNOME HIG compliance pass** — `AdwToolbarView`, view switcher, split buttons, shortcuts dialog, and modern dialogs throughout.
-- **Reworked sidebar** — hidden by default, appears automatically when two or more documents are open, with a toggle button in the header bar, per-document rename (pencil) and close buttons, and clean truncation of long file names.
+- **Modern GNOME design** — `AdwToolbarView`, view switcher, split buttons, shortcuts dialog, and native dialogs throughout.
+- **Smart sidebar** — hidden by default, appears automatically when two or more documents are open, with a toggle button in the header bar, per-document rename (pencil) and close buttons, and clean truncation of long file names.
 - **Split save button** — the floppy icon saves; its dropdown offers Save, Save As and Export.
-- **Single fullscreen button** — one toggle in the header bar instead of duplicated menu entries.
+- **Single fullscreen button** — one toggle in the header bar.
 - **Editor font size preference** — independent from the preview zoom.
 - **Document renaming** from the sidebar (pencil button or <kbd>F2</kbd>).
 
 **Zoom, reworked**
 
 - **Per-pane Ctrl+scroll zoom** — the editor and the preview zoom independently.
-- **Editable zoom field** in the header bar, applied instantly (no more multi-second lag).
+- **Editable zoom field** in the header bar, applied instantly.
 - **Fit-to-width button** — a short click fits the preview to the pane once; a long click toggles automatic re-fitting when the window is resized.
-- **Auto-fit on load** — with auto-fit enabled, the preview is fitted as the document loads, without a second render.
+- **Auto-fit on load** — with auto-fit enabled, the preview is fitted as the document loads.
 - **Manual zoom disables auto-fit**, and the scroll position is preserved while zooming.
 
 **Preview rendering**
 
-- **Bundled, offline-capable libraries** — KaTeX 0.19.1, highlight.js 11.12.0 and Mermaid 12.2.0 ship with the app.
-- **Fixed heading levels** — `#` is a real `<h1>` again, and stray `-`/`=` lines no longer produce phantom headings.
-- **Fixed fenced code blocks** — a code fence directly after a text line renders as code (GitHub-style), instead of being swallowed into the paragraph.
-- **Robust Mermaid** — diagrams containing `<`, `&` or `>` are no longer mangled, and one invalid diagram no longer breaks the following ones.
+- **Bundled, offline-capable libraries** — KaTeX, highlight.js and Mermaid ship with the app (no internet required).
+- **Correct heading levels** — `#` is a real `<h1>`.
+- **GitHub-style code blocks** — a code fence directly after a text line renders as code.
+- **Robust Mermaid diagrams** — diagrams containing `<`, `&` or `>` render correctly, and one invalid diagram no longer breaks the following ones.
 - **Outline navigation** — clicking a heading in the sidebar scrolls the preview to the exact section.
 
 **Themes**
@@ -229,16 +227,10 @@ Since the GTK 4 port, the fork adds:
 - **Fedora Dark / Fedora Light** preview themes built on official GNOME/libadwaita color tokens.
 - **Adwaita / Adwaita-dark** code-highlighting themes matching the editor's own color schemes.
 
-**Stability**
-
-- All six GTK 4 port regressions fixed (view-mode crashes, inert menus, greyed-out actions, blank preview, fullscreen state, cursor position).
-- Memory leaks, invalid frees and use-after-free bugs fixed; sidebar/menu state desyncs fixed; WebKitGTK freeze on Wayland + NVIDIA worked around.
-
 **Integration and packaging**
 
-- **D-Bus activation** — a proper service file is shipped, giving single-instance behavior and faster startup.
+- **Single-instance behavior** — D-Bus activation for faster startup.
 - **Automatic settings migration** from the previous `com.github.adrighem.marker` schema when upgrading.
-- **Green CI on every push** — AppStream/desktop/schema validation plus a full Flatpak build.
 - **Official packages** — COPR (Fedora), PPA (Ubuntu), AUR (Arch), signed Flatpak repo.
 
 ---
