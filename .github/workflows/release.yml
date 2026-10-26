@@ -97,9 +97,16 @@ jobs:
       - name: Build RPM
         run: |
           VERSION="${{ needs.version-guard.outputs.version }}"
+          # Fail fast if the spec version was not bumped along with the tag
+          SPEC_VERSION="$(rpmspec -P packaging/rpm/marker.spec | sed -n 's/^Version:[[:space:]]*//p')"
+          echo "tag version: $VERSION / spec version: $SPEC_VERSION"
+          if [ "$SPEC_VERSION" != "$VERSION" ]; then
+            echo "::error::marker.spec Version ($SPEC_VERSION) does not match the tag ($VERSION). Bump the spec."
+            exit 1
+          fi
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
           cp "marker-$VERSION.tar.gz" ~/rpmbuild/SOURCES/
-          rpmbuild --define "marker_version $VERSION" -ba packaging/rpm/marker.spec
+          rpmbuild -ba packaging/rpm/marker.spec
 
       - name: Collect artifacts
         run: |
@@ -171,6 +178,16 @@ jobs:
         with:
           submodules: recursive
 
+      # The repo is GPG-signed (official flatpak practice, docs.flatpak.org
+      # "Hosting a repository"): users install without --no-gpg-verify.
+      - name: Import the GPG signing key
+        env:
+          FLATPAK_GPG_PRIVATE_KEY: ${{ secrets.FLATPAK_GPG_PRIVATE_KEY }}
+        run: |
+          dnf install -y --setopt=install_weak_deps=False gnupg
+          echo "$FLATPAK_GPG_PRIVATE_KEY" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format long
+
       - name: Build flatpak bundle and OSTree repo
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
@@ -180,6 +197,7 @@ jobs:
           repo-dir: repo
           cache: true
           upload-artifact: false
+          gpg-sign: ${{ secrets.FLATPAK_GPG_KEY_ID }}
 
       - name: Prepare gh-pages content
         run: |
@@ -202,34 +220,9 @@ jobs:
           path: gh-pages/
           if-no-files-found: error
 
-  copr:
-    name: Publish RPM to COPR
-    needs: rpm
-    runs-on: ubuntu-24.04
-    container: fedora:latest
-    steps:
-      # copr-cli is not packaged for Ubuntu: run the job on Fedora instead.
-      # git is needed so checkout does a real clone.
-      - name: Install copr-cli
-        run: dnf install -y --setopt=install_weak_deps=False git copr-cli
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: rpm
-          path: artifacts
-
-      - name: Upload source RPM to COPR
-        env:
-          COPR_API_TOKEN: ${{ secrets.COPR_API_TOKEN }}
-        run: |
-          if [ -z "$COPR_API_TOKEN" ]; then
-            echo "::warning::Secret COPR_API_TOKEN is not set: skipping COPR upload (see RELEASE.md)."
-            exit 0
-          fi
-          mkdir -p ~/.config
-          printf '[copr-cli]\nlogin = thenathattify\ntoken = %s\n' "$COPR_API_TOKEN" > ~/.config/copr
-          chmod 600 ~/.config/copr
-          copr-cli build thenathattify/marker artifacts/*.src.rpm
+  # RPM publication for Fedora is handled by Packit (packit.dev), the official
+  # Fedora automation: it builds the COPR project thenathattify/marker on every
+  # release tag. See .packit.yaml and RELEASE.md.
 
   flatpak-repo-publish:
     name: Publish flatpak repo to GitHub Pages
@@ -288,7 +281,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.version-guard.outputs.version }}"
+          # Static part: download links and install instructions (template)
           sed "s/@VERSION@/$VERSION/g" packaging/release-notes.md.in > /tmp/release-notes.md
+          # Auto-generated part: changelog from commits (GitHub generate-notes API)
+          printf '\n---\n\n' >> /tmp/release-notes.md
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+            -f tag_name="$GITHUB_REF_NAME" -q .body >> /tmp/release-notes.md
           gh release create "$GITHUB_REF_NAME" \
             --title "Marker $VERSION" \
             --notes-file /tmp/release-notes.md \

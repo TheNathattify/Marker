@@ -24,20 +24,23 @@
 
 SHA256 checksums of all files above: `SHA256SUMS.txt`.
 
-### Flatpak repository (updated on every release)
+### Flatpak repository (updated on every release, GPG-signed)
 
 ```sh
-flatpak remote-add --if-not-exists --no-gpg-verify marker --from=https://thenathattify.github.io/Marker/marker.flatpakrepo
+flatpak remote-add --if-not-exists --from marker https://thenathattify.github.io/Marker/marker.flatpakrepo
 flatpak install marker com.github.thenathattify.marker
 ```
 
-### COPR (Fedora)
+### COPR (Fedora, built automatically by Packit on every release)
 
 ```sh
 sudo dnf copr enable thenathattify/marker
 sudo dnf install marker
 ```
 
----
+### PPA (Ubuntu, built automatically by Launchpad on every push to main)
 
-Full change log: https://github.com/TheNathattify/Marker/commits/main
+```sh
+sudo add-apt-repository ppa:thenathattify/marker
+sudo apt update && sudo apt install marker
+```
