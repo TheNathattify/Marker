@@ -235,34 +235,6 @@ This is a personal hard fork of [adrighem/Marker](https://github.com/adrighem/Ma
 
 ---
 
-## Keyboard shortcuts
-
-| Shortcut | Action |
-|---|---|
-| <kbd>Ctrl</kbd>+<kbd>N</kbd> | New document |
-| <kbd>Ctrl</kbd>+<kbd>O</kbd> | Open a document |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd> | Open in a new window |
-| <kbd>Ctrl</kbd>+<kbd>S</kbd> | Save |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> | Save as |
-| <kbd>Ctrl</kbd>+<kbd>E</kbd> | Export |
-| <kbd>F2</kbd> | Rename document |
-| <kbd>F5</kbd> / <kbd>Ctrl</kbd>+<kbd>R</kbd> | Reload from disk |
-| <kbd>Ctrl</kbd>+<kbd>W</kbd> | Close document |
-| <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>M</kbd> | Bold / italic / monospace selection |
-| <kbd>Ctrl</kbd>+<kbd>K</kbd> | Insert link |
-| <kbd>Ctrl</kbd>+<kbd>D</kbd> | Draw a sketch |
-| <kbd>Ctrl</kbd>+<kbd>F</kbd> / <kbd>H</kbd> | Find / find and replace |
-| <kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>-</kbd> | Zoom in / out (also <kbd>Ctrl</kbd>+scroll) |
-| <kbd>Ctrl</kbd>+<kbd>0</kbd> | Reset zoom |
-| <kbd>Ctrl</kbd>+<kbd>1</kbd>–<kbd>4</kbd> | Editor / preview / dual-pane / dual-window mode |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>N</kbd> | New window |
-| <kbd>F12</kbd> | Toggle sidebar |
-| <kbd>F11</kbd> | Toggle fullscreen |
-| <kbd>Ctrl</kbd>+<kbd>P</kbd> | Print |
-| <kbd>Ctrl</kbd>+<kbd>Q</kbd> | Quit |
-
----
-
 ## Themes and customization
 
 - **Preview themes** — 21 bundled CSS themes (GitHub, Nord, Solarized, Fedora Dark/Light, …), selectable in Preferences.
