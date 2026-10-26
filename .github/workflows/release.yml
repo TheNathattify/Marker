@@ -180,11 +180,11 @@ jobs:
 
       # The repo is GPG-signed (official flatpak practice, docs.flatpak.org
       # "Hosting a repository"): users install without --no-gpg-verify.
+      # The flathub-infra image is Freedesktop SDK based and already ships gpg.
       - name: Import the GPG signing key
         env:
           FLATPAK_GPG_PRIVATE_KEY: ${{ secrets.FLATPAK_GPG_PRIVATE_KEY }}
         run: |
-          dnf install -y --setopt=install_weak_deps=False gnupg
           echo "$FLATPAK_GPG_PRIVATE_KEY" | gpg --batch --import
           gpg --list-secret-keys --keyid-format long
 
