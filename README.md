@@ -83,21 +83,12 @@ sudo apt update && sudo apt install marker
 
 Supported: Ubuntu 26.04 (resolute). Debian users can also build from source (see below).
 
-### Arch Linux (AUR)
-
-> ⚠️ AUR account creation is temporarily closed due to bot waves. Until then,
-> build directly from the PKGBUILD in this repository:
+### Arch Linux
 
 ```bash
 git clone https://github.com/TheNathattify/Marker.git
 cd Marker/packaging/aur
 makepkg -si
-```
-
-Or with an AUR helper once the package is published:
-
-```bash
-yay -S marker        # or: paru -S marker
 ```
 
 ### AppImage
