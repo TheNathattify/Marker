@@ -255,7 +255,7 @@ jobs:
 
       - name: Submit SRPM to COPR
         run: |
-          copr build thenathattify/marker rpms/*.src.rpm
+          copr-cli build thenathattify/marker rpms/*.src.rpm
 
   flatpak-repo-publish:
     name: Publish flatpak repo to GitHub Pages
