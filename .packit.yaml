@@ -3,7 +3,8 @@
 # thenathattify/marker. Prerequisites (see RELEASE.md):
 #   - the packit-service GitHub app installed on this repository
 #   - the COPR project thenathattify/marker created with the chroots
-#     fedora-42-x86_64, fedora-43-x86_64, fedora-44-x86_64
+#     fedora-43-x86_64, fedora-44-x86_64, fedora-45-x86_64
+#     (update twice a year: add the new Fedora, drop the EOL one)
 # Packit reads the version from the git tag and updates the spec itself.
 # Tags are named vX.Y.Z: strip the leading "v" so the RPM version stays X.Y.Z.
 upstream_tag_template: "v{version}"
@@ -13,6 +14,6 @@ jobs:
     owner: thenathattify
     project: marker
     targets:
-      - fedora-42-x86_64
       - fedora-43-x86_64
       - fedora-44-x86_64
+      - fedora-45-x86_64

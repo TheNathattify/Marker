@@ -38,8 +38,13 @@ automatiquement ton RPM dans COPR à chaque release taggée.
 1. Crée un compte Fedora : https://accounts.fedoraproject.org (avec 2FA)
 2. Crée le projet COPR : https://copr.fedorainfracloud.org/coprs/new/
    - Owner : `thenathattify`, nom : `marker`
-   - Chroots : `fedora-42-x86_64`, `fedora-43-x86_64`, `fedora-44-x86_64`
-   - Fedora 41 est exclue : libadwaita 1.6 < 1.8 (requis par Marker)
+   - Description : « Marker (thenathattify fork) — markdown editor »
+   - Chroots : `fedora-43-x86_64`, `fedora-44-x86_64`, `fedora-45-x86_64`
+   - Fedora 42 est EOL (mai 2026) : son chroot n'existe plus sur COPR.
+     Règle : à chaque sortie Fedora (2×/an, ~avril et ~octobre), ajouter le
+     nouveau chroot `fedora-N-x86_64` et retirer le plus vieux (EOL).
+     Mettre à jour la liste `targets` de `.packit.yaml` en même temps.
+   - Fedora 41 et plus vieilles : exclues (libadwaita < 1.8 requis)
 3. Installe l'application GitHub **Packit** (packit-service) sur le dépôt
    `TheNathattify/Marker` : https://github.com/apps/packit-service
 4. C'est tout : le fichier `.packit.yaml` est déjà dans le dépôt. À chaque
