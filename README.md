@@ -12,7 +12,7 @@
 
 <p align="center"><i>A modern, fast, and feature-rich Markdown editor for the GNOME desktop, built with GTK 4, Libadwaita and WebKitGTK 6.0.</i></p>
 
-Marker combines a distraction-free writing environment with a powerful live preview engine, scientific typesetting, diagramming tools, and rich document export capabilities. Open [`example.md`](example.md) to see most features in action.
+Marker combines a distraction-free writing environment with a powerful live preview engine, scientific typesetting, diagramming tools, and rich document export capabilities.
 
 ---
 
