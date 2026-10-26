@@ -220,9 +220,41 @@ jobs:
           path: gh-pages/
           if-no-files-found: error
 
-  # RPM publication for Fedora is handled by Packit (packit.dev), the official
-  # Fedora automation: it builds the COPR project thenathattify/marker on every
-  # release tag. See .packit.yaml and RELEASE.md.
+  # RPM publication to Fedora COPR via copr-cli (GitHub Actions).
+  # The SRPM produced by the rpm job is submitted to the thenathattify/marker
+  # COPR project. Requires the COPR_API_TOKEN and COPR_LOGIN_TOKEN secrets.
+  # Runs independently of the release job (COPR builds take ~10-20 min).
+
+  copr-publish:
+    name: Publish to COPR
+    needs: rpm
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: rpm
+          path: rpms/
+
+      - name: Install copr-cli
+        run: |
+          apt-get update -qq
+          apt-get install -y python3-pip
+          pip install --break-system-packages copr-cli
+
+      - name: Configure COPR
+        run: |
+          mkdir -p ~/.config
+          cat > ~/.config/copr << EOF
+          [copr-cli]
+          username = thenathattify
+          token = ${{ secrets.COPR_API_TOKEN }}
+          login = ${{ secrets.COPR_LOGIN_TOKEN }}
+          EOF
+          chmod 600 ~/.config/copr
+
+      - name: Submit SRPM to COPR
+        run: |
+          copr build thenathattify/marker rpms/*.src.rpm
 
   flatpak-repo-publish:
     name: Publish flatpak repo to GitHub Pages

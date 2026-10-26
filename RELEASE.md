@@ -8,7 +8,7 @@ La CI fait le reste automatiquement une fois le tag pushé.
 
 | Canal | Outil officiel | Comment ça build |
 |---|---|---|
-| RPM Fedora | **COPR + Packit** (packit.dev) | automatique à chaque tag `v*` |
+| RPM Fedora | **COPR** (copr.fedorainfracloud.org) via GitHub Actions | automatique à chaque tag `v*` |
 | DEB Ubuntu | **PPA Launchpad** (miroirs git + recette) | « Request build(s) » manuel à chaque release |
 | Flatpak | **dépôt perso GitHub Pages** signé GPG (docs.flatpak.org) | automatique à chaque tag, via la CI |
 | Release | **GitHub Releases** + notes auto-générées | automatique à chaque tag, via la CI |
@@ -30,10 +30,10 @@ Pages pour que le site soit servi :
 > La branche `gh-pages` est créée automatiquement par le job
 > `flatpak-repo-publish` au premier tag. Active Pages juste après.
 
-### 1.2 COPR (RPM Fedora) — Packit, méthode officielle
+### 1.2 COPR (RPM Fedora) — GitHub Actions + copr-cli
 
-**Packit** (packit.dev) est l'outil officiel Fedora/Red Hat : il build
-automatiquement ton RPM dans COPR à chaque release taggée.
+Le job `copr-publish` du workflow `release.yml` pousse le SRPM sur le
+projet COPR **thenathattify/marker** automatiquement à chaque tag `v*`.
 
 1. Crée un compte Fedora : https://accounts.fedoraproject.org (avec 2FA)
 2. Crée le projet COPR : https://copr.fedorainfracloud.org/coprs/new/
@@ -43,34 +43,17 @@ automatiquement ton RPM dans COPR à chaque release taggée.
    - Fedora 42 est EOL (mai 2026) : son chroot n'existe plus sur COPR.
      Règle : à chaque sortie Fedora (2×/an, ~avril et ~octobre), ajouter le
      nouveau chroot `fedora-N-x86_64` et retirer le plus vieux (EOL).
-     Mettre à jour la liste `targets` de `.packit.yaml` en même temps.
    - Fedora 41 et plus vieilles : exclues (libadwaita < 1.8 requis)
-3. Installe l'application GitHub **Packit-as-a-Service** sur le dépôt
-   `TheNathattify/Marker` : https://github.com/apps/packit-as-a-service
-   → « Install it for free » → compte **TheNathattify** → « Only select
-   repositories » → `TheNathattify/Marker` → Install.
-   (L'app s'appelait « packit-service » avant, l'ancien lien est mort.)
-4. **Approuve ton compte** (obligatoire, une seule fois) : à l'installation,
-   Packit vérifie ton compte Fedora (FAS) et crée une issue dans
-   https://github.com/packit/notifications en te taguant. Tant que tu n'es
-   pas approuvé, Packit ignore tous les événements sans rien afficher
-   (aucun statut, aucun commentaire).
-   - Va sur
-     `https://accounts.fedoraproject.org/user/<ton-fas>/settings/profile/#github`
-     et mets **GitHub Username = `TheNathattify`**
-   - Vérifie que ton profil n'est pas privé :
-     `https://accounts.fedoraproject.org/user/<ton-fas>/settings/profile/#is_private`
-   - Commente dans l'issue créée par Packit :
-     `/packit verify-fas <ton-fas-username>`
-   - Packit vérifie le match entre le champ `GitHub Username` et ton compte
-     GitHub, puis t'approuve (l'issue est fermée).
-5. Au **premier** build, Packit demande la permission « builder » sur le
-   projet COPR et poste un commentaire : confirme la demande sur
-   https://copr.fedorainfracloud.org/coprs/thenathattify/marker/permissions/
-   puis relance le build (bouton « Re-run », ou recrée la release).
-   Les builds suivants n'ont plus besoin de cette étape.
-6. C'est tout : le fichier `.packit.yaml` est déjà dans le dépôt. À chaque
-   tag `v*`, Packit build le RPM dans `thenathattify/marker` automatiquement.
+3. **Génère les tokens API COPR** : https://copr.fedorainfracloud.org/api/
+   → connecte-toi → copie **API token** et **Login token**
+4. **Ajoute les secrets GitHub** : dépôt `TheNathattify/Marker` →
+   **Settings → Secrets and variables → Actions → New repository secret**
+   - `COPR_API_TOKEN` = API token
+   - `COPR_LOGIN_TOKEN` = Login token
+5. C'est tout : à chaque tag `v*`, le job `copr-publish` build le RPM
+   dans `thenathattify/marker` automatiquement (suivi dans l'onglet
+   **Actions** du dépôt, et sur
+   https://copr.fedorainfracloud.org/coprs/thenathattify/marker/builds/).
 
 ### 1.3 PPA Launchpad (Debian/Ubuntu) — recette « built on request », méthode officielle
 
@@ -205,6 +188,8 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
 | `GITHUB_TOKEN` | non (fourni automatiquement) | création de la release + publication gh-pages |
 | `FLATPAK_GPG_PRIVATE_KEY` | oui (signature flatpak) | clé privée pour signer le dépôt |
 | `FLATPAK_GPG_KEY_ID` | oui (signature flatpak) | ID de la clé à utiliser |
+| `COPR_API_TOKEN` | oui (COPR Fedora) | API token COPR (copr.fedorainfracloud.org/api) |
+| `COPR_LOGIN_TOKEN` | oui (COPR Fedora) | Login token COPR (copr.fedorainfracloud.org/api) |
 
 ## 2. Publier une release
 
@@ -212,7 +197,6 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
    `packaging/rpm/marker.spec` (`Version:`) et dans le `<release>` de
    `data/com.github.thenathattify.marker.appdata.xml`
    - la CI release vérifie que le tag = `meson.build` = le spec (fail-fast)
-   - Packit met à jour le spec tout seul depuis le tag pour le build COPR
 2. Commit + push sur `main`, vérifier que la CI est verte
    - pas d'import GitHub : les miroirs Launchpad sont poussés en CLI
      à l'étape 4, aucune synchronisation à attendre
@@ -252,7 +236,8 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
    https://launchpad.net/~thenathattify/+archive/ubuntu/marker/+builds
 5. Le pipeline fait le reste : tarball source, rpm, deb, flatpak signé,
    release GitHub (assets + `SHA256SUMS.txt` + notes auto-générées),
-   publication gh-pages. Packit build le COPR en parallèle.
+   publication gh-pages, et le job `copr-publish` pousse le SRPM sur COPR
+   en parallèle (suivi dans l'onglet Actions).
 
 > **Garde-fou** : si le tag ne correspond pas à la version dans
 > `meson.build`, le pipeline s'arrête immédiatement (job `version-guard`).
@@ -307,7 +292,7 @@ flatpak remote-add --if-not-exists --from marker \
 flatpak install marker com.github.thenathattify.marker
 ```
 
-### COPR (Fedora, via Packit)
+### COPR (Fedora)
 
 ```sh
 sudo dnf copr enable thenathattify/marker
