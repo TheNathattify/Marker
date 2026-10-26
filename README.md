@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://github.com/TheNathattify/Marker/actions/workflows/ci.yml"><img src="https://github.com/TheNathattify/Marker/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
   <a href="https://github.com/TheNathattify/Marker/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/TheNathattify/Marker" alt="License: GPL-3.0-or-later" /></a>
+  <a href="https://github.com/TheNathattify/Marker/releases"><img src="https://img.shields.io/github/v/release/TheNathattify/Marker" alt="Latest release" /></a>
 </p>
 
 <p align="center"><i>A modern, fast, and feature-rich Markdown editor for the GNOME desktop, built with GTK 4, Libadwaita and WebKitGTK 6.0.</i></p>
@@ -15,14 +16,34 @@ Marker combines a distraction-free writing environment with a powerful live prev
 
 ---
 
+## Why Marker?
+
+| | **Marker** | Typora | Obsidian | VS Code | Ghostwriter |
+|---|---|---|---|---|---|
+| **Price** | Free (GPL-3.0) | Paid | Free (paid for sync/publish) | Free | Free |
+| **Native GNOME** | ✅ GTK4 + Libadwaita | ❌ Qt | ❌ Electron | ❌ Electron | ✅ Qt |
+| **Lightweight** | ✅ C, native | ⚠️ Qt | ❌ Electron (~200 MB) | ❌ Electron | ✅ Qt |
+| **Live preview** | ✅ Real-time, synced | ✅ WYSIWYG | ✅ | ⚠️ Basic | ✅ |
+| **Math (KaTeX)** | ✅ Built-in, offline | ✅ | ⚠️ Plugin | ⚠️ Extension | ❌ |
+| **Diagrams (Mermaid)** | ✅ Built-in | ❌ | ⚠️ Plugin | ⚠️ Extension | ❌ |
+| **Syntax highlighting** | ✅ 84 themes | ✅ | ✅ | ✅ | ⚠️ Limited |
+| **Export** | ✅ HTML, PDF, ODT, DOCX, LaTeX, RTF | ✅ HTML, PDF, DOCX… | ⚠️ Paid | ⚠️ Extension | ⚠️ ODT, HTML |
+| **Task lists** | ✅ Interactive checkboxes | ✅ | ✅ | ⚠️ Basic | ✅ |
+| **Multi-document sidebar** | ✅ | ❌ | ✅ | ⚠️ Tabs | ❌ |
+| **Cloud / account required** | ❌ No | ❌ No | ⚠️ Optional | ❌ No | ❌ No |
+
+**Marker is the only fully-featured Markdown editor that is native to GNOME, free, open source, and requires no account or cloud service.**
+
+---
+
 ## Key features
 
 - **Real-time live preview** — fast, sandboxed WebKitGTK 6.0 preview that stays synchronized with the editor, including scroll position.
 - **Document outline** — instant ATX/Setext heading navigation in the sidebar; click a heading to jump straight to its section in the preview.
 - **Interactive task lists** — GFM task lists (`- [ ]` / `- [x]`) render as real checkboxes in the preview; click one to toggle it in the source, with undo support.
-- **Mathematical typesetting** — complex formulas rendered in real time with KaTeX (bundled, works offline) or MathJax.
+- **Mathematical typesetting** — complex formulas rendered in real time with KaTeX (bundled, works offline).
 - **Diagrams and plotting** — Mermaid diagrams (flowcharts, sequence, state, …) and Charter plots, rendered live.
-- **Syntax highlighting** — code blocks highlighted in the preview (highlight.js) and in the editor (GtkSourceView 5).
+- **Syntax highlighting** — code blocks highlighted in the preview (highlight.js, 84 themes) and in the editor (GtkSourceView 5).
 - **Find and replace** — interactive search/replace with match highlighting and navigation.
 - **Multi-format export** — export to HTML, PDF, LaTeX, RTF, ODT and DOCX (via Pandoc and Scidown), or print to PDF.
 - **Integrated sketcher** — draw hand-drawn sketches and embed them directly into your notes.
@@ -31,6 +52,146 @@ Marker combines a distraction-free writing environment with a powerful live prev
 - **Customizable styling** — 21 preview themes and 84 code-highlighting themes, plus support for your own CSS.
 - **Modern GNOME interface** — clean Libadwaita design, responsive adaptive layout, automatic dark/light switching.
 - **Fully translated** — available in 14 languages.
+
+---
+
+## Installation
+
+### Flatpak (recommended, any distribution)
+
+```bash
+flatpak remote-add --if-not-exists --from marker \
+  https://thenathattify.github.io/Marker/marker.flatpakrepo
+flatpak install marker com.github.thenathattify.marker
+```
+
+### Fedora / RHEL / CentOS (COPR)
+
+```bash
+sudo dnf copr enable thenathattify/marker
+sudo dnf install marker
+```
+
+Supported: Fedora 43, 44, 45 (x86_64).
+
+### Ubuntu / Debian (PPA)
+
+```bash
+sudo add-apt-repository ppa:thenathattify/marker
+sudo apt update && sudo apt install marker
+```
+
+Supported: Ubuntu 26.04 (resolute). Debian users can also build from source (see below).
+
+### Arch Linux (AUR)
+
+> ⚠️ AUR account creation is temporarily closed due to bot waves. Until then,
+> build directly from the PKGBUILD in this repository:
+
+```bash
+git clone https://github.com/TheNathattify/Marker.git
+cd Marker/packaging/aur
+makepkg -si
+```
+
+Or with an AUR helper once the package is published:
+
+```bash
+yay -S marker        # or: paru -S marker
+```
+
+### AppImage
+
+Not yet available. Use Flatpak or build from source.
+
+---
+
+## Build from source
+
+### Dependencies by distribution
+
+**Fedora / RHEL / CentOS:**
+
+```bash
+sudo dnf install meson ninja-build gcc \
+  gtk4-devel libadwaita-devel gtksourceview5-devel webkitgtk6.0-devel \
+  glib2-devel gettext itstool appstream desktop-file-utils pandoc
+```
+
+**Ubuntu / Debian:**
+
+```bash
+sudo apt install meson ninja-build gcc \
+  libgtk-4-dev libadwaita-1-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev \
+  libglib2.0-dev gettext itstool appstream desktop-file-utils pandoc
+```
+
+**Arch Linux:**
+
+```bash
+sudo pacman -S meson ninja gcc \
+  gtk4 libadwaita gtksourceview5 webkitgtk-6.0 \
+  glib2 gettext itstool appstream desktop-file-utils pandoc
+```
+
+**openSUSE:**
+
+```bash
+sudo zypper install meson ninja gcc \
+  gtk4-devel libadwaita-devel gtksourceview5-devel webkitgtk6.0-devel \
+  glib2-devel gettext itstool appstream desktop-file-utils pandoc
+```
+
+### Minimum version requirements
+
+| Dependency | Minimum version |
+|---|---|
+| meson | >= 0.62.0 |
+| ninja | any |
+| gcc / clang | any recent |
+| gtk4 | >= 4.16.0 |
+| libadwaita | >= 1.8.0 |
+| gtksourceview5 | >= 5.6.0 |
+| webkitgtk-6.0 | >= 2.40.0 |
+| glib-2.0 | >= 2.74.0 |
+| gettext | any |
+| itstool | any |
+| appstream | any |
+| desktop-file-utils | any |
+| pandoc | optional (for document export) |
+
+### Compile and install (one command, any distribution)
+
+After installing the dependencies for your distribution (see above):
+
+```bash
+git clone --recursive https://github.com/TheNathattify/Marker.git && \
+cd Marker && \
+meson setup build --prefix=/usr && \
+ninja -C build && \
+sudo ninja -C build install
+```
+
+The `--recursive` flag is required: the Markdown renderer (scidown) and its
+dependencies (charter, tinyexpr) are git submodules.
+
+### Run without installing
+
+```bash
+git clone --recursive https://github.com/TheNathattify/Marker.git && \
+cd Marker && \
+meson setup build && \
+ninja -C build && \
+./build/src/marker
+```
+
+### Uninstall
+
+```bash
+sudo ninja -C build uninstall
+```
+
+---
 
 ## What's new in this fork
 
@@ -76,9 +237,11 @@ Since the GTK 4 port, the fork adds:
 **Integration and packaging**
 
 - **D-Bus activation** — a proper service file is shipped, giving single-instance behavior and faster startup.
-- **Automatic settings migration** from the previous `com.github.adrighem.marker` schema when upgrading (see [`marker-rebrand.sh`](marker-rebrand.sh)).
+- **Automatic settings migration** from the previous `com.github.adrighem.marker` schema when upgrading.
 - **Green CI on every push** — AppStream/desktop/schema validation plus a full Flatpak build.
-- **Flatpak manifest** targeting GNOME Platform/SDK 50.
+- **Official packages** — COPR (Fedora), PPA (Ubuntu), AUR (Arch), signed Flatpak repo.
+
+---
 
 ## Keyboard shortcuts
 
@@ -106,50 +269,14 @@ Since the GTK 4 port, the fork adds:
 | <kbd>Ctrl</kbd>+<kbd>P</kbd> | Print |
 | <kbd>Ctrl</kbd>+<kbd>Q</kbd> | Quit |
 
+---
+
 ## Themes and customization
 
 - **Preview themes** — 21 bundled CSS themes (GitHub, Nord, Solarized, Fedora Dark/Light, …), selectable in Preferences.
 - **Code highlighting themes** — 84 bundled themes, including Adwaita and Adwaita-dark which match the editor.
 - **Your own themes** — drop `.css` files into `~/.local/share/marker/styles/` and they appear in Preferences.
 - **Editor** — font size, color scheme and zoom are configurable independently of the preview.
-
-## Installation
-
-### Dependencies
-
-- `meson` (>= 0.62.0) and `ninja`
-- `gtk4` (>= 4.16.0)
-- `libadwaita-1` (>= 1.8.0)
-- `gtksourceview-5` (>= 5.6.0)
-- `webkitgtk-6.0` (>= 2.40.0)
-- `glib-2.0` / `gio-2.0` (>= 2.74.0)
-- `gettext`
-- `pandoc` (optional, for document export)
-
-### Build from source
-
-```bash
-git clone --recursive https://github.com/TheNathattify/Marker.git
-cd Marker
-meson setup build
-ninja -C build
-sudo ninja -C build install
-```
-
-The `--recursive` flag is required: the Markdown renderer (scidown) is a git submodule.
-
-### Flatpak
-
-```bash
-flatpak install flathub org.gnome.Platform//50 org.gnome.Sdk//50
-flatpak-builder --user --install --force-clean build-flatpak com.github.thenathattify.marker.json
-```
-
-To run the sandboxed build without installing it:
-
-```bash
-flatpak-builder --run build-flatpak com.github.thenathattify.marker.json marker
-```
 
 ---
 
@@ -158,6 +285,8 @@ flatpak-builder --run build-flatpak com.github.thenathattify.marker.json marker
 Marker is a continuation of the original [Marker](https://github.com/fabiocolacio/Marker) by **Fabio Colacio**, modernized to GTK 4 / Libadwaita / WebKitGTK 6.0 by **Vincent van Adrighem** ([@adrighem](https://github.com/adrighem)), and maintained as this hard fork by **Nathan Obry** ([@thenathattify](https://github.com/thenathattify)).
 
 Built on [scidown](https://github.com/Mandarancio/scidown) and [Charter](https://github.com/Mandarancio/charter) by Mandarancio, and on the excellent GTK, Libadwaita, GtkSourceView, WebKitGTK, KaTeX, highlight.js and Mermaid projects.
+
+---
 
 ## License
 
