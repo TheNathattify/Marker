@@ -137,18 +137,24 @@ navigate (MarkerPreview        *preview,
     return FALSE;
 
   /* Interactive task-list toggling (see marker-markdown.c): the live
-   * preview reports checkbox clicks through this custom URI. */
+   * preview reports checkbox clicks through this custom URI.
+   * Only honour user gestures (real clicks on the checkbox): a document
+   * script could otherwise toggle tasks on every render via
+   * location.href = 'marker://task-toggle/N'. */
   if (g_str_has_prefix (uri, "marker://task-toggle/"))
   {
-    const char *index_str = uri + strlen ("marker://task-toggle/");
-    char *endptr = NULL;
-    guint64 task_index = g_ascii_strtoull (index_str, &endptr, 10);
+    if (webkit_navigation_action_is_user_gesture (action))
+    {
+      const char *index_str = uri + strlen ("marker://task-toggle/");
+      char *endptr = NULL;
+      guint64 task_index = g_ascii_strtoull (index_str, &endptr, 10);
 
-    /* Only emit well-formed indices: anything else (hand-written
-     * marker:// links, stale anchors, raw private-use chars in the
-     * document) is swallowed without toggling. */
-    if (endptr != index_str && *endptr == '\0')
-      g_signal_emit_by_name (preview, "task-toggled", (guint) task_index);
+      /* Only emit well-formed indices: anything else (hand-written
+       * marker:// links, stale anchors, raw private-use chars in the
+       * document) is swallowed without toggling. */
+      if (endptr != index_str && *endptr == '\0')
+        g_signal_emit_by_name (preview, "task-toggled", (guint) task_index);
+    }
 
     webkit_policy_decision_ignore (decision);
     return TRUE;
