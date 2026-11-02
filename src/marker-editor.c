@@ -71,6 +71,35 @@ on_debounce_refresh_preview_cb (gpointer user_data)
   return G_SOURCE_REMOVE;
 }
 
+/* gtk_text_buffer_set_text() resets the insert mark to the end of the new
+ * text; reload paths must keep the cursor where the user left it. */
+static gint
+buffer_cursor_offset (GtkTextBuffer *buffer)
+{
+  GtkTextIter iter;
+  gtk_text_buffer_get_iter_at_mark (buffer, &iter,
+                                    gtk_text_buffer_get_insert (buffer));
+  return gtk_text_iter_get_offset (&iter);
+}
+
+static void
+buffer_restore_cursor_offset (GtkTextBuffer *buffer,
+                              gint           offset)
+{
+  const gint clamped = MIN (offset, gtk_text_buffer_get_char_count (buffer));
+  GtkTextIter iter;
+  gtk_text_buffer_get_iter_at_offset (buffer, &iter, clamped);
+  gtk_text_buffer_place_cursor (buffer, &iter);
+}
+
+static void
+buffer_place_cursor_at_start (GtkTextBuffer *buffer)
+{
+  GtkTextIter start_iter;
+  gtk_text_buffer_get_start_iter (buffer, &start_iter);
+  gtk_text_buffer_place_cursor (buffer, &start_iter);
+}
+
 static void
 on_document_external_change (MarkerDocument *doc,
                              gpointer        user_data)
@@ -85,9 +114,11 @@ on_document_external_change (MarkerDocument *doc,
     MarkerSourceView *source_view = editor->source_view;
     GtkTextBuffer *buffer =
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (source_view));
+    const gint cursor_offset = buffer_cursor_offset (buffer);
     gtk_text_buffer_begin_irreversible_action (buffer);
     marker_source_view_set_text (source_view, contents, size);
     gtk_text_buffer_end_irreversible_action (buffer);
+    buffer_restore_cursor_offset (buffer, cursor_offset);
     gtk_text_buffer_set_modified (buffer, FALSE);
     marker_document_set_is_modified (doc, FALSE);
     editor->needs_refresh = TRUE;
@@ -523,6 +554,8 @@ marker_editor_open_file (MarkerEditor *editor,
     gtk_text_buffer_begin_irreversible_action (buffer);
     marker_source_view_set_text (source_view, contents, size);
     gtk_text_buffer_end_irreversible_action (buffer);
+    /* Opening a document: cursor (and preview) start at the top. */
+    buffer_place_cursor_at_start (buffer);
     gtk_text_buffer_set_modified (buffer, FALSE);
   }
   else if (error)
@@ -566,11 +599,13 @@ marker_editor_reload_file (MarkerEditor *editor)
   GtkSourceBuffer *buffer =
     GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (source_view)));
 
+  const gint cursor_offset = buffer_cursor_offset (GTK_TEXT_BUFFER (buffer));
   g_signal_handlers_block_by_func (buffer, buffer_changed_cb, editor);
   gtk_text_buffer_begin_user_action (GTK_TEXT_BUFFER (buffer));
   marker_source_view_set_text (source_view, contents, size);
   gtk_text_buffer_end_user_action (GTK_TEXT_BUFFER (buffer));
   g_signal_handlers_unblock_by_func (buffer, buffer_changed_cb, editor);
+  buffer_restore_cursor_offset (GTK_TEXT_BUFFER (buffer), cursor_offset);
 
   gtk_text_buffer_set_modified (GTK_TEXT_BUFFER (buffer), FALSE);
   marker_document_set_is_modified (editor->document, FALSE);
