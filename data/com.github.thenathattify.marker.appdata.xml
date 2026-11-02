@@ -45,6 +45,17 @@
   </provides>
 
   <releases>
+    <release version="2026.11.0" date="2026-11-02">
+      <description translate="no">
+        <ul>
+          <li>Fix: no new window on every D-Bus Activate — clicking the GNOME icon now presents the existing window instead of opening another one.</li>
+          <li>Fix: cursor and preview no longer jump to the top when the file changes on disk (reload paths restore the cursor offset, clamped to the new length).</li>
+          <li>Fix: task-list checkbox toggles are only honoured on real user gestures (webkit_navigation_action_is_user_gesture), so document scripts cannot toggle tasks on every render.</li>
+          <li>Fix: no stale GtkTextIter in the task-toggle handler (cursor offset saved before the buffer edit, iter re-fetched after).</li>
+          <li>Cleanup: dropped the redundant is_fullscreen field and the state guards in marker_window_(un)fullscreen (idempotent GTK calls, async state on Wayland).</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.10.7" date="2026-10-25">
       <description translate="no">
         <ul>
