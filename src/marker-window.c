@@ -50,7 +50,6 @@ struct _MarkerWindow
   AdwWindowTitle       *window_title;
   GtkButton            *zoom_original_btn;
 
-  gboolean              is_fullscreen;
   GtkButton            *unfullscreen_btn;
 
   GtkBox               *vbox;
@@ -673,24 +672,20 @@ void
 marker_window_fullscreen (MarkerWindow *window)
 {
   g_return_if_fail (MARKER_IS_WINDOW (window));
-  g_return_if_fail (!marker_window_is_fullscreen (window));
 
-  window->is_fullscreen = TRUE;
+  /* No state guard: gtk_window_fullscreen() is idempotent, the window state
+   * changes asynchronously (especially on Wayland) so a quick double F11
+   * would otherwise log a critical warning. The unfullscreen button is
+   * shown/hidden by the notify::fullscreened handler. */
   gtk_window_fullscreen (GTK_WINDOW (window));
-  if (window->unfullscreen_btn)
-    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), TRUE);
 }
 
 void
 marker_window_unfullscreen (MarkerWindow *window)
 {
   g_return_if_fail (MARKER_IS_WINDOW (window));
-  g_return_if_fail (marker_window_is_fullscreen (window));
 
-  window->is_fullscreen = FALSE;
   gtk_window_unfullscreen (GTK_WINDOW (window));
-  if (window->unfullscreen_btn)
-    gtk_widget_set_visible (GTK_WIDGET (window->unfullscreen_btn), FALSE);
 }
 
 typedef struct {
@@ -1109,7 +1104,6 @@ marker_window_init (MarkerWindow *window)
     g_action_map_add_action (G_ACTION_MAP (window), action);
   }
 
-  window->is_fullscreen = FALSE;
   window->sidebar_visible = TRUE;
   window->editors_counter = 0;
   window->last_click_ = 0;
