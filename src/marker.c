@@ -90,7 +90,15 @@ static void
 activate (GtkApplication *app)
 {
   marker_init (app);
-  marker_create_new_window ();
+
+  /* Chaque clic sur l'icône GNOME envoie Activate sur D-Bus : ne créer une
+   * fenêtre que s'il n'y en a aucune, sinon présenter l'existante (sinon
+   * chaque clic ouvrait une nouvelle fenêtre dans le même process). */
+  GList *windows = gtk_application_get_windows (app);
+  if (windows != NULL)
+    gtk_window_present (GTK_WINDOW (windows->data));
+  else
+    marker_create_new_window ();
 }
 
 static void
