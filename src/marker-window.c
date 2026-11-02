@@ -42,7 +42,6 @@ struct _MarkerWindow
   AdwWindowTitle       *window_title;
   GtkEntry             *zoom_entry;
 
-  gboolean              is_fullscreen;
   GtkToggleButton      *fullscreen_btn;
 
   AdwToolbarView       *toolbar_view;
@@ -920,20 +919,19 @@ void
 marker_window_fullscreen (MarkerWindow *window)
 {
   g_return_if_fail (MARKER_IS_WINDOW (window));
-  g_return_if_fail (!marker_window_is_fullscreen (window));
 
-  window->is_fullscreen = TRUE;
+  /* Pas de garde d'état : gtk_window_fullscreen() est idempotent et l'état
+   * de la fenêtre change de façon asynchrone (surtout sous Wayland), un
+   * double F11 rapide loggerait sinon un warning critical. L'icône du
+   * bouton est mise à jour dans on_fullscreen_notify. */
   gtk_window_fullscreen (GTK_WINDOW (window));
-  /* L'icône du bouton est mise à jour dans on_fullscreen_notify. */
 }
 
 void
 marker_window_unfullscreen (MarkerWindow *window)
 {
   g_return_if_fail (MARKER_IS_WINDOW (window));
-  g_return_if_fail (marker_window_is_fullscreen (window));
 
-  window->is_fullscreen = FALSE;
   gtk_window_unfullscreen (GTK_WINDOW (window));
   /* L'icône du bouton est mise à jour dans on_fullscreen_notify. */
 }
@@ -1412,7 +1410,6 @@ marker_window_init (MarkerWindow *window)
     g_action_map_add_action (G_ACTION_MAP (window), action);
   }
 
-  window->is_fullscreen = FALSE;
   /* TRUE car le widget GTK est visible par défaut — hide_sidebar() au démarrage
    * pourra alors vraiment le cacher (son garde-fou vérifie sidebar_visible). */
   window->sidebar_visible = TRUE;
