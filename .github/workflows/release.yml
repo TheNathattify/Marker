@@ -65,12 +65,13 @@ jobs:
           # PKGBUILD embeds the sha256 of this very tarball (circular). The AUR
           # packaging lives in the git repo, not in the tarball.
           rm -rf "$WORK/packaging/aur"
-          # Reproducible tarball (reproducible-builds.org): fixed mtime (commit
-          # date), fixed owner/group, sorted entry names, gzip without
-          # timestamp — re-running the release must NOT change the sha256,
-          # otherwise the PKGBUILD sha256sums goes stale on every re-run.
-          SOURCE_DATE_EPOCH="$(git log -1 --format=%ct HEAD)"
-          tar --sort=name --mtime="@${SOURCE_DATE_EPOCH}" --owner=0 --group=0 --numeric-owner -cf - "$WORK" | gzip -n > "$WORK.tar.gz"
+          # Reproducible tarball (reproducible-builds.org): fixed mtime (epoch,
+          # NOT the commit date — otherwise the sha256 would depend on the
+          # tagged commit and the PKGBUILD could never match it), fixed
+          # owner/group, sorted entry names, gzip without timestamp. Re-running
+          # the release must NOT change the sha256, otherwise the PKGBUILD
+          # sha256sums goes stale on every re-run.
+          tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner -cf - "$WORK" | gzip -n > "$WORK.tar.gz"
           echo "tarball sha256: $(sha256sum "$WORK.tar.gz" | cut -d' ' -f1)"
           echo "tarball entries: $(tar -tzf "$WORK.tar.gz" | wc -l)"
           mkdir -p artifacts
