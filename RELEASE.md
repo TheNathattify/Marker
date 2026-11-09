@@ -181,10 +181,13 @@ Le `PKGBUILD` vit dans `packaging/aur/` (versionné dans ce dépôt).
    git push
    ```
 
-3. **Mise à jour à chaque release** : bump `pkgver`/`sha256sums` dans
-   `packaging/aur/PKGBUILD`, régénère `.SRCINFO` (`makepkg --printsrcinfo`
-   sur Arch), commit + push sur `~/Marker`, puis copie les 2 fichiers
-   vers `/tmp/marker-aur` et push.
+3. **Mise à jour à chaque release** : bump `pkgver` dans
+   `packaging/aur/PKGBUILD` (avec le bump de version, §2.1). Le
+   `sha256sums` n'est **pas** édité à la main : la CI le pousse
+   automatiquement sur `main` après chaque tag (commit
+   « chore(aur): update sha256sums for marker X [skip ci] », voir §2.6).
+   Il suffit ensuite de copier les 2 fichiers à jour vers `/tmp/marker-aur`
+   et push.
 
 > **Pourquoi le tarball de la release et pas `git archive`** : le tarball
 > GitHub auto-généré n'inclut pas les sous-modules git (scidown, charter,
@@ -223,9 +226,12 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
 ## 2. Publier une release
 
 1. Bump la version dans `meson.build` (`version: '2026.10.X'`), dans
-   `packaging/rpm/marker.spec` (`Version:`) et dans le `<release>` de
+   `packaging/rpm/marker.spec` (`Version:`), dans `packaging/aur/PKGBUILD`
+   (`pkgver`) et dans le `<release>` de
    `data/com.github.thenathattify.marker.appdata.xml`
    - la CI release vérifie que le tag = `meson.build` = le spec (fail-fast)
+   - le `sha256sums` du PKGBUILD est mis à jour automatiquement par la CI
+     après le tag (tarball reproductible, voir §2.6) : ne pas y toucher
 2. Commit + push sur `main`, vérifier que la CI est verte
    - pas d'import GitHub : les miroirs Launchpad sont poussés en CLI
      à l'étape 4, aucune synchronisation à attendre
@@ -267,15 +273,18 @@ régénère une clé, mets à jour les deux secrets et le `GPGKey=` de
    release GitHub (assets + `SHA256SUMS.txt` + notes auto-générées),
    publication gh-pages, et le job `copr-publish` pousse le SRPM sur COPR
    en parallèle (suivi dans l'onglet Actions).
-6. **AUR (Arch)** : mets à jour `packaging/aur/PKGBUILD` (`pkgver` +
-   `sha256sums` du tarball source de la release), régénère `.SRCINFO`,
-   puis pousse sur l'AUR (voir §1.4) :
+6. **AUR (Arch)** : bump `pkgver` dans `packaging/aur/PKGBUILD` (fait en
+   §2.1). Le `sha256sums` est **mis à jour automatiquement sur `main` par la
+   CI** (job `source-tarball` du workflow release : il calcule le sha256 du
+   tarball publié — reproductible grâce à `mtime=@0` et à l'exclusion de
+   `packaging/aur` du tarball — et pousse le commit
+   « chore(aur): update sha256sums for marker X [skip ci] » sur `main`).
+   Récupère les 2 fichiers à jour depuis `main`, puis pousse sur l'AUR
+   (voir §1.4) :
 
    ```sh
    cd ~/Marker
-   sed -i "s/^pkgver=.*/pkgver=2026.10.X/" packaging/aur/PKGBUILD
-   # mettre à jour sha256sums avec le checksum du marker-2026.10.X.tar.gz
-   # de la release (fichier SHA256SUMS.txt)
+   git pull   # récupère le commit auto du sha256sums poussé par la CI
    cd /tmp/marker-aur   # créé en §1.4
    cp ~/Marker/packaging/aur/PKGBUILD ~/Marker/packaging/aur/.SRCINFO .
    git add -A

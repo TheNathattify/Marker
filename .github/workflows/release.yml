@@ -83,6 +83,30 @@ jobs:
           path: artifacts/
           if-no-files-found: error
 
+      # The tarball is reproducible (mtime=@0, sorted, gzip -n) and excludes
+      # packaging/aur, so the sha256 computed here is byte-identical to the
+      # asset users download from the release. Push it to main so the AUR
+      # PKGBUILD/.SRCINFO always match the published tarball — no manual update.
+      - name: Auto-update AUR sha256sums on main
+        run: |
+          VERSION="${{ needs.version-guard.outputs.version }}"
+          SHA="$(sha256sum "artifacts/marker-$VERSION.tar.gz" | cut -d' ' -f1)"
+          echo "published tarball sha256: $SHA"
+          git fetch origin main
+          git checkout -B aur-sha256 origin/main
+          sed -i -E "s/^sha256sums=\('.*'\)/sha256sums=('$SHA')/" packaging/aur/PKGBUILD
+          sed -i -E "s/^([[:space:]]*sha256sums = ).*/\1$SHA/" packaging/aur/.SRCINFO
+          if git diff --quiet -- packaging/aur; then
+            echo "sha256sums already up to date on main, nothing to push"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packaging/aur/PKGBUILD packaging/aur/.SRCINFO
+          git commit -m "chore(aur): update sha256sums for marker $VERSION [skip ci]"
+          git push origin aur-sha256:main
+          echo "::notice::AUR sha256sums auto-updated on main for marker $VERSION"
+
   rpm:
     name: Build RPM (Fedora)
     needs: [version-guard, source-tarball]
