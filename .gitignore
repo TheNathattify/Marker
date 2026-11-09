@@ -31,8 +31,9 @@ resources.c
 *.tar.gz
 *.tar.xz
 *.flatpak
-*.flatpakrepo
 repo/
+# marker.flatpakrepo is intentionally tracked: the release workflow copies it
+# into gh-pages/ (it is NOT generated, it holds the repo URL + GPGKey).
 
 # Logs and misc
 *.log
