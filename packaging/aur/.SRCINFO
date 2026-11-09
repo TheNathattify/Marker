@@ -18,6 +18,6 @@ pkgbase = marker
 	depends = webkitgtk-6.0
 	depends = glib2
 	source = marker-2026.11.1.tar.gz::https://github.com/TheNathattify/Marker/releases/download/v2026.11.1/marker-2026.11.1.tar.gz
-	sha256sums = 9a3ef9ecde5fe8217c8bc5460a2dba803ed2178a6e067495374738eeba9d697b
+	sha256sums = 5a86677577632a98f5197fa2647c48f1af864343a106000186a2becd8e4ada3f
 
 pkgname = marker
