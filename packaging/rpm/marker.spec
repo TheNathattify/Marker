@@ -3,7 +3,7 @@
 # Bump it together with meson.build on every release - the CI release job
 # fails if the spec version does not match the tag.
 Name:           marker
-Version:        2026.11.0
+Version:        2026.11.1
 Release:        1%{?dist}
 Summary:        Powerful markdown editor for the GNOME desktop
 License:        GPL-3.0-or-later

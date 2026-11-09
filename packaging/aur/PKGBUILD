@@ -1,7 +1,7 @@
 # Maintainer: Nathan Obry <nathan170262@proton.me>
 # AUR: https://aur.archlinux.org/packages/marker
 pkgname=marker
-pkgver=2026.11.0
+pkgver=2026.11.1
 pkgrel=1
 pkgdesc="Powerful markdown editor for the GNOME desktop (GTK4/libadwaita, thenathattify fork)"
 arch=('x86_64')

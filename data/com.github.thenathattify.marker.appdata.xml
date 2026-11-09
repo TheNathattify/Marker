@@ -45,6 +45,13 @@
   </provides>
 
   <releases>
+    <release version="2026.11.1" date="2026-11-09">
+      <description translate="no">
+        <ul>
+          <li>Fix: restore marker.flatpakrepo so the release pipeline can publish the GPG-signed Flatpak repo to GitHub Pages again (v2026.11.0 failed at "cp marker.flatpakrepo" and shipped no Flatpak artifacts or GitHub release).</li>
+        </ul>
+      </description>
+    </release>
     <release version="2026.11.0" date="2026-11-02">
       <description translate="no">
         <ul>
