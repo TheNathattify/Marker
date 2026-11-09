@@ -27,7 +27,7 @@ makedepends=(
 # Use the source tarball attached to the GitHub release (built by CI, includes
 # the scidown/charter/tinyexpr submodule sources).
 source=("$pkgname-$pkgver.tar.gz::https://github.com/TheNathattify/Marker/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('5ba340756f5a7a6d14f13f948b3653a895d118ef6b2a763538b55c5e3cf2ab60')
+sha256sums=('cec452d9985731e79bcb6dfda86f2bd1008d90aeb5e86f37e4084a85e05f6ff7')
 
 build() {
     cd "$pkgname-$pkgver"
